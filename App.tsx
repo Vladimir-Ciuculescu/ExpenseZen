@@ -1,31 +1,40 @@
+import { StyleSheet, FlatList, SafeAreaView, Animated } from "react-native";
+import { PieChart, Progress, Savings } from "./assets/SVG";
+import { View, NativeBaseProvider } from "native-base";
+import OnboardingStep from "./components/OnboardingStep";
+import { Step } from "./interfaces/Step";
+import { useFonts } from "expo-font";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View } from "react-native";
-import { Text } from "react-native-ui-lib";
-import { supabase } from "./database/supabase";
-import { useEffect } from "react";
+import SourceSansPro from "./assets/fonts/SourceSansProRegular.ttf";
+import SourceBold from "./assets/fonts/SourceSansProBold.ttf";
+import Onboarding from "./components/Onboarding";
 
 export default function App() {
-  const getVladi = async () => {
-    const { data } = await supabase.from("users").select(`*`);
+  const [fontsLoaded] = useFonts({
+    SourceSansPro,
+    SourceBold,
+  });
 
-    console.log(data);
-  };
-  useEffect(() => {
-    getVladi();
-  }, []);
+  if (!fontsLoaded) {
+    return null;
+  }
 
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />s{" "}
-    </View>
+    <NativeBaseProvider>
+      <StatusBar style="auto" />
+      <View style={styles.container}>
+        <SafeAreaView>
+          <Onboarding />
+        </SafeAreaView>
+      </View>
+    </NativeBaseProvider>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "red",
+    backgroundColor: "white",
     alignItems: "center",
     justifyContent: "center",
   },
