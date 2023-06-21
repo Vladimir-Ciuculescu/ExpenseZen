@@ -7,7 +7,8 @@ import { useFonts } from "expo-font";
 import { StatusBar } from "expo-status-bar";
 import SourceSansPro from "./assets/fonts/SourceSansProRegular.ttf";
 import SourceBold from "./assets/fonts/SourceSansProBold.ttf";
-import Onboarding from "./components/Onboarding";
+import Onboarding from "./screens/OnboardingScreen";
+import Navigation from "./Navigation";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -22,20 +23,7 @@ export default function App() {
   return (
     <NativeBaseProvider>
       <StatusBar style="auto" />
-      <View style={styles.container}>
-        <SafeAreaView>
-          <Onboarding />
-        </SafeAreaView>
-      </View>
+      <Navigation />
     </NativeBaseProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});

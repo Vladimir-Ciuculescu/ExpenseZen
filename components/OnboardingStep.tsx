@@ -12,8 +12,8 @@ const OnboardingStep: React.FC<OnboardingStepProps> = ({ step }) => {
 
   const { title, description, image } = step;
   return (
-    <View flex={1} justifyContent="center" alignItems="center" width={width}>
-      <VStack space={10} alignItems="center">
+    <VStack flex={1} justifyContent="center" alignItems="center" width={width}>
+      <VStack space={5} alignItems="center">
         {image}
         <VStack space={2} alignItems="center" mx={10}>
           <Text
@@ -34,7 +34,7 @@ const OnboardingStep: React.FC<OnboardingStepProps> = ({ step }) => {
           </Text>
         </VStack>
       </VStack>
-    </View>
+    </VStack>
   );
 };
 
