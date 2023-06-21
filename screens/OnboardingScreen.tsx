@@ -71,7 +71,7 @@ const OnboardingScreen: React.FC<OnBoardingScreenProps> = ({ navigation }) => {
   const goDirection = async (direction: Direction) => {
     if (currentIndex === steps.length - 1 && direction === Direction.Next) {
       await finishOnboarding();
-      navigation.navigate("Home");
+      navigation.navigate("Login");
     } else {
       flatListRef.current?.scrollToIndex({
         index:

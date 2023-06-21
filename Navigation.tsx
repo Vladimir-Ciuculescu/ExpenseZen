@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "./screens/HomeScreen";
 import OnboardingScreen from "./screens/OnboardingScreen";
 import { getItem } from "./storage";
+import LoginScreen from "./screens/LoginScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -16,7 +17,7 @@ const Navigation: React.FC<any> = () => {
       if (!onboarded) {
         setInitialScreen("Onboarding");
       } else {
-        setInitialScreen("Home");
+        setInitialScreen("Login");
       }
     };
     checkOnboarding();
@@ -34,7 +35,11 @@ const Navigation: React.FC<any> = () => {
           name="Onboarding"
           options={{ headerShown: false }}
         />
-        <Stack.Screen component={HomeScreen} name="Home" />
+        <Stack.Screen
+          component={LoginScreen}
+          name="Login"
+          options={{ headerShown: false }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
