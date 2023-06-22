@@ -162,7 +162,6 @@ const OnboardingScreen: React.FC<OnBoardingScreenProps> = ({ navigation }) => {
             fontSize: 20,
           }}
           onPress={() => goDirection(Direction.Next)}
-          //opacity={isLastStep ? 0.4 : 1}
           endIcon={
             <Ionicons
               name="md-arrow-forward-outline"
