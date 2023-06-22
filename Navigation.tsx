@@ -5,6 +5,7 @@ import HomeScreen from "./screens/HomeScreen";
 import OnboardingScreen from "./screens/OnboardingScreen";
 import { getItem } from "./storage";
 import LoginScreen from "./screens/LoginScreen";
+import RegisterScreen from "./screens/RegisterScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +40,11 @@ const Navigation: React.FC<any> = () => {
           component={LoginScreen}
           name="Login"
           options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          component={RegisterScreen}
+          name="Register"
+          //options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>
