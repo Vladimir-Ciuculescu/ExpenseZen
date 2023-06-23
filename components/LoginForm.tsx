@@ -35,6 +35,7 @@ const LoginForm: React.FC<any> = () => {
         <Input
           type={passwordVisilble ? "text" : "password"}
           placeholder="Password"
+          color="purple.700"
           fontSize={15}
           pl={5}
           fontFamily="SourceSansPro"
