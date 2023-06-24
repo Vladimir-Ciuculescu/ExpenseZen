@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import OnboardingScreen from "./screens/OnboardingScreen";
-import { getItem } from "./storage";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -11,16 +10,18 @@ import GraphScreen from "./screens/GraphScreen";
 import { Ionicons } from "@expo/vector-icons";
 import CategoriesScreen from "./screens/CategoriesScreen";
 import SettingsScreen from "./screens/SettingsScreen";
+import { useSelector } from "react-redux";
+import { RootState } from "./redux/store";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const Navigation: React.FC<any> = () => {
   const [initialScreen, setInitialScreen] = useState<string | null>(null);
+  const { onboarded } = useSelector((state: RootState) => state.onboard);
 
   useEffect(() => {
     const checkOnboarding = async () => {
-      const onboarded = await getItem("onboarded");
       if (!onboarded) {
         setInitialScreen("Onboarding");
       } else {

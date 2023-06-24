@@ -1,12 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+interface initalStateProps {
+  firstName: string | null;
+  lastName: string | null;
+  email: string | null;
+}
+
+const initialState: initalStateProps = {
+  firstName: null,
+  lastName: null,
+  email: null,
+};
+
 const userReducer = createSlice({
   name: "user",
-  initialState: {
-    firstName: "",
-    lastName: "",
-    email: "",
-  },
+
+  initialState: initialState,
   reducers: {
     setUser: (state, action) => {
       const { payload } = action;

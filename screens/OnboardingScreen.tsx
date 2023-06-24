@@ -8,7 +8,8 @@ import Paginator from "../components/Paginator";
 import { Ionicons } from "@expo/vector-icons";
 import COLORS from "../colors";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
-import { setItem } from "../storage";
+import { useDispatch } from "react-redux";
+import { onBoard } from "../redux/onboardReducer";
 
 enum Direction {
   Back = "Back",
@@ -52,6 +53,7 @@ interface OnBoardingScreenProps {
 const OnboardingScreen: React.FC<OnBoardingScreenProps> = ({ navigation }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const { width, height } = useWindowDimensions();
+  const dispatch = useDispatch();
 
   const scrollX = useRef(new Animated.Value(0)).current;
   const flatListRef = useRef<FlatList<any>>(null);
@@ -64,13 +66,9 @@ const OnboardingScreen: React.FC<OnBoardingScreenProps> = ({ navigation }) => {
     setCurrentIndex(viewableItems[0].index);
   }, []);
 
-  const finishOnboarding = async () => {
-    await setItem("onboarded", "true");
-  };
-
   const goDirection = async (direction: Direction) => {
     if (currentIndex === steps.length - 1 && direction === Direction.Next) {
-      await finishOnboarding();
+      dispatch(onBoard());
       navigation.navigate("Login");
     } else {
       flatListRef.current?.scrollToIndex({
