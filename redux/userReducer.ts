@@ -24,9 +24,9 @@ const userReducer = createSlice({
       state.email = payload.email;
     },
     removeUser: (state) => {
-      state.firstName = "";
-      state.lastName = "";
-      state.email = "";
+      state.firstName = null;
+      state.lastName = null;
+      state.email = null;
     },
   },
 });

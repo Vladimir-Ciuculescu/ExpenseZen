@@ -178,7 +178,7 @@ const RegisterForm: React.FC<any> = () => {
         _text={{ fontFamily: "SourceSansPro", fontSize: 17 }}
         onPress={submit}
         isLoading={loading}
-        _pressed={{ backgroundColor: COLORS.PURPLE[700] }}
+        _pressed={{ backgroundColor: COLORS.PURPLE[700], opacity: 0.7 }}
       >
         Register
       </Button>

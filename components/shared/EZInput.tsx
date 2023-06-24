@@ -13,6 +13,7 @@ interface EZInputProps {
   error?: any;
   type: inputType;
   textContentType?: any;
+  InputRightElement?: JSX.Element;
 }
 
 interface EZInputStylesProp {
@@ -20,8 +21,15 @@ interface EZInputStylesProp {
 }
 
 const EZInput: React.FC<EZInputProps & EZInputStylesProp> = (props) => {
-  const { placeholder, error, value, onChangeText, type, textContentType } =
-    props;
+  const {
+    placeholder,
+    error,
+    value,
+    onChangeText,
+    type,
+    textContentType,
+    InputRightElement,
+  } = props;
   return (
     <FormControl isInvalid={error !== undefined} justifyContent="center">
       <Input
@@ -31,6 +39,7 @@ const EZInput: React.FC<EZInputProps & EZInputStylesProp> = (props) => {
         placeholder={placeholder}
         value={value}
         onChangeText={onChangeText}
+        InputRightElement={InputRightElement}
       />
       <FormControl.ErrorMessage
         _text={{ fontSize: 14, fontFamily: "SourceSansPro" }}

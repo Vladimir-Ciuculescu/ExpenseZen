@@ -19,13 +19,20 @@ const Tab = createBottomTabNavigator();
 const Navigation: React.FC<any> = () => {
   const [initialScreen, setInitialScreen] = useState<string | null>(null);
   const { onboarded } = useSelector((state: RootState) => state.onboard);
+  const user = useSelector((state: RootState) => state.user);
+
+  console.log(user);
 
   useEffect(() => {
     const checkOnboarding = async () => {
       if (!onboarded) {
         setInitialScreen("Onboarding");
       } else {
-        setInitialScreen("Login");
+        if (user.email) {
+          setInitialScreen("Tabs");
+        } else {
+          setInitialScreen("Login");
+        }
       }
     };
     checkOnboarding();

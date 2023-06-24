@@ -1,20 +1,17 @@
 import { User } from "../../interfaces/User";
 import { supabase } from "../supabase";
-import { Alert } from "react-native";
 import { compareHashed } from "../../utils/compareHashed";
 import { hashPassword } from "../../utils/hashPassword";
+import { Provider } from "../../interfaces/Provider";
 
 const registerUser = async (user: User) => {
   const { firstName, lastName, email, password, provider } = user;
-
-  console.log(password);
 
   try {
     const { data } = await supabase
       .from("users")
       .select("*")
       .filter("email", "eq", email)
-      //.filter("passowrd", "eq", password)
       .filter("provider", "eq", provider)
       .single();
 
@@ -30,7 +27,6 @@ const registerUser = async (user: User) => {
             first_name: firstName,
             last_name: lastName,
             email,
-            //password,
             password: await hashPassword(password),
             provider,
           },
@@ -50,11 +46,43 @@ const registerUser = async (user: User) => {
     }
   } catch (error) {
     if (error instanceof Error) {
-      Alert.alert(error.message);
+      console.log(error);
     }
+  }
+};
+
+const loginUser = async (
+  email: string,
+  password: string,
+  provider: Provider
+) => {
+  try {
+    const { data } = await supabase
+      .from("users")
+      .select("*")
+      .filter("email", "eq", email)
+      .filter("provider", "eq", provider)
+      .single();
+
+    if (data && (await compareHashed(password, data.password))) {
+      return {
+        message: "User exists",
+        data: data,
+      };
+      return data;
+    } else {
+      return {
+        message: "This user does not exist !",
+      };
+    }
+  } catch (error) {
+    return {
+      message: error,
+    };
   }
 };
 
 export const UserService = {
   registerUser,
+  loginUser,
 };
