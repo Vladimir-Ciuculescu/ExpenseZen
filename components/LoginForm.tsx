@@ -1,12 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { VStack, Text, Input, Pressable, Icon, Button } from "native-base";
 import { Feather } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../redux/userReducer";
+import { RootState } from "../redux/store";
 
 const LoginForm: React.FC<any> = () => {
   const [passwordVisilble, setPasswordVisible] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const user = useSelector((state: RootState) => state.user);
 
   const togglePasswordVisible = () => {
     setPasswordVisible((prevValue) => !prevValue);
+  };
+
+  useEffect(() => {
+    console.log(user);
+  }, []);
+
+  const login = () => {
+    dispatch(
+      setUser({
+        firstName: "vladi",
+        lastName: "Ciuculescu",
+        email: "vladi@gmail.com",
+      })
+    );
   };
 
   return (
@@ -56,6 +75,7 @@ const LoginForm: React.FC<any> = () => {
         />
       </VStack>
       <Button
+        onPress={login}
         bg="purple.700"
         borderRadius={8}
         height="55px"

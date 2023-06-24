@@ -5,7 +5,7 @@ import EZInput from "./shared/EZInput";
 import { useFormik } from "formik";
 import { registerSchema } from "../schemas/registerSchema";
 import COLORS from "../colors";
-import { UserService } from "../api/services/userService";
+import { UserService } from "../api/services/UserService";
 import { User } from "../interfaces/User";
 import { Provider } from "../interfaces/Provider";
 import { useNavigation } from "@react-navigation/native";
@@ -31,6 +31,7 @@ const RegisterForm: React.FC<any> = () => {
         firstName: values.firstName,
         lastName: values.lastName,
         email: values.email,
+
         password: values.password,
         provider: Provider.DIRECT,
       };
@@ -57,13 +58,11 @@ const RegisterForm: React.FC<any> = () => {
     formik.setFieldValue(label, value);
   };
 
-  const submit = () => {
+  const submit = async () => {
     setLoading(true);
 
-    setTimeout(() => {
-      submitForm();
-      setLoading(false);
-    }, 500);
+    await submitForm();
+    setLoading(false);
   };
 
   return (

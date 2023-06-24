@@ -1,21 +1,24 @@
 import { User } from "../../interfaces/User";
 import { supabase } from "../supabase";
 import { Alert } from "react-native";
+import { compareHashed } from "../../utils/compareHashed";
+import { hashPassword } from "../../utils/hashPassword";
 
 const registerUser = async (user: User) => {
   const { firstName, lastName, email, password, provider } = user;
+
+  console.log(password);
 
   try {
     const { data } = await supabase
       .from("users")
       .select("*")
       .filter("email", "eq", email)
-      .filter("passowrd", "eq", password)
+      //.filter("passowrd", "eq", password)
       .filter("provider", "eq", provider)
-
       .single();
 
-    if (data) {
+    if (data && (await compareHashed(password, data.password))) {
       return {
         title: "Try again",
         message: "This user is already registered !",
@@ -27,7 +30,8 @@ const registerUser = async (user: User) => {
             first_name: firstName,
             last_name: lastName,
             email,
-            password,
+            //password,
+            password: await hashPassword(password),
             provider,
           },
         ],

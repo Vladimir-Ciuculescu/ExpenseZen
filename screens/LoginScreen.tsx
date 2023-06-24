@@ -1,9 +1,8 @@
 import React from "react";
 import { SafeAreaView, KeyboardAvoidingView } from "react-native";
-import { Text, VStack, HStack, Divider, Pressable } from "native-base";
+import { Text, VStack, HStack, Pressable } from "native-base";
 import { TouchableWithoutFeedback, Keyboard } from "react-native";
 import LoginForm from "../components/LoginForm";
-import LoginProviders from "../components/LoginProviders";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 
 interface LoginScreenProps {
@@ -32,7 +31,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               <Text fontFamily="SourceSansPro">Or continue with</Text>
               <Divider flex={1} />
             </HStack>
-
             <LoginProviders /> */}
             <HStack justifyContent="center" space={2}>
               <Text fontFamily="SourceSansPro" fontSize={17}>
