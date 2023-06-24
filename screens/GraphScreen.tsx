@@ -1,11 +1,11 @@
 import { View, Text } from "native-base";
 import React from "react";
 
-const HomeScreen: React.FC<any> = () => {
+const GraphScreen: React.FC<any> = () => {
   return (
     <View>
-      <Text>Home screen</Text>
+      <Text>Graph</Text>
     </View>
   );
 };
-export default HomeScreen;
+export default GraphScreen;

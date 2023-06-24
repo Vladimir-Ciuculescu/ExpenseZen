@@ -4,9 +4,14 @@ import { Feather } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../redux/userReducer";
 import { RootState } from "../redux/store";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../interfaces/RootStackParamList";
 
 const LoginForm: React.FC<any> = () => {
   const [passwordVisilble, setPasswordVisible] = useState<boolean>(false);
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const dispatch = useDispatch();
   const user = useSelector((state: RootState) => state.user);
 
@@ -19,13 +24,14 @@ const LoginForm: React.FC<any> = () => {
   }, []);
 
   const login = () => {
-    dispatch(
-      setUser({
-        firstName: "vladi",
-        lastName: "Ciuculescu",
-        email: "vladi@gmail.com",
-      })
-    );
+    // dispatch(
+    //   setUser({
+    //     firstName: "vladi",
+    //     lastName: "Ciuculescu",
+    //     email: "vladi@gmail.com",
+    //   })
+    // );
+    navigation.navigate("Tabs");
   };
 
   return (

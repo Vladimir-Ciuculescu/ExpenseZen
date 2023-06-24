@@ -1,11 +1,11 @@
 import { View, Text } from "native-base";
 import React from "react";
 
-const HomeScreen: React.FC<any> = () => {
+const CategoriesScreen: React.FC<any> = () => {
   return (
     <View>
-      <Text>Home screen</Text>
+      <Text>Categories</Text>
     </View>
   );
 };
-export default HomeScreen;
+export default CategoriesScreen;
