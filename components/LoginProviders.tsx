@@ -2,18 +2,10 @@ import React, { useEffect, useState } from "react";
 import { makeRedirectUri, startAsync } from "expo-auth-session";
 import { Google, Facebook } from "../assets/SVG";
 import { HStack, Pressable, Text } from "native-base";
-import { supabase } from "../database/supabase";
+import { supabase } from "../api/supabase";
 import { SUPABASE_URL } from "@env";
 
 const LoginProviders: React.FC<any> = () => {
-  useEffect(() => {
-    const logOUt = async () => {
-      const { data } = await supabase.auth.getSession();
-      console.log(data.session?.access_token);
-    };
-    logOUt();
-  }, []);
-
   const googleSignIn = async () => {
     const redirectUrl = makeRedirectUri({
       path: "/auth/callback",

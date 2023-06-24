@@ -27,13 +27,13 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         >
           <VStack space={10} px={10}>
             <LoginForm />
-            <HStack alignItems="center" space={3}>
+            {/* <HStack alignItems="center" space={3}>
               <Divider flex={1} />
               <Text fontFamily="SourceSansPro">Or continue with</Text>
               <Divider flex={1} />
             </HStack>
 
-            <LoginProviders />
+            <LoginProviders /> */}
             <HStack justifyContent="center" space={2}>
               <Text fontFamily="SourceSansPro" fontSize={17}>
                 Don't have an account ?

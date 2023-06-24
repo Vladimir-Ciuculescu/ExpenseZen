@@ -1,12 +1,21 @@
 import React, { useState } from "react";
+import { Alert } from "react-native";
 import { VStack, Text, Button } from "native-base";
 import EZInput from "./shared/EZInput";
 import { useFormik } from "formik";
 import { registerSchema } from "../schemas/registerSchema";
 import COLORS from "../colors";
+import { UserService } from "../api/services/userService";
+import { User } from "../interfaces/User";
+import { Provider } from "../interfaces/Provider";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../interfaces/RootStackParamList";
 
 const RegisterForm: React.FC<any> = () => {
   const [loading, setLoading] = useState<boolean>(false);
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const formik = useFormik({
     initialValues: {
@@ -17,8 +26,28 @@ const RegisterForm: React.FC<any> = () => {
       repeatPassword: "",
     },
     validationSchema: registerSchema,
-    onSubmit: () => {
-      setLoading(true);
+    onSubmit: async (values) => {
+      const user: User = {
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        password: values.password,
+        provider: Provider.DIRECT,
+      };
+
+      try {
+        const response = await UserService.registerUser(user);
+
+        Alert.alert(response!.title, response!.message);
+
+        if (response!.title === "Try again") {
+          formik.resetForm();
+        } else {
+          navigation.navigate("Login");
+        }
+      } catch (error) {
+        console.log(error);
+      }
     },
   });
 
@@ -34,7 +63,7 @@ const RegisterForm: React.FC<any> = () => {
     setTimeout(() => {
       submitForm();
       setLoading(false);
-    }, 2000);
+    }, 500);
   };
 
   return (
@@ -104,6 +133,7 @@ const RegisterForm: React.FC<any> = () => {
         />
         <EZInput
           type="password"
+          textContentType="oneTimeCode"
           value={values.password}
           placeholder="Password"
           fontSize={15}
@@ -111,7 +141,9 @@ const RegisterForm: React.FC<any> = () => {
           pl={5}
           fontFamily="SourceSansPro"
           borderRadius={8}
-          focusOutlineColor={errors.password ? "red.500" : "purple.700"}
+          focusOutlineColor={
+            touched.password && errors.password ? "red.500" : "purple.700"
+          }
           height="55px"
           borderColor="purple.700"
           _focus={{ backgroundColor: "transparent" }}
@@ -120,6 +152,7 @@ const RegisterForm: React.FC<any> = () => {
         />
         <EZInput
           type="password"
+          textContentType="oneTimeCode"
           value={values.repeatPassword}
           placeholder="Repeat password"
           fontSize={15}
@@ -127,7 +160,11 @@ const RegisterForm: React.FC<any> = () => {
           pl={5}
           fontFamily="SourceSansPro"
           borderRadius={8}
-          focusOutlineColor={errors.repeatPassword ? "red.500" : "purple.700"}
+          focusOutlineColor={
+            touched.repeatPassword && errors.repeatPassword
+              ? "red.500"
+              : "purple.700"
+          }
           height="55px"
           borderColor="purple.700"
           _focus={{ backgroundColor: "transparent" }}

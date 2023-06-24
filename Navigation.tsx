@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from "./screens/HomeScreen";
 import OnboardingScreen from "./screens/OnboardingScreen";
 import { getItem } from "./storage";
 import LoginScreen from "./screens/LoginScreen";
@@ -41,11 +40,7 @@ const Navigation: React.FC<any> = () => {
           name="Login"
           options={{ headerShown: false }}
         />
-        <Stack.Screen
-          component={RegisterScreen}
-          name="Register"
-          //options={{ headerShown: false }}
-        />
+        <Stack.Screen component={RegisterScreen} name="Register" />
       </Stack.Navigator>
     </NavigationContainer>
   );

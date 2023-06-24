@@ -2,6 +2,7 @@ import React from "react";
 import { FormControl, Input, WarningOutlineIcon } from "native-base";
 import { FontAwesome } from "@expo/vector-icons";
 import COLORS from "../../colors";
+import { InterfaceInputProps } from "native-base/lib/typescript/components/primitives/Input/types";
 
 type inputType = "text" | "password" | undefined;
 
@@ -11,6 +12,7 @@ interface EZInputProps {
   onChangeText: (e: string) => void;
   error?: any;
   type: inputType;
+  textContentType?: any;
 }
 
 interface EZInputStylesProp {
@@ -18,11 +20,12 @@ interface EZInputStylesProp {
 }
 
 const EZInput: React.FC<EZInputProps & EZInputStylesProp> = (props) => {
-  const { placeholder, error, value, onChangeText, type } = props;
-  console.log(error);
+  const { placeholder, error, value, onChangeText, type, textContentType } =
+    props;
   return (
     <FormControl isInvalid={error !== undefined} justifyContent="center">
       <Input
+        textContentType={textContentType}
         {...props}
         type={type}
         placeholder={placeholder}
