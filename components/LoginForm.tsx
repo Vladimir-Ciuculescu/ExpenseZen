@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Alert } from "react-native";
-import { VStack, Text, Input, Pressable, Icon, Button } from "native-base";
+import { VStack, Text, Pressable, Icon, Button } from "native-base";
 import { Feather } from "@expo/vector-icons";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setUser } from "../redux/userReducer";
 import { RootState } from "../redux/store";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../interfaces/RootStackParamList";
+import { NavigationProp, ParamListBase } from "@react-navigation/native";
+
 import { UserService } from "../api/services/UserService";
 import { Provider } from "../interfaces/Provider";
 import { useFormik } from "formik";
@@ -15,7 +14,11 @@ import { loginSchema } from "../schemas/loginSchema";
 import EZInput from "./shared/EZInput";
 import COLORS from "../colors";
 
-const LoginForm: React.FC<any> = () => {
+interface LoginFormProps {
+  navigation: NavigationProp<ParamListBase>;
+}
+
+const LoginForm: React.FC<LoginFormProps> = ({ navigation }) => {
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -42,10 +45,15 @@ const LoginForm: React.FC<any> = () => {
     },
   });
 
+  useEffect(() => {
+    navigation.addListener("focus", () => {
+      formik.resetForm();
+    });
+  }, [navigation]);
+
   const [passwordVisilble, setPasswordVisible] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
   const dispatch = useDispatch();
 
   const togglePasswordVisible = () => {
@@ -56,15 +64,6 @@ const LoginForm: React.FC<any> = () => {
     setLoading(true);
     await submitForm();
     setLoading(false);
-
-    // dispatch(
-    //   setUser({
-    //     firstName: "vladi",
-    //     lastName: "Ciuculescu",
-    //     email: "vladi@gmail.com",
-    //   })
-    // );
-    // navigation.navigate("Tabs");
   };
 
   const handleValue = (label: string, value: string) => {

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { SafeAreaView, KeyboardAvoidingView } from "react-native";
 import { Text, VStack, HStack, Pressable } from "native-base";
 import { TouchableWithoutFeedback, Keyboard } from "react-native";
@@ -25,7 +25,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           }}
         >
           <VStack space={10} px={10}>
-            <LoginForm />
+            <LoginForm navigation={navigation} />
             {/* <HStack alignItems="center" space={3}>
               <Divider flex={1} />
               <Text fontFamily="SourceSansPro">Or continue with</Text>
