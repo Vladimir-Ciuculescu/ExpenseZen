@@ -77,7 +77,7 @@ const Navigation: React.FC<any> = () => {
             name="Home"
             options={{
               title: "Home",
-
+              headerShown: false,
               tabBarIcon: ({ focused }) => (
                 <Ionicons
                   name={focused ? "home" : "home-outline"}
