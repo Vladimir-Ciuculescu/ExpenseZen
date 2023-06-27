@@ -40,6 +40,8 @@ const EZInput: React.FC<EZInputProps & EZInputStylesProp> = (props) => {
         value={value}
         onChangeText={onChangeText}
         InputRightElement={InputRightElement}
+
+        //placeholderTextColor="red.900"
       />
       <FormControl.ErrorMessage
         _text={{ fontSize: 14, fontFamily: "SourceSansPro" }}

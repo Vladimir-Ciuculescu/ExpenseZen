@@ -14,6 +14,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "./redux/store";
 import COLORS from "./colors";
 import { Animated, useWindowDimensions } from "react-native";
+import AddExpenseScreen from "./screens/AddExpenseScreen";
+import { TAB_BAR_HEIGHT } from "./constants";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -68,7 +70,7 @@ const Navigation: React.FC<any> = () => {
               fontFamily: "SourceBold",
             },
             tabBarStyle: {
-              height: 80,
+              height: TAB_BAR_HEIGHT,
             },
           }}
         >
@@ -77,7 +79,7 @@ const Navigation: React.FC<any> = () => {
             name="Home"
             options={{
               title: "Home",
-              headerShown: false,
+              //headerShown: false,
               tabBarIcon: ({ focused }) => (
                 <Ionicons
                   name={focused ? "home" : "home-outline"}
@@ -160,22 +162,31 @@ const Navigation: React.FC<any> = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={initialScreen!}>
-        <Stack.Screen
-          component={OnboardingScreen}
-          name="Onboarding"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          component={LoginScreen}
-          name="Login"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen component={RegisterScreen} name="Register" />
-        <Stack.Screen
-          component={Tabs}
-          name="Tabs"
-          options={{ headerShown: false }}
-        />
+        <Stack.Group>
+          <Stack.Screen
+            component={OnboardingScreen}
+            name="Onboarding"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            component={LoginScreen}
+            name="Login"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen component={RegisterScreen} name="Register" />
+          <Stack.Screen
+            component={Tabs}
+            name="Tabs"
+            options={{ headerShown: false }}
+          />
+        </Stack.Group>
+        <Stack.Group screenOptions={{ presentation: "containedModal" }}>
+          <Stack.Screen
+            component={AddExpenseScreen}
+            name="AddExpense"
+            options={{ headerShown: false }}
+          />
+        </Stack.Group>
       </Stack.Navigator>
     </NavigationContainer>
   );
