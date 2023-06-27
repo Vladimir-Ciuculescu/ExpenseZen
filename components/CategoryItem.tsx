@@ -11,8 +11,6 @@ interface CategoryItemProps {
 const CategoryItem: React.FC<CategoryItemProps> = ({ category }) => {
   const { name, color } = category;
 
-  console.log(name);
-
   return (
     <HStack
       marginX={3}

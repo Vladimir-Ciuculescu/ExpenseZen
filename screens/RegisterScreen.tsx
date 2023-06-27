@@ -10,6 +10,7 @@ import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import LoginForm from "../components/LoginForm";
 import RegisterForm from "../components/RegisterForm";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 interface RegisterScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -32,7 +33,10 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
   }, []);
 
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+    <KeyboardAwareScrollView
+      style={{ flex: 1 }}
+      contentContainerStyle={{ justifyContent: "center" }}
+    >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View bg="white" flex={1} justifyContent="center">
           <VStack space={10} px={10}>
@@ -40,7 +44,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           </VStack>
         </View>
       </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+    </KeyboardAwareScrollView>
   );
 };
 
