@@ -16,6 +16,7 @@ import COLORS from "./colors";
 import { Animated, useWindowDimensions } from "react-native";
 import AddExpenseScreen from "./screens/AddExpenseScreen";
 import { TAB_BAR_HEIGHT } from "./constants";
+import AddCurrencyScreen from "./screens/AddCurrencyScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -32,9 +33,15 @@ const Navigation: React.FC<any> = () => {
       if (!onboarded) {
         setInitialScreen("Onboarding");
       } else {
-        if (user.email) {
+        console.log("1");
+        if (user.email && user.currency) {
+          console.log("2");
           setInitialScreen("Tabs");
+        } else if (user.email && !user.currency) {
+          console.log("3");
+          setInitialScreen("Currency");
         } else {
+          console.log("4");
           setInitialScreen("Login");
         }
       }
@@ -79,7 +86,6 @@ const Navigation: React.FC<any> = () => {
             name="Home"
             options={{
               title: "Home",
-              //headerShown: false,
               tabBarIcon: ({ focused }) => (
                 <Ionicons
                   name={focused ? "home" : "home-outline"}
@@ -177,6 +183,11 @@ const Navigation: React.FC<any> = () => {
           <Stack.Screen
             component={Tabs}
             name="Tabs"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            component={AddCurrencyScreen}
+            name="Currency"
             options={{ headerShown: false }}
           />
         </Stack.Group>

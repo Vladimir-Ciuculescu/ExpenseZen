@@ -11,6 +11,7 @@ import { Provider } from "../interfaces/Provider";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../interfaces/RootStackParamList";
+import EZButton from "./shared/EZButton";
 
 const RegisterForm: React.FC<any> = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -171,7 +172,8 @@ const RegisterForm: React.FC<any> = () => {
           error={touched.repeatPassword && errors.repeatPassword}
         />
       </VStack>
-      <Button
+
+      <EZButton
         bg="purple.700"
         borderRadius={8}
         height="55px"
@@ -181,7 +183,7 @@ const RegisterForm: React.FC<any> = () => {
         _pressed={{ backgroundColor: COLORS.PURPLE[700], opacity: 0.7 }}
       >
         Register
-      </Button>
+      </EZButton>
     </VStack>
   );
 };

@@ -13,6 +13,8 @@ import { useFormik } from "formik";
 import { loginSchema } from "../schemas/loginSchema";
 import EZInput from "./shared/EZInput";
 import COLORS from "../colors";
+import EZButton from "./shared/EZButton";
+import { CurrencyService } from "../api/services/CurrencyService";
 
 interface LoginFormProps {
   navigation: NavigationProp<ParamListBase>;
@@ -34,11 +36,20 @@ const LoginForm: React.FC<LoginFormProps> = ({ navigation }) => {
       );
       const message: any = response.message;
       if (message === "User exists") {
-        const { first_name, last_name, email } = response.data;
+        const { id, first_name, last_name, email } = response.data;
+
         dispatch(
           setUser({ firstName: first_name, lastName: last_name, email })
         );
-        navigation.navigate("Tabs");
+
+        //Check if the user has registered a currency
+        const data = await CurrencyService.getUserCurrency(id);
+
+        if (data) {
+          navigation.navigate("Tabs");
+        } else {
+          navigation.navigate("Currency");
+        }
       } else {
         Alert.alert("Error", message);
       }
@@ -163,7 +174,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ navigation }) => {
           }
         />
       </VStack>
-      <Button
+
+      <EZButton
         isLoading={loading}
         onPress={login}
         bg="purple.700"
@@ -172,8 +184,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ navigation }) => {
         _text={{ fontFamily: "SourceSansPro", fontSize: 17 }}
         _pressed={{ backgroundColor: COLORS.PURPLE[700], opacity: 0.7 }}
       >
-        Sign In
-      </Button>
+        Sign in
+      </EZButton>
     </VStack>
   );
 };

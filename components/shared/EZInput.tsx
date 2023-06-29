@@ -1,15 +1,14 @@
 import React from "react";
 import { KeyboardTypeOptions } from "react-native";
-import { FormControl, Input, WarningOutlineIcon } from "native-base";
+import { FormControl, Input } from "native-base";
 import { FontAwesome } from "@expo/vector-icons";
 import COLORS from "../../colors";
-import { InterfaceInputProps } from "native-base/lib/typescript/components/primitives/Input/types";
 
 type inputType = "text" | "password" | undefined;
 
 interface EZInputProps {
   placeholder?: string;
-  value: string | null | number;
+  value: string | undefined;
   onChangeText: (e: string) => void;
   error?: any;
   type: inputType;
@@ -57,7 +56,7 @@ const EZInput: React.FC<EZInputProps & EZInputStylesProp> = (props) => {
         //placeholderTextColor="red.900"
       />
       <FormControl.ErrorMessage
-        _text={{ fontSize: 14, fontFamily: "SourceSansPro" }}
+        _text={{ fontSize: 14, fontFamily: "SourceBold" }}
         leftIcon={
           <FontAwesome name="close" size={20} color={COLORS.DANGER[500]} />
         }
