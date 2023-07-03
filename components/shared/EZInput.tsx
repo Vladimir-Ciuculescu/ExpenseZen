@@ -1,5 +1,5 @@
-import React from "react";
-import { KeyboardTypeOptions } from "react-native";
+import React, { ForwardedRef, forwardRef } from "react";
+import { KeyboardTypeOptions, ReturnKeyTypeOptions } from "react-native";
 import { FormControl, Input } from "native-base";
 import { FontAwesome } from "@expo/vector-icons";
 import COLORS from "../../colors";
@@ -15,56 +15,67 @@ interface EZInputProps {
   textContentType?: any;
   InputRightElement?: JSX.Element;
   keyboardType?: KeyboardTypeOptions | undefined;
+  returnKeyType?: ReturnKeyTypeOptions | undefined;
   multiline?: boolean;
   numberOfLines?: number;
   onFocus?: any;
+  ref?: any;
+  onSubmitEditing?: () => void;
 }
 
 interface EZInputStylesProp {
   [key: string]: any;
 }
 
-const EZInput: React.FC<EZInputProps & EZInputStylesProp> = (props) => {
-  const {
-    placeholder,
-    error,
-    value,
-    onChangeText,
-    type,
-    textContentType,
-    InputRightElement,
-    keyboardType,
-    multiline,
-    numberOfLines,
-    onFocus,
-  } = props;
-  return (
-    <FormControl isInvalid={error !== undefined} justifyContent="center">
-      <Input
-        onFocus={onFocus}
-        multiline={multiline}
-        numberOfLines={numberOfLines}
-        textContentType={textContentType}
-        keyboardType={keyboardType}
-        {...props}
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChangeText={onChangeText}
-        InputRightElement={InputRightElement}
+type Props = EZInputProps & EZInputStylesProp;
 
-        //placeholderTextColor="red.900"
-      />
-      <FormControl.ErrorMessage
-        _text={{ fontSize: 14, fontFamily: "SourceBold" }}
-        leftIcon={
-          <FontAwesome name="close" size={20} color={COLORS.DANGER[500]} />
-        }
-      >
-        {error}
-      </FormControl.ErrorMessage>
-    </FormControl>
-  );
-};
+const EZInput = forwardRef<any, Props>(
+  (props: Props, ref: ForwardedRef<any>) => {
+    const {
+      placeholder,
+      error,
+      value,
+      onChangeText,
+      type,
+      textContentType,
+      InputRightElement,
+      keyboardType,
+      multiline,
+      numberOfLines,
+      onFocus,
+      returnKeyType,
+      onSubmitEditing,
+    } = props;
+    return (
+      <FormControl isInvalid={error !== undefined} justifyContent="center">
+        <Input
+          returnKeyType={returnKeyType}
+          onSubmitEditing={onSubmitEditing}
+          ref={ref}
+          onFocus={onFocus}
+          multiline={multiline}
+          numberOfLines={numberOfLines}
+          textContentType={textContentType}
+          autoComplete="off"
+          keyboardType={keyboardType}
+          {...props}
+          type={type}
+          placeholder={placeholder}
+          value={value}
+          onChangeText={onChangeText}
+          InputRightElement={InputRightElement}
+        />
+        <FormControl.ErrorMessage
+          _text={{ fontSize: 14, fontFamily: "SourceBold" }}
+          leftIcon={
+            <FontAwesome name="close" size={20} color={COLORS.DANGER[500]} />
+          }
+        >
+          {error}
+        </FormControl.ErrorMessage>
+      </FormControl>
+    );
+  }
+);
 
 export default EZInput;

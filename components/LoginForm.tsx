@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Alert } from "react-native";
 import { VStack, Text, Pressable, Icon, Button } from "native-base";
 import { Feather } from "@expo/vector-icons";
@@ -21,6 +21,8 @@ interface LoginFormProps {
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ navigation }) => {
+  const passwordRef = useRef(null);
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -84,6 +86,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ navigation }) => {
     formik.setFieldValue(label, value);
   };
 
+  const focusNextInput = (nextInputRef: any) => {
+    nextInputRef.current.focus();
+  };
+
   const { values, errors, touched, submitForm } = formik;
 
   return (
@@ -132,10 +138,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ navigation }) => {
           }
         /> */}
         <EZInput
+          returnKeyType="next"
           type="text"
           value={values.email}
           placeholder="Enter your email"
-          onChangeText={(e) => handleValue("email", e)}
+          onChangeText={(e: string) => handleValue("email", e)}
           color="purple.700"
           fontSize={15}
           pl={5}
@@ -148,12 +155,17 @@ const LoginForm: React.FC<LoginFormProps> = ({ navigation }) => {
           }
           _focus={{ backgroundColor: "transparent" }}
           error={touched.email && errors.email}
+          onSubmitEditing={() => {
+            focusNextInput(passwordRef);
+          }}
         />
         <EZInput
+          returnKeyType="done"
+          ref={passwordRef}
           type={passwordVisilble ? "text" : "password"}
           value={values.password}
           placeholder="Password"
-          onChangeText={(e) => handleValue("password", e)}
+          onChangeText={(e: string) => handleValue("password", e)}
           color="purple.700"
           fontSize={15}
           pl={5}

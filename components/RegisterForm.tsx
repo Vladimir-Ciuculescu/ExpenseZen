@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Alert } from "react-native";
-import { VStack, Text, Button } from "native-base";
+import { VStack, Text } from "native-base";
 import EZInput from "./shared/EZInput";
 import { useFormik } from "formik";
 import { registerSchema } from "../schemas/registerSchema";
@@ -15,6 +15,12 @@ import EZButton from "./shared/EZButton";
 
 const RegisterForm: React.FC<any> = () => {
   const [loading, setLoading] = useState<boolean>(false);
+
+  const lastNameRef = useRef(null);
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+  const repeatPasswordRef = useRef(null);
+
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -59,6 +65,10 @@ const RegisterForm: React.FC<any> = () => {
     formik.setFieldValue(label, value);
   };
 
+  const focusNextInput = (nextInputRef: any) => {
+    nextInputRef.current.focus();
+  };
+
   const submit = async () => {
     setLoading(true);
 
@@ -78,6 +88,7 @@ const RegisterForm: React.FC<any> = () => {
       </VStack>
       <VStack space={6}>
         <EZInput
+          returnKeyType="next"
           type="text"
           value={values.firstName}
           placeholder="First name"
@@ -94,8 +105,13 @@ const RegisterForm: React.FC<any> = () => {
           _focus={{ backgroundColor: "transparent" }}
           onChangeText={(e: string) => handleValue("firstName", e)}
           error={touched.firstName && errors.firstName}
+          onSubmitEditing={() => {
+            focusNextInput(lastNameRef);
+          }}
         />
         <EZInput
+          returnKeyType="next"
+          ref={lastNameRef}
           type="text"
           value={values.lastName}
           placeholder="Last name"
@@ -112,8 +128,13 @@ const RegisterForm: React.FC<any> = () => {
           _focus={{ backgroundColor: "transparent" }}
           onChangeText={(e: string) => handleValue("lastName", e)}
           error={touched.lastName && errors.lastName}
+          onSubmitEditing={() => {
+            focusNextInput(emailRef);
+          }}
         />
         <EZInput
+          returnKeyType="next"
+          ref={emailRef}
           type="text"
           value={values.email}
           placeholder="Email"
@@ -130,8 +151,13 @@ const RegisterForm: React.FC<any> = () => {
           _focus={{ backgroundColor: "transparent" }}
           onChangeText={(e: string) => handleValue("email", e)}
           error={touched.email && errors.email}
+          onSubmitEditing={() => {
+            focusNextInput(passwordRef);
+          }}
         />
         <EZInput
+          returnKeyType="next"
+          ref={passwordRef}
           type="password"
           textContentType="oneTimeCode"
           value={values.password}
@@ -149,8 +175,13 @@ const RegisterForm: React.FC<any> = () => {
           _focus={{ backgroundColor: "transparent" }}
           onChangeText={(e: string) => handleValue("password", e)}
           error={touched.password && errors.password}
+          onSubmitEditing={() => {
+            focusNextInput(repeatPasswordRef);
+          }}
         />
         <EZInput
+          returnKeyType="done"
+          ref={repeatPasswordRef}
           type="password"
           textContentType="oneTimeCode"
           value={values.repeatPassword}

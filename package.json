@@ -16,6 +16,7 @@
     "@reduxjs/toolkit": "^1.9.5",
     "@supabase/supabase-js": "^2.25.0",
     "@types/bcrypt": "^5.0.0",
+    "@types/react-dom": "^18.2.6",
     "add": "^2.0.6",
     "axios": "^1.4.0",
     "expo": "~48.0.18",
@@ -26,8 +27,10 @@
     "expo-splash-screen": "~0.18.2",
     "expo-status-bar": "~1.4.4",
     "formik": "^2.4.2",
+    "install": "^0.13.0",
     "isaac": "^0.0.5",
     "native-base": "^3.4.28",
+    "npm": "^9.7.2",
     "react": "18.2.0",
     "react-native": "0.71.8",
     "react-native-bcrypt": "^2.4.0",
@@ -48,7 +51,7 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@types/isaac": "^0.0.0",
-    "@types/react": "~18.0.14",
+    "@types/react": "^18.2.14",
     "@types/react-native": "^0.72.2",
     "@types/react-native-bcrypt": "^2.4.3",
     "typescript": "^4.9.4"
