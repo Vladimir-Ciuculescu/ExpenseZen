@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 interface initalStateProps {
+  id: number;
   firstName: string | null;
   lastName: string | null;
   email: string | null;
@@ -9,6 +10,7 @@ interface initalStateProps {
 }
 
 const initialState: initalStateProps = {
+  id: 0,
   firstName: null,
   lastName: null,
   email: null,
@@ -23,11 +25,13 @@ const userReducer = createSlice({
   reducers: {
     setUser: (state, action) => {
       const { payload } = action;
+      state.id = payload.id;
       state.firstName = payload.firstName;
       state.lastName = payload.lastName;
       state.email = payload.email;
     },
     removeUser: (state) => {
+      state.id = 0;
       state.firstName = null;
       state.lastName = null;
       state.email = null;

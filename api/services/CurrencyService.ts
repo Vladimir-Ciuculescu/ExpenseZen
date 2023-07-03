@@ -16,10 +16,25 @@ const getUserCurrency = async (userId: number) => {
   }
 };
 
+const addUserCurrency = async (userId: number, currencyId: number) => {
+  try {
+    const { error } = await supabase
+      .from("users_currencies")
+      .insert([{ user_id: userId, currency_id: currencyId }]);
+    if (error) {
+      throw error;
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error);
+    }
+  }
+};
+
 const getAllCurrencies = async () => {
   try {
     const { data } = await supabase.from("currencies").select("*");
-    console.log(data);
+
     return data;
   } catch (error) {
     if (error instanceof Error) {
@@ -31,4 +46,5 @@ const getAllCurrencies = async () => {
 export const CurrencyService = {
   getUserCurrency,
   getAllCurrencies,
+  addUserCurrency,
 };

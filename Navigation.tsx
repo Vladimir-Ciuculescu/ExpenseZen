@@ -33,15 +33,11 @@ const Navigation: React.FC<any> = () => {
       if (!onboarded) {
         setInitialScreen("Onboarding");
       } else {
-        console.log("1");
         if (user.email && user.currency) {
-          console.log("2");
           setInitialScreen("Tabs");
         } else if (user.email && !user.currency) {
-          console.log("3");
           setInitialScreen("Currency");
         } else {
-          console.log("4");
           setInitialScreen("Login");
         }
       }
@@ -53,13 +49,11 @@ const Navigation: React.FC<any> = () => {
     return null;
   }
 
-  const tabWidth = () => {
-    return width / 4;
-  };
+  const tabWidth = width / 4;
 
   const animateTabOffest = (index: number) => {
     Animated.spring(tabOffsetValue, {
-      toValue: tabWidth() * index,
+      toValue: tabWidth * index,
       speed: 20,
       useNativeDriver: true,
     }).start();
@@ -70,6 +64,7 @@ const Navigation: React.FC<any> = () => {
       <Fragment>
         <Tab.Navigator
           screenOptions={{
+            unmountOnBlur: true,
             tabBarActiveTintColor: COLORS.PURPLE[700],
             tabBarInactiveTintColor: COLORS.MUTED[500],
 
@@ -152,7 +147,7 @@ const Navigation: React.FC<any> = () => {
         </Tab.Navigator>
         <Animated.View
           style={{
-            width: tabWidth(),
+            width: tabWidth,
             height: 2,
             backgroundColor: COLORS.PURPLE[700],
             position: "absolute",

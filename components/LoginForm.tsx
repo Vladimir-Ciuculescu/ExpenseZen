@@ -39,14 +39,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ navigation }) => {
         const { id, first_name, last_name, email } = response.data;
 
         dispatch(
-          setUser({ firstName: first_name, lastName: last_name, email })
+          setUser({ firstName: first_name, lastName: last_name, email, id })
         );
 
-        //Check if the user has registered a currency
         const data = await CurrencyService.getUserCurrency(id);
+        console.log("user currency:", data);
 
         if (data) {
-          navigation.navigate("Tabs");
+          navigation.navigate("Tabs", { screen: "Home" });
         } else {
           navigation.navigate("Currency");
         }

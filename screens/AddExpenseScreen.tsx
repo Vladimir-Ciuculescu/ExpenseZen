@@ -29,7 +29,6 @@ import { useFormik } from "formik";
 import { expenseSchema } from "../schemas/expenseSchema";
 import EZButton from "../components/shared/EZButton";
 import COLORS from "../colors";
-import axios from "axios";
 
 interface AddExpenseScreenProps {
   navigation: NavigationProp<ParamListBase>;

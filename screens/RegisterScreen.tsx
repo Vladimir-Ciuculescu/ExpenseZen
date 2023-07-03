@@ -34,8 +34,12 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
 
   return (
     <KeyboardAwareScrollView
-      style={{ flex: 1 }}
-      contentContainerStyle={{ justifyContent: "center" }}
+      contentContainerStyle={{
+        flex: 1,
+        justifyContent: "center",
+      }}
+      extraScrollHeight={20}
+      style={{ backgroundColor: "white" }}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View bg="white" flex={1} justifyContent="center">
