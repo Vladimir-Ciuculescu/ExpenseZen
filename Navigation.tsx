@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useIsFocused } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import OnboardingScreen from "./screens/OnboardingScreen";
 import LoginScreen from "./screens/LoginScreen";
@@ -22,7 +22,6 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const Navigation: React.FC<any> = () => {
-  const tabOffsetValue = useRef(new Animated.Value(0)).current;
   let { width } = useWindowDimensions();
   const [initialScreen, setInitialScreen] = useState<string | null>(null);
   const { onboarded } = useSelector((state: RootState) => state.onboard);
@@ -49,17 +48,31 @@ const Navigation: React.FC<any> = () => {
     return null;
   }
 
-  const tabWidth = width / 4;
-
-  const animateTabOffest = (index: number) => {
-    Animated.spring(tabOffsetValue, {
-      toValue: tabWidth * index,
-      speed: 20,
-      useNativeDriver: true,
-    }).start();
-  };
-
   const Tabs = () => {
+    const tabOffsetValue = useRef(new Animated.Value(0)).current;
+    const isFocused = useIsFocused();
+    const tabWidth = width / 4;
+
+    const animateTabOffset = (index: number) => {
+      Animated.spring(tabOffsetValue, {
+        toValue: tabWidth * index,
+        speed: 20,
+        useNativeDriver: true,
+      }).start();
+    };
+
+    const resetOffset = () => {
+      Animated.spring(tabOffsetValue, {
+        toValue: 0,
+        speed: 0,
+        useNativeDriver: true,
+      });
+    };
+
+    if (isFocused) {
+      resetOffset();
+    }
+
     return (
       <Fragment>
         <Tab.Navigator
@@ -90,7 +103,7 @@ const Navigation: React.FC<any> = () => {
               ),
             }}
             listeners={() => ({
-              tabPress: () => animateTabOffest(0),
+              tabPress: () => animateTabOffset(0),
             })}
           />
           <Tab.Screen
@@ -107,7 +120,7 @@ const Navigation: React.FC<any> = () => {
               ),
             }}
             listeners={() => ({
-              tabPress: () => animateTabOffest(1),
+              tabPress: () => animateTabOffset(1),
             })}
           />
           <Tab.Screen
@@ -124,7 +137,7 @@ const Navigation: React.FC<any> = () => {
               ),
             }}
             listeners={() => ({
-              tabPress: () => animateTabOffest(2),
+              tabPress: () => animateTabOffset(2),
             })}
           />
           <Tab.Screen
@@ -141,7 +154,7 @@ const Navigation: React.FC<any> = () => {
               ),
             }}
             listeners={() => ({
-              tabPress: () => animateTabOffest(3),
+              tabPress: () => animateTabOffset(3),
             })}
           />
         </Tab.Navigator>

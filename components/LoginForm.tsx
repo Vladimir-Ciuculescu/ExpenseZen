@@ -3,7 +3,7 @@ import { Alert } from "react-native";
 import { VStack, Text, Pressable, Icon, Button } from "native-base";
 import { Feather } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
-import { setUser } from "../redux/userReducer";
+import { setCurrency, setUser } from "../redux/userReducer";
 import { RootState } from "../redux/store";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 
@@ -42,10 +42,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ navigation }) => {
           setUser({ firstName: first_name, lastName: last_name, email, id })
         );
 
-        const data = await CurrencyService.getUserCurrency(id);
-        console.log("user currency:", data);
+        const userCurrency = await CurrencyService.getUserCurrency(id);
 
-        if (data) {
+        if (userCurrency) {
+          const { currencies } = userCurrency;
+
+          dispatch(setCurrency(currencies));
+
           navigation.navigate("Tabs", { screen: "Home" });
         } else {
           navigation.navigate("Currency");

@@ -4,7 +4,7 @@ const getUserCurrency = async (userId: number) => {
   try {
     const { data } = await supabase
       .from("users_currencies")
-      .select("*")
+      .select("*, currencies(name, symbol)")
       .eq("user_id", userId)
       .single();
 

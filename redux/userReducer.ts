@@ -38,7 +38,7 @@ const userReducer = createSlice({
     },
     setCurrency: (state, action) => {
       const { payload } = action;
-      state.currency = payload.currency;
+      state.currency = payload.name;
       state.symbol = payload.symbol;
     },
     removeCurrency: (state) => {
@@ -50,5 +50,7 @@ const userReducer = createSlice({
 
 export const setUser = userReducer.actions.setUser;
 export const removeUser = userReducer.actions.removeUser;
+export const setCurrency = userReducer.actions.setCurrency;
+export const removeCurrency = userReducer.actions.removeCurrency;
 
 export default userReducer.reducer;
