@@ -1,13 +1,27 @@
-import React, { useLayoutEffect } from "react";
-import { View, Text, Box, Progress, VStack, Fab, Icon } from "native-base";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import {
+  View,
+  Text,
+  Box,
+  Progress,
+  VStack,
+  Fab,
+  Icon,
+  Skeleton,
+  HStack,
+} from "native-base";
 import {
   NavigationProp,
   ParamListBase,
   useIsFocused,
 } from "@react-navigation/native";
+import { ActivityIndicator } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign } from "@expo/vector-icons";
 import { TAB_BAR_HEIGHT } from "../constants";
+import { ExpenseService } from "../api/services/ExpenseService";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 interface HomeScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -15,6 +29,9 @@ interface HomeScreenProps {
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const isFocused = useIsFocused();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [todayTotal, setTodayTotal] = useState<string>("");
+  const user = useSelector((state: RootState) => state.user);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -27,12 +44,43 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         />
       ),
       headerTitle: () => (
-        <Text fontFamily="SourceBold" color="muted.100" fontSize={20}>
-          Today : $180.75
-        </Text>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <HStack space="1" alignItems="center">
+            <Text fontFamily="SourceBold" color="muted.100" fontSize={20}>
+              Today:
+            </Text>
+            {isLoading ? (
+              <Skeleton
+                h="3"
+                width={10}
+                rounded="full"
+                startColor="indigo.300"
+              />
+            ) : (
+              <Text fontFamily="SourceBold" color="muted.100" fontSize={20}>
+                ${todayTotal}
+              </Text>
+            )}
+          </HStack>
+        </View>
       ),
     });
-  }, [navigation]);
+  }, [navigation, todayTotal, isLoading]);
+
+  useEffect(() => {
+    if (isFocused) {
+      getTodayTotal();
+    }
+  }, [isFocused]);
+
+  const getTodayTotal = async () => {
+    setIsLoading(true);
+    console.log("here");
+    const total = await ExpenseService.getTodayTotalExpenses(Number(user.id));
+
+    setTodayTotal(total!.toString());
+    setIsLoading(false);
+  };
 
   const openAddExpenseModal = () => {
     navigation.navigate("AddExpense");
@@ -43,11 +91,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   return (
     <View flex={1} pt={10} px={7}>
-      {/* <SafeAreaView style={{ flex: 1, alignItems: "center", marginTop: 100 }}> */}
       <VStack space={3}>
         <Text fontFamily="SourceBold" fontSize={20}>
           Monthly costs
         </Text>
+
         <Box
           alignSelf="center"
           bg="muted.50"
@@ -79,7 +127,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           )}
         </Box>
       </VStack>
-      {/* </SafeAreaView> */}
     </View>
   );
 };

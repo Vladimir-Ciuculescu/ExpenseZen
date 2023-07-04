@@ -71,7 +71,6 @@ const RegisterForm: React.FC<any> = () => {
 
   const submit = async () => {
     setLoading(true);
-
     await submitForm();
     setLoading(false);
   };

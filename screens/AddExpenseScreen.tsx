@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState, useEffect } from "react";
 import {
   Button,
   FormControl,
@@ -16,6 +16,7 @@ import {
   Keyboard,
   FlatList,
   useWindowDimensions,
+  TextInput,
 } from "react-native";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
@@ -25,10 +26,13 @@ import { Category } from "../interfaces/Category";
 import { getCategoryIcon } from "../utils/getCategoryIcon";
 import CategoryItem from "../components/CategoryItem";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { useFormik } from "formik";
+import { useFormik, FastField } from "formik";
 import { expenseSchema } from "../schemas/expenseSchema";
 import EZButton from "../components/shared/EZButton";
 import COLORS from "../colors";
+import { ExpenseService } from "../api/services/ExpenseService";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 interface AddExpenseScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -37,6 +41,8 @@ interface AddExpenseScreenProps {
 const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const { width } = useWindowDimensions();
+
+  const user = useSelector((state: RootState) => state.user);
   const [loading, setLoading] = useState<boolean>(false);
   const formik = useFormik({
     initialValues: {
@@ -45,7 +51,31 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
       description: "",
     },
     validationSchema: expenseSchema,
-    onSubmit: async () => {},
+    onSubmit: async (values) => {
+      const { amount, category, description } = values;
+
+      try {
+        const currentCategory = categories.find(
+          (item) => item.name === category
+        );
+
+        const formatAmount = amount.replace(",", ".");
+        const numericFormat = Number(formatAmount);
+
+        const Expense = {
+          userId: Number(user.id),
+          categoryId: Number(currentCategory!.id),
+          amount: numericFormat,
+          description,
+        };
+
+        await ExpenseService.AddExpense(Expense);
+
+        navigation.goBack();
+      } catch (error) {
+        console.log(error);
+      }
+    },
   });
 
   useLayoutEffect(() => {
@@ -55,6 +85,7 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
       setCategories(
         data!.map((category: Category) => {
           return {
+            id: category.id,
             name: category.name,
             color: category.color,
             icon: getCategoryIcon(category.name),
@@ -67,12 +98,12 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
   }, [navigation]);
 
   const handleValue = (label: string, value: string) => {
-    if (label === "amount") {
-      const numericText = value.replace(/[^0-9.]/g, "");
-
-      const formattedNumber = Number(numericText).toLocaleString("en-US");
-
-      formik.setFieldValue(label, formattedNumber);
+    if (
+      label === "amount" &&
+      values.amount.includes(",") &&
+      value.slice(-1) === ","
+    ) {
+      formik.setFieldValue(label, value.slice(0, -1));
     } else {
       formik.setFieldValue(label, value);
     }
@@ -118,13 +149,14 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
                   </Text>
                   <FormControl w={"100%"}>
                     <Text fontFamily="SourceSansPro" fontSize={20}>
-                      Enter amount
+                      Enter amount {user.symbol}
                     </Text>
+
                     <EZInput
-                      keyboardType="numeric"
+                      keyboardType="decimal-pad"
                       type="text"
                       value={values.amount}
-                      onChangeText={(e) => handleValue("amount", e)}
+                      onChangeText={(e: string) => handleValue("amount", e)}
                       fontSize={22}
                       color="purple.700"
                       pl={5}
@@ -205,7 +237,9 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
                       numberOfLines={4}
                       type="text"
                       value={values.description}
-                      onChangeText={(e) => handleValue("description", e)}
+                      onChangeText={(e: string) =>
+                        handleValue("description", e)
+                      }
                       fontSize={22}
                       color="purple.700"
                       pl={5}
