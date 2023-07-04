@@ -30,7 +30,7 @@ interface HomeScreenProps {
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const isFocused = useIsFocused();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [todayTotal, setTodayTotal] = useState<string>("");
+  const [todayTotal, setTodayTotal] = useState<number>(0);
   const user = useSelector((state: RootState) => state.user);
 
   useLayoutEffect(() => {
@@ -69,17 +69,33 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   useEffect(() => {
     if (isFocused) {
-      getTodayTotal();
+      //getTodayTotal();
+      fetchInfo();
     }
   }, [isFocused]);
 
   const getTodayTotal = async () => {
-    setIsLoading(true);
-    console.log("here");
-    const total = await ExpenseService.getTodayTotalExpenses(Number(user.id));
+    // setIsLoading(true);
+    // const total = await ExpenseService.getTodayTotalExpenses(Number(user.id));
+    // setTodayTotal(total);
+    // setIsLoading(false);
+    const todayTotal = await ExpenseService.getTodayTotalExpenses(
+      Number(user.id)
+    );
+    return todayTotal;
+  };
 
-    setTodayTotal(total!.toString());
-    setIsLoading(false);
+  const getMonthTotal = async () => {
+    const monthTotal = await ExpenseService.getMonthTotalExpensed(
+      Number(user.id)
+    );
+    return monthTotal;
+  };
+
+  const fetchInfo = async () => {
+    const results = await Promise.all([getTodayTotal(), getMonthTotal()]);
+
+    console.log(results);
   };
 
   const openAddExpenseModal = () => {
@@ -111,7 +127,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           <Text fontFamily="SourceBold" color="muted.900" fontSize={35}>
             $ 4,578.00
           </Text>
-          <Progress value={10} />
+          {/* <Progress value={10} /> */}
           {isFocused && (
             <Fab
               onPress={openAddExpenseModal}
