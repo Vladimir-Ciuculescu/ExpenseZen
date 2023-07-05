@@ -1,6 +1,5 @@
 import React, { useLayoutEffect, useState, useEffect } from "react";
 import {
-  Button,
   FormControl,
   HStack,
   Pressable,
@@ -16,7 +15,6 @@ import {
   Keyboard,
   FlatList,
   useWindowDimensions,
-  TextInput,
 } from "react-native";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
@@ -26,7 +24,7 @@ import { Category } from "../interfaces/Category";
 import { getCategoryIcon } from "../utils/getCategoryIcon";
 import CategoryItem from "../components/CategoryItem";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { useFormik, FastField } from "formik";
+import { useFormik } from "formik";
 import { expenseSchema } from "../schemas/expenseSchema";
 import EZButton from "../components/shared/EZButton";
 import COLORS from "../colors";
@@ -88,7 +86,7 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
             id: category.id,
             name: category.name,
             color: category.color,
-            icon: getCategoryIcon(category.name),
+            icon: getCategoryIcon(category.name, 24),
           };
         })
       );
@@ -199,7 +197,7 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
                     }}
                     numColumns={2}
                     showsVerticalScrollIndicator={false}
-                    ItemSeparatorComponent={() => <View margin={3} />}
+                    ItemSeparatorComponent={() => <View margin={4} />}
                     data={categories}
                     renderItem={({ item }) => (
                       <CategoryItem
@@ -233,8 +231,7 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
                     </Text>
 
                     <EZInput
-                      multiline={true}
-                      numberOfLines={4}
+                      returnKeyType="done"
                       type="text"
                       value={values.description}
                       onChangeText={(e: string) =>

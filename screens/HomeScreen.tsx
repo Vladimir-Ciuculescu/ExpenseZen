@@ -9,19 +9,22 @@ import {
   Icon,
   Skeleton,
   HStack,
+  FlatList,
 } from "native-base";
 import {
   NavigationProp,
   ParamListBase,
   useIsFocused,
 } from "@react-navigation/native";
-import { ActivityIndicator } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign } from "@expo/vector-icons";
 import { TAB_BAR_HEIGHT } from "../constants";
 import { ExpenseService } from "../api/services/ExpenseService";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import TopSpendingCategory from "../components/TopSpendingCategory";
+import { Category } from "../interfaces/Category";
+import { CategoryService } from "../api/services/CategoryService";
 
 interface HomeScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -29,8 +32,10 @@ interface HomeScreenProps {
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const isFocused = useIsFocused();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [todayTotal, setTodayTotal] = useState<number>(0);
+  const [monthTotal, setMonthTotal] = useState<number>(0);
+  const [topCategories, setTopCategories] = useState<Category[]>([]);
   const user = useSelector((state: RootState) => state.user);
 
   useLayoutEffect(() => {
@@ -49,7 +54,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
             <Text fontFamily="SourceBold" color="muted.100" fontSize={20}>
               Today:
             </Text>
-            {isLoading ? (
+            {loading ? (
               <Skeleton
                 h="3"
                 width={10}
@@ -58,27 +63,23 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               />
             ) : (
               <Text fontFamily="SourceBold" color="muted.100" fontSize={20}>
-                ${todayTotal}
+                {user.symbol}
+                {todayTotal}
               </Text>
             )}
           </HStack>
         </View>
       ),
     });
-  }, [navigation, todayTotal, isLoading]);
+  }, [navigation, todayTotal, loading]);
 
   useEffect(() => {
     if (isFocused) {
-      //getTodayTotal();
-      fetchInfo();
+      getGeneralInfo();
     }
   }, [isFocused]);
 
   const getTodayTotal = async () => {
-    // setIsLoading(true);
-    // const total = await ExpenseService.getTodayTotalExpenses(Number(user.id));
-    // setTodayTotal(total);
-    // setIsLoading(false);
     const todayTotal = await ExpenseService.getTodayTotalExpenses(
       Number(user.id)
     );
@@ -86,16 +87,34 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   };
 
   const getMonthTotal = async () => {
-    const monthTotal = await ExpenseService.getMonthTotalExpensed(
+    const monthTotal = await ExpenseService.getMonthTotalExpenses(
       Number(user.id)
     );
     return monthTotal;
   };
 
-  const fetchInfo = async () => {
-    const results = await Promise.all([getTodayTotal(), getMonthTotal()]);
+  const getTopSpendingCategories = async (userId: number) => {
+    const categories = await CategoryService.getTopSpendingCategories(userId);
 
-    console.log(results);
+    console.log(categories);
+
+    return categories;
+  };
+
+  const getGeneralInfo = async () => {
+    setLoading(true);
+
+    const [todayTotal, monthTotal, categories] = await Promise.all([
+      getTodayTotal(),
+      getMonthTotal(),
+      getTopSpendingCategories(user.id),
+    ]);
+
+    setTodayTotal(todayTotal);
+    setMonthTotal(monthTotal);
+    setTopCategories(categories);
+
+    setLoading(false);
   };
 
   const openAddExpenseModal = () => {
@@ -107,41 +126,74 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   return (
     <View flex={1} pt={10} px={7}>
-      <VStack space={3}>
-        <Text fontFamily="SourceBold" fontSize={20}>
-          Monthly costs
-        </Text>
+      <VStack space={10}>
+        <VStack space={3}>
+          <Text fontFamily="SourceBold" fontSize={25}>
+            Monthly costs
+          </Text>
 
-        <Box
-          alignSelf="center"
-          bg="muted.50"
-          width="100%"
-          shadow={2}
-          borderRadius={10}
-          px={5}
-          py={3}
-        >
-          <Text fontFamily="SourceSansPro" color="muted.400" fontSize={20}>
-            {currentMonth}
+          <Box
+            alignSelf="center"
+            bg="muted.50"
+            width="100%"
+            shadow={2}
+            borderRadius={10}
+            px={5}
+            py={3}
+          >
+            <Text fontFamily="SourceSansPro" color="muted.400" fontSize={20}>
+              {currentMonth}
+            </Text>
+            {loading ? (
+              <Skeleton
+                mt={5}
+                mb={3}
+                h="5"
+                width={20}
+                rounded="full"
+                startColor="indigo.300"
+              />
+            ) : (
+              <Text fontFamily="SourceBold" color="muted.900" fontSize={35}>
+                {user.symbol}
+                {monthTotal}
+              </Text>
+            )}
+            {/* <Progress value={10} /> */}
+            {isFocused && (
+              <Fab
+                onPress={openAddExpenseModal}
+                width="56px"
+                height="56px"
+                right={"20px"}
+                bg="purple.700"
+                bottom={`${TAB_BAR_HEIGHT + 20}px`}
+                icon={
+                  <Icon
+                    color="white"
+                    size={26}
+                    as={<AntDesign name="plus" />}
+                  />
+                }
+              />
+            )}
+          </Box>
+        </VStack>
+        <VStack space={4}>
+          <Text fontFamily="SourceBold" fontSize={25}>
+            Top Spending
           </Text>
-          <Text fontFamily="SourceBold" color="muted.900" fontSize={35}>
-            $ 4,578.00
-          </Text>
-          {/* <Progress value={10} /> */}
-          {isFocused && (
-            <Fab
-              onPress={openAddExpenseModal}
-              width="56px"
-              height="56px"
-              right={"20px"}
-              bg="purple.700"
-              bottom={`${TAB_BAR_HEIGHT + 20}px`}
-              icon={
-                <Icon color="white" size={26} as={<AntDesign name="plus" />} />
-              }
-            />
-          )}
-        </Box>
+          <FlatList
+            mx={-7}
+            contentContainerStyle={{ paddingHorizontal: 28 }}
+            showsHorizontalScrollIndicator={false}
+            ItemSeparatorComponent={() => <View p="10px" />}
+            horizontal={true}
+            data={topCategories}
+            keyExtractor={(item: any) => item.id}
+            renderItem={({ item }) => <TopSpendingCategory item={item} />}
+          />
+        </VStack>
       </VStack>
     </View>
   );

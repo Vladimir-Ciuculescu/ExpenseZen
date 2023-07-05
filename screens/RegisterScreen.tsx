@@ -2,15 +2,12 @@ import React, { useLayoutEffect } from "react";
 import {
   Keyboard,
   KeyboardAvoidingView,
-  SafeAreaView,
   TouchableWithoutFeedback,
 } from "react-native";
-import { Divider, HStack, Pressable, Text, View, VStack } from "native-base";
+import { Pressable, View, VStack } from "native-base";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
-import LoginForm from "../components/LoginForm";
 import RegisterForm from "../components/RegisterForm";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 interface RegisterScreenProps {
   navigation: NavigationProp<ParamListBase>;

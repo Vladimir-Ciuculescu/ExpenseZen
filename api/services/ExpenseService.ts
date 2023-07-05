@@ -39,14 +39,14 @@ const getTodayTotalExpenses = async (userId: number) => {
   }
 };
 
-const getMonthTotalExpensed = async (userId: number) => {
+const getMonthTotalExpenses = async (userId: number) => {
   const startMonth = moment().startOf("month").format("YYYY-MM-DD");
   const endMonth = moment().endOf("month").format("YYYY-MM-DD");
 
   try {
     const { data } = await supabase.rpc("get_month_total", {
       start_month: startMonth,
-      endMonth,
+      end_month: endMonth,
       user_id: userId,
     });
 
@@ -64,5 +64,5 @@ const getMonthTotalExpensed = async (userId: number) => {
 export const ExpenseService = {
   AddExpense,
   getTodayTotalExpenses,
-  getMonthTotalExpensed,
+  getMonthTotalExpenses,
 };
