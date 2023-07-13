@@ -267,6 +267,7 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
                   </FormControl>
                 </VStack>
                 <EZButton
+                  variant="solid"
                   onPress={addExpense}
                   w="100%"
                   isLoading={loading}

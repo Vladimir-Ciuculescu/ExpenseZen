@@ -82,7 +82,25 @@ const loginUser = async (
   }
 };
 
+const getUserBudgets = async (userId: number) => {
+  try {
+    const { data } = await supabase.rpc("get_user_budgets", {
+      user_id: 1,
+    });
+
+    if (data) {
+      return data;
+    }
+    return 0;
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error);
+    }
+  }
+};
+
 export const UserService = {
   registerUser,
   loginUser,
+  getUserBudgets,
 };

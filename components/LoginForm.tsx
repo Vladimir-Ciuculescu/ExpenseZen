@@ -191,6 +191,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ navigation }) => {
       </VStack>
 
       <EZButton
+        variant="solid"
         isLoading={loading}
         onPress={login}
         bg="purple.700"

@@ -21,6 +21,9 @@ interface EZInputProps {
   onFocus?: any;
   ref?: any;
   onSubmitEditing?: () => void;
+  alignItems: string;
+  flex?: number | string;
+  height?: number | string;
 }
 
 interface EZInputStylesProp {
@@ -45,9 +48,18 @@ const EZInput = forwardRef<any, Props>(
       onFocus,
       returnKeyType,
       onSubmitEditing,
+      alignItems,
+      flex,
+      height,
     } = props;
     return (
-      <FormControl isInvalid={error !== undefined} justifyContent="center">
+      <FormControl
+        height={height || "auto"}
+        flex={flex || "auto"}
+        isInvalid={error !== undefined}
+        justifyContent="center"
+        alignItems={alignItems || "flex-start"}
+      >
         <Input
           returnKeyType={returnKeyType}
           onSubmitEditing={onSubmitEditing}

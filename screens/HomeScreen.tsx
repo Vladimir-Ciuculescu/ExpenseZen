@@ -3,7 +3,6 @@ import {
   View,
   Text,
   Box,
-  Progress,
   VStack,
   Fab,
   Icon,
@@ -25,6 +24,12 @@ import { RootState } from "../redux/store";
 import TopSpendingCategory from "../components/TopSpendingCategory";
 import { Category } from "../interfaces/Category";
 import { CategoryService } from "../api/services/CategoryService";
+import EZButton from "../components/shared/EZButton";
+import { Foundation } from "@expo/vector-icons";
+import { NoData } from "../assets/SVG";
+import MonthlyBudgetCategory from "../components/MonthlyBudgetCategory";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import COLORS from "../colors";
 
 interface HomeScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -36,6 +41,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const [todayTotal, setTodayTotal] = useState<number>(0);
   const [monthTotal, setMonthTotal] = useState<number>(0);
   const [topCategories, setTopCategories] = useState<Category[]>([]);
+
   const user = useSelector((state: RootState) => state.user);
 
   useLayoutEffect(() => {
@@ -96,8 +102,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const getTopSpendingCategories = async (userId: number) => {
     const categories = await CategoryService.getTopSpendingCategories(userId);
 
-    console.log(categories);
-
     return categories;
   };
 
@@ -121,12 +125,16 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     navigation.navigate("AddExpense");
   };
 
+  const openEditBudgetsModal = () => {
+    navigation.navigate("EditBudgets");
+  };
+
   const currentDate = new Date();
   const currentMonth = currentDate.toLocaleString("default", { month: "long" });
 
   return (
     <View flex={1} pt={10} px={7}>
-      <VStack space={10}>
+      <VStack space={8}>
         <VStack space={3}>
           <Text fontFamily="SourceBold" fontSize={25}>
             Monthly costs
@@ -159,7 +167,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                 {monthTotal}
               </Text>
             )}
-            {/* <Progress value={10} /> */}
             {isFocused && (
               <Fab
                 onPress={openAddExpenseModal}
@@ -183,16 +190,68 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           <Text fontFamily="SourceBold" fontSize={25}>
             Top Spending
           </Text>
-          <FlatList
-            mx={-7}
-            contentContainerStyle={{ paddingHorizontal: 28 }}
-            showsHorizontalScrollIndicator={false}
-            ItemSeparatorComponent={() => <View p="10px" />}
-            horizontal={true}
-            data={topCategories}
-            keyExtractor={(item: any) => item.id}
-            renderItem={({ item }) => <TopSpendingCategory item={item} />}
-          />
+          {topCategories.length !== 0 ? (
+            <FlatList
+              mx={-7}
+              contentContainerStyle={{ paddingHorizontal: 28 }}
+              showsHorizontalScrollIndicator={false}
+              ItemSeparatorComponent={() => <View p="10px" />}
+              horizontal={true}
+              data={topCategories}
+              keyExtractor={(item: any) => item.id}
+              renderItem={({ item }) => <TopSpendingCategory item={item} />}
+            />
+          ) : (
+            <HStack justifyContent="center">
+              <VStack alignItems="center" space={2}>
+                <NoData width={85} height={85} />
+                <Text fontSize={20} fontFamily="SourceSansPro">
+                  No spendings yet
+                </Text>
+              </VStack>
+            </HStack>
+          )}
+        </VStack>
+        <VStack>
+          <VStack space={4}>
+            <HStack justifyContent="space-between">
+              <Text fontFamily="SourceBold" fontSize={25}>
+                Monthly Budget
+              </Text>
+              <EZButton
+                _text={{
+                  fontFamily: "SourceBold",
+                  color: COLORS.PURPLE[700],
+                  fontSize: 17,
+                }}
+                variant="unstyled"
+                onPress={openEditBudgetsModal}
+                leftIcon={
+                  <MaterialCommunityIcons
+                    name="lead-pencil"
+                    size={22}
+                    color={COLORS.PURPLE[700]}
+                  />
+                }
+              >
+                Edit
+              </EZButton>
+            </HStack>
+
+            <FlatList
+              showsHorizontalScrollIndicator={false}
+              mx={-7}
+              style={{ paddingTop: 5, paddingBottom: 10 }}
+              contentContainerStyle={{ paddingHorizontal: 28 }}
+              ItemSeparatorComponent={() => <View p="10px" />}
+              horizontal={true}
+              data={topCategories}
+              keyExtractor={(item: any) => item.id}
+              renderItem={({ item }) => (
+                <MonthlyBudgetCategory category={item} />
+              )}
+            />
+          </VStack>
         </VStack>
       </VStack>
     </View>

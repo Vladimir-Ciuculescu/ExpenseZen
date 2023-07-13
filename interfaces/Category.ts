@@ -3,4 +3,6 @@ export interface Category {
   name: string;
   color?: string;
   total?: number;
+  icon?: any;
+  budget?: number;
 }

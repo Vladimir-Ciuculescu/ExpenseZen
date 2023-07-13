@@ -204,6 +204,7 @@ const RegisterForm: React.FC<any> = () => {
       </VStack>
 
       <EZButton
+        variant="solid"
         bg="purple.700"
         borderRadius={8}
         height="55px"

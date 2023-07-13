@@ -17,8 +17,6 @@ const getTopSpendingCategories = async (userId: number) => {
   const startOfMonth = moment().startOf("month").format("YYYY-MM-DD");
   const endOfMonth = moment().endOf("month").format("YYYY-MM-DD");
 
-  console.log(startOfMonth);
-
   try {
     const { data } = await supabase.rpc("get_top_spendings", {
       user_id: userId,

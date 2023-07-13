@@ -17,6 +17,7 @@ import { Animated, useWindowDimensions } from "react-native";
 import AddExpenseScreen from "./screens/AddExpenseScreen";
 import { TAB_BAR_HEIGHT } from "./constants";
 import AddCurrencyScreen from "./screens/AddCurrencyScreen";
+import EditBudgetScreen from "./screens/EditBudgetsScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -203,6 +204,11 @@ const Navigation: React.FC<any> = () => {
           <Stack.Screen
             component={AddExpenseScreen}
             name="AddExpense"
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            component={EditBudgetScreen}
+            name="EditBudgets"
             options={{ headerShown: false }}
           />
         </Stack.Group>

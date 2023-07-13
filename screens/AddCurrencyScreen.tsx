@@ -95,6 +95,7 @@ const AddCurrencyScreen: React.FC<AddCurrencyScreenProps> = ({
           })}
         </Picker>
         <EZButton
+          variant="solid"
           position="absolute"
           bottom={10}
           width="80%"
