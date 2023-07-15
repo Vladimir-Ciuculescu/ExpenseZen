@@ -1,3 +1,7 @@
+import {
+  GET_MONTH_TOTAL,
+  GET_TODAY_TOTAL,
+} from "../../constants/PostgresFunctions";
 import { Expense } from "../../interfaces/Expense";
 import { getCurrentDate } from "../../utils/getCurrentDate";
 import { supabase } from "../supabase";
@@ -26,7 +30,7 @@ const AddExpense = async (expense: Expense) => {
 
 const getTodayTotalExpenses = async (userId: number) => {
   try {
-    const { data } = await supabase.rpc("get_today_total", { user_id: userId });
+    const { data } = await supabase.rpc(GET_TODAY_TOTAL, { user_id: userId });
 
     if (data) {
       return data;
@@ -44,7 +48,7 @@ const getMonthTotalExpenses = async (userId: number) => {
   const endMonth = moment().endOf("month").format("YYYY-MM-DD");
 
   try {
-    const { data } = await supabase.rpc("get_month_total", {
+    const { data } = await supabase.rpc(GET_MONTH_TOTAL, {
       start_month: startMonth,
       end_month: endMonth,
       user_id: userId,

@@ -15,7 +15,7 @@ import { RootState } from "./redux/store";
 import COLORS from "./colors";
 import { Animated, useWindowDimensions } from "react-native";
 import AddExpenseScreen from "./screens/AddExpenseScreen";
-import { TAB_BAR_HEIGHT } from "./constants";
+import { TAB_BAR_HEIGHT } from "./constants/NavigationConstants";
 import AddCurrencyScreen from "./screens/AddCurrencyScreen";
 import EditBudgetScreen from "./screens/EditBudgetsScreen";
 

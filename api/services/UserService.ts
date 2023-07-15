@@ -4,13 +4,15 @@ import { compareHashed } from "../../utils/compareHashed";
 import { hashPassword } from "../../utils/hashPassword";
 import { Provider } from "../../interfaces/Provider";
 import { Budget } from "../../interfaces/Budget";
+import { MONTHLY_BUDGETS, USERS } from "../../constants/Tables";
+import { GET_USER_BUDGETS } from "../../constants/PostgresFunctions";
 
 const registerUser = async (user: User) => {
   const { firstName, lastName, email, password, provider } = user;
 
   try {
     const { data } = await supabase
-      .from("users")
+      .from(USERS)
       .select("*")
       .filter("email", "eq", email)
       .filter("provider", "eq", provider)
@@ -22,7 +24,7 @@ const registerUser = async (user: User) => {
         message: "This user is already registered !",
       };
     } else {
-      const { error } = await supabase.from("users").insert(
+      const { error } = await supabase.from(USERS).insert(
         [
           {
             first_name: firstName,
@@ -59,7 +61,7 @@ const loginUser = async (
 ) => {
   try {
     const { data } = await supabase
-      .from("users")
+      .from(USERS)
       .select("*")
       .filter("email", "eq", email)
       .filter("provider", "eq", provider)
@@ -85,7 +87,7 @@ const loginUser = async (
 const getUserBudgets = async (userId: number) => {
   console.log(userId);
   try {
-    const { data } = await supabase.rpc("get_user_budgets", {
+    const { data } = await supabase.rpc(GET_USER_BUDGETS, {
       user_id: userId,
     });
 
@@ -104,7 +106,7 @@ const saveUserBudgets = async (userId: number, budgets: Budget[]) => {
   try {
     for (const item of budgets) {
       const { data } = await supabase
-        .from("monthly_budgets")
+        .from(MONTHLY_BUDGETS)
         .select("*")
         .filter("category_id", "eq", item.categoryId)
         .filter("user_id", "eq", userId)
@@ -112,12 +114,12 @@ const saveUserBudgets = async (userId: number, budgets: Budget[]) => {
 
       if (data) {
         await supabase
-          .from("monthly_budgets")
+          .from(MONTHLY_BUDGETS)
           .update({ budget: item.budget })
           .filter("category_id", "eq", item.categoryId)
           .filter("user_id", "eq", userId);
       } else {
-        await supabase.from("monthly_budgets").insert({
+        await supabase.from(MONTHLY_BUDGETS).insert({
           user_id: userId,
           category_id: item.categoryId,
           budget: item.budget,

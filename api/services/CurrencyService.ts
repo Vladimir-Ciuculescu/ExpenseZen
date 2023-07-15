@@ -1,9 +1,10 @@
+import { CURRENCIES, USERS_CURRENCIES } from "../../constants/Tables";
 import { supabase } from "../supabase";
 
 const getUserCurrency = async (userId: number) => {
   try {
     const { data } = await supabase
-      .from("users_currencies")
+      .from(USERS_CURRENCIES)
       .select("*, currencies(name, symbol)")
       .eq("user_id", userId)
       .single();
@@ -19,7 +20,7 @@ const getUserCurrency = async (userId: number) => {
 const addUserCurrency = async (userId: number, currencyId: number) => {
   try {
     const { error } = await supabase
-      .from("users_currencies")
+      .from(USERS_CURRENCIES)
       .insert([{ user_id: userId, currency_id: currencyId }]);
     if (error) {
       throw error;
@@ -33,7 +34,7 @@ const addUserCurrency = async (userId: number, currencyId: number) => {
 
 const getAllCurrencies = async () => {
   try {
-    const { data } = await supabase.from("currencies").select("*");
+    const { data } = await supabase.from(CURRENCIES).select("*");
 
     return data;
   } catch (error) {

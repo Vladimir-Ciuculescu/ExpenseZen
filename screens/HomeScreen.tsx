@@ -17,7 +17,7 @@ import {
 } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign } from "@expo/vector-icons";
-import { TAB_BAR_HEIGHT } from "../constants";
+import { TAB_BAR_HEIGHT } from "../constants/NavigationConstants";
 import { ExpenseService } from "../api/services/ExpenseService";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
