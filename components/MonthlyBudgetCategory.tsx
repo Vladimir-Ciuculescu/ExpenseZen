@@ -2,9 +2,17 @@ import { Box, HStack, Text, VStack } from "native-base";
 import React from "react";
 import { getCategoryIcon } from "../utils/getCategoryIcon";
 import EZProgress from "./shared/EZProgress";
+import { Category } from "../interfaces/Category";
+import { Budget } from "../interfaces/Budget";
 
-const MonthlyBudgetCategory: React.FC<any> = ({ category }) => {
-  const { name, color } = category;
+interface MonthlyBudgetCategoryProps {
+  budget: Budget;
+}
+
+const MonthlyBudgetCategory: React.FC<MonthlyBudgetCategoryProps> = ({
+  budget,
+}) => {
+  const { budget: amount, category, color } = budget;
 
   return (
     <Box
@@ -29,15 +37,15 @@ const MonthlyBudgetCategory: React.FC<any> = ({ category }) => {
             justifyContent="center"
             alignItems="center"
           >
-            {getCategoryIcon(name, 24)}
+            {getCategoryIcon(category, 24)}
           </Box>
           <Text fontFamily="SourceBold" fontSize={18}>
-            {name}
+            {category}
           </Text>
         </HStack>
 
         <VStack>
-          <Text>20$</Text>
+          <Text>{amount}$</Text>
           <EZProgress height="25px" steps={10} step={3} color={color} />
         </VStack>
       </VStack>

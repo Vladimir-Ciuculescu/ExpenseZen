@@ -85,7 +85,6 @@ const loginUser = async (
 };
 
 const getUserBudgets = async (userId: number) => {
-  console.log(userId);
   try {
     const { data } = await supabase.rpc(GET_USER_BUDGETS, {
       user_id: userId,

@@ -29,6 +29,8 @@ import { NoData } from "../assets/SVG";
 import MonthlyBudgetCategory from "../components/MonthlyBudgetCategory";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import COLORS from "../colors";
+import { UserService } from "../api/services/UserService";
+import { Budget } from "../interfaces/Budget";
 
 interface HomeScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -40,6 +42,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const [todayTotal, setTodayTotal] = useState<number>(0);
   const [monthTotal, setMonthTotal] = useState<number>(0);
   const [topCategories, setTopCategories] = useState<Category[]>([]);
+  const [monthlyBudgets, setMonthlyBudgets] = useState<Budget[]>([]);
 
   const user = useSelector((state: RootState) => state.user);
 
@@ -103,18 +106,35 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     return categories;
   };
 
+  const getMonthlyBudgets = async (userId: number) => {
+    const budgets = await UserService.getUserBudgets(userId);
+
+    return budgets;
+  };
+
+  const getMonthlyExpenses = async (userId: number) => {
+    const expenses = await ExpenseService.getMonthExpenses(userId);
+    return expenses;
+  };
+
   const getGeneralInfo = async () => {
     setLoading(true);
 
-    const [todayTotal, monthTotal, categories] = await Promise.all([
-      getTodayTotal(),
-      getMonthTotal(),
-      getTopSpendingCategories(user.id),
-    ]);
+    const [todayTotal, monthTotal, categories, budgets, EXpenses] =
+      await Promise.all([
+        getTodayTotal(),
+        getMonthTotal(),
+        getTopSpendingCategories(user.id),
+        getMonthlyBudgets(user.id),
+        getMonthlyExpenses(user.id),
+      ]);
+
+    console.log("expenses:", EXpenses);
 
     setTodayTotal(todayTotal);
     setMonthTotal(monthTotal);
     setTopCategories(categories);
+    setMonthlyBudgets(budgets.filter((item: Budget) => item.budget !== 0));
 
     setLoading(false);
   };
@@ -242,11 +262,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               contentContainerStyle={{ paddingHorizontal: 28 }}
               ItemSeparatorComponent={() => <View p="10px" />}
               horizontal={true}
-              data={topCategories}
+              data={monthlyBudgets}
               keyExtractor={(item: any) => item.id}
-              renderItem={({ item }) => (
-                <MonthlyBudgetCategory category={item} />
-              )}
+              renderItem={({ item }) => <MonthlyBudgetCategory budget={item} />}
             />
           </VStack>
         </VStack>

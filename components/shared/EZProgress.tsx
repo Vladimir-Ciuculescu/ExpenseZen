@@ -6,7 +6,7 @@ interface EZProgresssProps {
   height: string | number;
   steps: number;
   step: number;
-  color: string;
+  color: string | undefined;
 }
 
 const EZProgress: React.FC<EZProgresssProps> = ({
