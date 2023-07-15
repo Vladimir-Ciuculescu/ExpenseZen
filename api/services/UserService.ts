@@ -3,6 +3,7 @@ import { supabase } from "../supabase";
 import { compareHashed } from "../../utils/compareHashed";
 import { hashPassword } from "../../utils/hashPassword";
 import { Provider } from "../../interfaces/Provider";
+import { Budget } from "../../interfaces/Budget";
 
 const registerUser = async (user: User) => {
   const { firstName, lastName, email, password, provider } = user;
@@ -69,7 +70,6 @@ const loginUser = async (
         message: "User exists",
         data: data,
       };
-      return data;
     } else {
       return {
         message: "This user does not exist !",
@@ -83,9 +83,10 @@ const loginUser = async (
 };
 
 const getUserBudgets = async (userId: number) => {
+  console.log(userId);
   try {
     const { data } = await supabase.rpc("get_user_budgets", {
-      user_id: 1,
+      user_id: userId,
     });
 
     if (data) {
@@ -99,8 +100,40 @@ const getUserBudgets = async (userId: number) => {
   }
 };
 
+const saveUserBudgets = async (userId: number, budgets: Budget[]) => {
+  try {
+    for (const item of budgets) {
+      const { data } = await supabase
+        .from("monthly_budgets")
+        .select("*")
+        .filter("category_id", "eq", item.categoryId)
+        .filter("user_id", "eq", userId)
+        .single();
+
+      if (data) {
+        await supabase
+          .from("monthly_budgets")
+          .update({ budget: item.budget })
+          .filter("category_id", "eq", item.categoryId)
+          .filter("user_id", "eq", userId);
+      } else {
+        await supabase.from("monthly_budgets").insert({
+          user_id: userId,
+          category_id: item.categoryId,
+          budget: item.budget,
+        });
+      }
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error);
+    }
+  }
+};
+
 export const UserService = {
   registerUser,
   loginUser,
   getUserBudgets,
+  saveUserBudgets,
 };

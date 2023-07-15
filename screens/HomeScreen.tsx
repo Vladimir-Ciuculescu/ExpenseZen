@@ -25,7 +25,6 @@ import TopSpendingCategory from "../components/TopSpendingCategory";
 import { Category } from "../interfaces/Category";
 import { CategoryService } from "../api/services/CategoryService";
 import EZButton from "../components/shared/EZButton";
-import { Foundation } from "@expo/vector-icons";
 import { NoData } from "../assets/SVG";
 import MonthlyBudgetCategory from "../components/MonthlyBudgetCategory";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -69,8 +68,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               />
             ) : (
               <Text fontFamily="SourceBold" color="muted.100" fontSize={20}>
-                {user.symbol}
-                {todayTotal}
+                {user.symbol} {todayTotal}
               </Text>
             )}
           </HStack>
@@ -163,8 +161,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               />
             ) : (
               <Text fontFamily="SourceBold" color="muted.900" fontSize={35}>
-                {user.symbol}
-                {monthTotal}
+                {user.symbol} {monthTotal}
               </Text>
             )}
             {isFocused && (

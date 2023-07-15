@@ -1,17 +1,28 @@
 import { Box, HStack, Text } from "native-base";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import EZInput from "./shared/EZInput";
 import { Category } from "../interfaces/Category";
 
 interface MonthlyBudgetItemProps {
   category: Category;
+  onChange: (e: string) => void;
 }
 
-const MonthlyBudgetItem: React.FC<MonthlyBudgetItemProps> = ({ category }) => {
+const MonthlyBudgetItem: React.FC<MonthlyBudgetItemProps> = ({
+  category,
+  onChange,
+}) => {
   const { color, icon, name, budget } = category;
 
-  const [amount, setAmount] = useState<string>(budget!.toString());
+  const [amount, setAmount] = useState<string>(
+    budget!.toString().replace(".", ",")
+  );
+
+  const handleChange = (e: string) => {
+    setAmount(e);
+    onChange(e);
+  };
 
   return (
     <HStack alignItems="center" justifyContent="space-between">
@@ -34,17 +45,13 @@ const MonthlyBudgetItem: React.FC<MonthlyBudgetItemProps> = ({ category }) => {
         type="text"
         width="140px"
         value={amount}
-        onChangeText={setAmount}
-        //value={values.amount}
-        //onChangeText={(e: string) => handleValue("amount", e)}
+        onChangeText={(e: string) => handleChange(e)}
         fontSize={22}
         color="purple.700"
         pl={5}
         fontFamily="SourceSansPro"
         borderRadius={8}
-        // focusOutlineColor={
-        //   touched.amount && errors.amount ? "red.500" : "purple.700"
-        // }
+        focusOutlineColor="purple.700"
         height="45px"
         borderColor="muted.300"
         placeholderTextColor="muted.300"
@@ -54,9 +61,7 @@ const MonthlyBudgetItem: React.FC<MonthlyBudgetItemProps> = ({ category }) => {
           placeholderTextColor: "purple.700",
         }}
         alignItems="flex-end"
-        //error={touched.amount && errors.amount}
       />
-      {/* <Input width={"180px"} /> */}
     </HStack>
   );
 };
