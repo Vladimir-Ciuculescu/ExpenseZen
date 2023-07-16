@@ -214,6 +214,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                   width="56px"
                   height="56px"
                   right={"20px"}
+                  _pressed={{ bg: "purple.600" }}
                   bg="purple.700"
                   bottom={`${TAB_BAR_HEIGHT + 20}px`}
                   icon={
