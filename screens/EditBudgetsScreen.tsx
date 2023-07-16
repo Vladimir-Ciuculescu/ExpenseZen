@@ -4,20 +4,11 @@ import {
   ScrollView,
   Pressable,
   VStack,
-  KeyboardAvoidingView,
-  View,
-  Input,
   HStack,
   Skeleton,
 } from "native-base";
 import React, { useState, useEffect } from "react";
-import {
-  Keyboard,
-  TouchableWithoutFeedback,
-  SafeAreaView,
-  Button,
-  TextInput,
-} from "react-native";
+import { Keyboard, TouchableWithoutFeedback, SafeAreaView } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { AntDesign } from "@expo/vector-icons";
 import MonthlyBudgetItem from "../components/MonthlyBudgetItem";
@@ -83,7 +74,6 @@ const EditBudgetScreen: React.FC<EditBudgetScreenProps> = ({ navigation }) => {
 
   const getCategories = async () => {
     const data = await CategoryService.getAllCategories();
-    console.log(data);
     return data;
   };
 
@@ -103,13 +93,18 @@ const EditBudgetScreen: React.FC<EditBudgetScreenProps> = ({ navigation }) => {
     );
 
     let newValues;
+    const formatAmount = value.replace(",", ".");
+    const numericFormat = Number(formatAmount);
 
     if (element) {
       newValues = budgets.map((item: any) =>
-        item === element ? { ...item, budget: value } : item
+        item === element ? { ...item, budget: numericFormat } : item
       );
     } else {
-      newValues = [...budgets, { budget: value, category: category.name }];
+      newValues = [
+        ...budgets,
+        { budget: numericFormat, category: category.name },
+      ];
     }
 
     setBudgets(newValues);

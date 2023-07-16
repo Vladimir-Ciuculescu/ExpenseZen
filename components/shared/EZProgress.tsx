@@ -4,15 +4,15 @@ import { Text, View } from "native-base";
 
 interface EZProgresssProps {
   height: string | number;
-  steps: number;
-  step: number;
+  value: number;
+  max: number;
   color: string | undefined;
 }
 
 const EZProgress: React.FC<EZProgresssProps> = ({
   height,
-  step,
-  steps,
+  value,
+  max,
   color,
 }) => {
   const animatedValue = useRef(new Animated.Value(-1000)).current;
@@ -28,8 +28,8 @@ const EZProgress: React.FC<EZProgresssProps> = ({
   }, []);
 
   useEffect(() => {
-    reactive.setValue(-width + (width * step) / steps);
-  }, [step, width]);
+    reactive.setValue(-width + (width * value) / max);
+  }, [value, width, max]);
 
   const AnimatedView = Animated.createAnimatedComponent(View);
 

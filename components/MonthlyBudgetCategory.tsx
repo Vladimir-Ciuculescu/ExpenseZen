@@ -2,22 +2,31 @@ import { Box, HStack, Text, VStack } from "native-base";
 import React from "react";
 import { getCategoryIcon } from "../utils/getCategoryIcon";
 import EZProgress from "./shared/EZProgress";
-import { Category } from "../interfaces/Category";
 import { Budget } from "../interfaces/Budget";
+import { AntDesign } from "@expo/vector-icons";
+import COLORS from "../colors";
 
 interface MonthlyBudgetCategoryProps {
   budget: Budget;
+  monthlyTotal: number;
 }
 
 const MonthlyBudgetCategory: React.FC<MonthlyBudgetCategoryProps> = ({
   budget,
+  monthlyTotal,
 }) => {
   const { budget: amount, category, color } = budget;
+
+  const isAlmostExceeded = () => {
+    const threshold = (amount * 75) / 100;
+
+    return monthlyTotal > threshold;
+  };
 
   return (
     <Box
       width="265px"
-      height="145px"
+      height="165px"
       style={{
         shadowColor: "#171717",
         shadowOffset: { width: 0, height: 0 },
@@ -27,7 +36,14 @@ const MonthlyBudgetCategory: React.FC<MonthlyBudgetCategoryProps> = ({
       bg="muted.50"
       borderRadius={20}
     >
-      <VStack flex={1} p={4} justifyContent="space-between">
+      <VStack
+        flex={1}
+        pt={4}
+        pl={4}
+        pr={4}
+        space={3}
+        //justifyContent="space-between"
+      >
         <HStack space={3} alignItems="center">
           <Box
             borderRadius={22}
@@ -45,10 +61,27 @@ const MonthlyBudgetCategory: React.FC<MonthlyBudgetCategoryProps> = ({
         </HStack>
 
         <VStack>
-          <Text>{amount}$</Text>
-          <EZProgress height="25px" steps={10} step={3} color={color} />
+          <Text>
+            {monthlyTotal}$ / {amount}$
+          </Text>
+          <EZProgress
+            height="20px"
+            max={amount}
+            value={monthlyTotal}
+            color={color}
+          />
         </VStack>
       </VStack>
+      {isAlmostExceeded() && (
+        <HStack pb={2} pl={4} alignItems="center" space={2}>
+          <AntDesign
+            name="exclamationcircle"
+            size={15}
+            color={COLORS.DANGER[500]}
+          />
+          <Text>Almost exceeded</Text>
+        </HStack>
+      )}
     </Box>
   );
 };

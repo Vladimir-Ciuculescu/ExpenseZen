@@ -40,6 +40,7 @@ const MonthlyBudgetItem: React.FC<MonthlyBudgetItemProps> = ({
         <Text>{name}</Text>
       </HStack>
       <EZInput
+        formHeight="45px"
         flex={1}
         keyboardType="decimal-pad"
         type="text"
@@ -52,7 +53,6 @@ const MonthlyBudgetItem: React.FC<MonthlyBudgetItemProps> = ({
         fontFamily="SourceSansPro"
         borderRadius={8}
         focusOutlineColor="purple.700"
-        height="45px"
         borderColor="muted.300"
         placeholderTextColor="muted.300"
         _focus={{

@@ -15,6 +15,7 @@ import EZInput from "./shared/EZInput";
 import COLORS from "../colors";
 import EZButton from "./shared/EZButton";
 import { CurrencyService } from "../api/services/CurrencyService";
+import LoginProviders from "./LoginProviders";
 
 interface LoginFormProps {
   navigation: NavigationProp<ParamListBase>;
@@ -103,40 +104,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ navigation }) => {
         </Text>
       </VStack>
       <VStack space={6}>
-        {/* <Input
-          color="purple.700"
-          placeholder="Enter your email"
-          fontSize={15}
-          pl={5}
-          fontFamily="SourceSansPro"
-          borderRadius={8}
-          focusOutlineColor="purple.700"
-          height="55px"
-          borderColor="purple.700"
-          _focus={{ backgroundColor: "transparent" }}
-        />
-        <Input
-          type={passwordVisilble ? "text" : "password"}
-          placeholder="Password"
-          color="purple.700"
-          fontSize={15}
-          pl={5}
-          fontFamily="SourceSansPro"
-          borderRadius={8}
-          focusOutlineColor="purple.700"
-          height="55px"
-          borderColor="purple.700"
-          _focus={{ backgroundColor: "transparent" }}
-          InputRightElement={
-            <Pressable mr={4} onPress={togglePasswordVisible}>
-              <Icon
-                size={5}
-                color="purple.700"
-                as={<Feather name={passwordVisilble ? "eye" : "eye-off"} />}
-              />
-            </Pressable>
-          }
-        /> */}
         <EZInput
           returnKeyType="next"
           type="text"

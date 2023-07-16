@@ -24,6 +24,7 @@ interface EZInputProps {
   alignItems: string;
   flex?: number | string;
   height?: number | string;
+  formHeight?: number | string;
 }
 
 interface EZInputStylesProp {
@@ -51,10 +52,11 @@ const EZInput = forwardRef<any, Props>(
       alignItems,
       flex,
       height,
+      formHeight,
     } = props;
     return (
       <FormControl
-        height={height || "auto"}
+        height={formHeight || "auto"}
         flex={flex || "auto"}
         isInvalid={error !== undefined}
         justifyContent="center"

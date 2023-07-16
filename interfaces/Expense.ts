@@ -3,6 +3,7 @@ export interface Expense {
   userId?: number;
   categoryId?: number;
   amount: number;
-  description: string;
+  description?: string;
+  name?: string;
   date?: any;
 }
