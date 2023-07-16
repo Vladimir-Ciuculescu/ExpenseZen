@@ -124,22 +124,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const getGeneralInfo = async () => {
     setLoading(true);
 
-    const [
-      todayTotal,
-      //monthTotal,
-      categories,
-      budgets,
-      expenses,
-    ] = await Promise.all([
+    const [todayTotal, categories, budgets, expenses] = await Promise.all([
       getTodayTotal(),
-      //getMonthTotal(),
       getTopSpendingCategories(user.id),
       getMonthlyBudgets(user.id),
       getMonthlyExpenses(user.id),
     ]);
 
     setTodayTotal(todayTotal);
-    //setMonthTotal(monthTotal);
     setMonthTotal(
       expenses.reduce(
         (accumulator: any, currentValue: Expense) =>
@@ -314,7 +306,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                   renderItem={({ item }) => (
                     <MonthlyBudgetCategory
                       budget={item}
-                      monthlyTotal={getCategoryMonthlyTotal(item.category)}
+                      monthlyTotal={getCategoryMonthlyTotal(item.category!)}
                     />
                   )}
                 />

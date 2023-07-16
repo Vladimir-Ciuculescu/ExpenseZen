@@ -6,4 +6,5 @@ export interface Expense {
   description?: string;
   name?: string;
   date?: any;
+  color?: string;
 }
