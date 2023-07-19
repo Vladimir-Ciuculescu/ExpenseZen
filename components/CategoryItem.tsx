@@ -8,8 +8,8 @@ import COLORS from "../colors";
 
 interface CategoryItemProps {
   category: Category;
-  selectCategory: (e: string) => void;
-  selectedCategory: string;
+  selectCategory?: (e: string) => void;
+  selectedCategory?: string;
 }
 
 const CategoryItem: React.FC<CategoryItemProps> = ({
@@ -23,7 +23,7 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
 
   return (
     <Pressable
-      onPress={() => selectCategory(name)}
+      onPress={() => selectCategory!(name)}
       _pressed={{ opacity: 0.4 }}
       marginX={3}
       flex={1}

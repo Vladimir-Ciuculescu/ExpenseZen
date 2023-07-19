@@ -19,6 +19,7 @@ import { Expense } from "../interfaces/Expense";
 import { RootState } from "../redux/store";
 import { GraphCategory } from "../interfaces/GraphCategory";
 import GraphCategoryItem from "../components/GraphCategory";
+import { StatusBar } from "expo-status-bar";
 
 interface GraphScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -107,6 +108,7 @@ const GraphScreen: React.FC<GraphScreenProps> = ({ navigation }) => {
       flexDirection="column"
       style={{ gap: 20 }}
     >
+      <StatusBar style="light" />
       <Box
         flexDirection="row"
         justifyContent="space-between"

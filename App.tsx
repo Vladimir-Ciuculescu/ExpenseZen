@@ -26,7 +26,7 @@ export default function App() {
     <NativeBaseProvider>
       <Provider store={store}>
         <PersistGate persistor={persistor}>
-          <StatusBar style="auto" />
+          {/* <StatusBar style="auto" /> */}
           <Navigation />
         </PersistGate>
       </Provider>

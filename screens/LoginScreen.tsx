@@ -4,6 +4,7 @@ import { Text, VStack, HStack, Pressable } from "native-base";
 import { TouchableWithoutFeedback, Keyboard } from "react-native";
 import LoginForm from "../components/LoginForm";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
 
 interface LoginScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -16,6 +17,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+      <StatusBar style="dark" />
+
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView
           style={{
