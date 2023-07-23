@@ -3,19 +3,31 @@ import React from "react";
 import { Category } from "../interfaces/Category";
 import { getCategoryIcon } from "../utils/getCategoryIcon";
 import { useNavigation } from "@react-navigation/native";
+import { Expense } from "../interfaces/Expense";
+import COLORS from "../colors";
 
 interface TopSpendingCategoryProps {
   item: Category;
+  expenses: Expense[];
 }
 
-const TopSpendingCategory: React.FC<TopSpendingCategoryProps> = ({ item }) => {
+const TopSpendingCategory: React.FC<TopSpendingCategoryProps> = ({
+  item,
+  expenses,
+}) => {
   const { name, color, id } = item;
+
+  // console.log(111, expenses, expenses.length);
 
   const navigation = useNavigation();
 
   const goToCategoryExpenses = () => {
     // @ts-ignore
-    navigation.navigate("CategoryExpenses", { category: name, categoryId: id });
+    navigation.navigate("CategoryExpenses", {
+      //category: name,
+      //categoryId: id,
+      expenses,
+    });
   };
 
   return (
@@ -30,7 +42,7 @@ const TopSpendingCategory: React.FC<TopSpendingCategoryProps> = ({ item }) => {
           alignItems="center"
           borderRadius={22}
         >
-          {getCategoryIcon(name, 32)}
+          {getCategoryIcon(name, 32, COLORS.MUTED[50])}
         </Box>
         <Text fontFamily="SourceBold">{name}</Text>
       </VStack>

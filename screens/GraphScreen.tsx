@@ -143,7 +143,7 @@ const GraphScreen: React.FC<GraphScreenProps> = ({ navigation }) => {
                   Total
                 </Text>
                 <Text fontSize={22} fontFamily="SourceBold">
-                  {user.symbol} {total}
+                  {user.symbol} {total.toFixed(2)}
                 </Text>
               </VStack>
             )}

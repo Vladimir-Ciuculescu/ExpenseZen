@@ -5,6 +5,6 @@ export interface Expense {
   amount: number;
   description?: string;
   name?: string;
-  date?: any;
+  payDate?: any;
   color?: string | undefined;
 }

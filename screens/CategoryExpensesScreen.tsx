@@ -1,41 +1,33 @@
 import React, { useLayoutEffect } from "react";
-import {
-  StyleSheet,
-  SafeAreaView,
-  ScrollView,
-  View,
-  TouchableOpacity,
-} from "react-native";
-import { Pressable, Text } from "native-base";
+import { StyleSheet, SafeAreaView, TouchableOpacity } from "react-native";
+import { Pressable, Text, ScrollView, HStack, View } from "native-base";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   NavigationProp,
   ParamListBase,
   RouteProp,
 } from "@react-navigation/native";
-import { useLayout } from "native-base";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { ExpenseService } from "../api/services/ExpenseService";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
+
+import { Expense } from "../interfaces/Expense";
+import moment from "moment";
+import { StatusBar } from "expo-status-bar";
+import { getCategoryIcon } from "../utils/getCategoryIcon";
+import COLORS from "../colors";
 
 interface CategoryExpenseScreenProps {
   navigation: NavigationProp<ParamListBase>;
-  route: RouteProp<
-    { params: { category: string; categoryId: number } },
-    "params"
-  >;
+  route: RouteProp<{ params: { expenses: Expense[] } }, "params">;
 }
 
 const CategoryExpensesScreen: React.FC<CategoryExpenseScreenProps> = ({
   navigation,
   route,
 }) => {
-  const {
-    params: { categoryId },
-  } = route;
+  const { params } = route;
+  const { expenses } = params;
 
-  const user = useSelector((state: RootState) => state.user);
+  console.log("111", expenses);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -54,202 +46,93 @@ const CategoryExpensesScreen: React.FC<CategoryExpenseScreenProps> = ({
         </Pressable>
       ),
     });
-
-    getMonthlyCategoryExpenses();
   }, [navigation]);
 
-  const getMonthlyCategoryExpenses = async () => {
-    const data = await ExpenseService.getMonthlyCategoryExpenses(
-      user.id,
-      categoryId
-    );
-
-    console.log(data);
-  };
-
-  const items = [
-    {
-      icon: "figma",
-      label: "Pr",
-      company: "Figma",
-      start: new Date(2021, 3, 1),
-      end: null,
-    },
-    {
-      icon: "twitch",
-      label: "Lead Designer",
-      company: "Twitch",
-      start: new Date(2020, 12, 1),
-      end: new Date(2021, 3, 1),
-    },
-    {
-      icon: "github",
-      label: "Senior Designer",
-      company: "GitHub",
-      start: new Date(2017, 8, 1),
-      end: new Date(2020, 12, 1),
-    },
-    {
-      icon: "gitlab",
-      company: "GitLab",
-      label: "Mid-level Designer",
-      start: new Date(2016, 4, 1),
-      end: new Date(2017, 8, 1),
-    },
-    {
-      icon: "figma",
-      label: "Principal Designer",
-      company: "Figma",
-      start: new Date(2021, 3, 1),
-      end: null,
-    },
-    {
-      icon: "twitch",
-      label: "Lead Designer",
-      company: "Twitch",
-      start: new Date(2020, 12, 1),
-      end: new Date(2021, 3, 1),
-    },
-    {
-      icon: "github",
-      label: "Senior Designer",
-      company: "GitHub",
-      start: new Date(2017, 8, 1),
-      end: new Date(2020, 12, 1),
-    },
-    {
-      icon: "gitlab",
-      company: "GitLab",
-      label: "Mid-level Designer",
-      start: new Date(2016, 4, 1),
-      end: new Date(2017, 8, 1),
-    },
-    {
-      icon: "figma",
-      label: "Principal Designer",
-      company: "Figma",
-      start: new Date(2021, 3, 1),
-      end: null,
-    },
-    {
-      icon: "twitch",
-      label: "Lead Designer",
-      company: "Twitch",
-      start: new Date(2020, 12, 1),
-      end: new Date(2021, 3, 1),
-    },
-    {
-      icon: "github",
-      label: "Senior Designer",
-      company: "GitHub",
-      start: new Date(2017, 8, 1),
-      end: new Date(2020, 12, 1),
-    },
-    {
-      icon: "gitlab",
-      company: "GitLab",
-      label: "Mid-level Designer",
-      start: new Date(2016, 4, 1),
-      end: new Date(2017, 8, 1),
-    },
-    {
-      icon: "twitter",
-      company: "Twitter",
-      label: "Mid-level Designer",
-      start: new Date(2014, 2, 1),
-      end: new Date(2016, 4, 1),
-    },
-    {
-      icon: "codepen",
-      label: "Junior Designer",
-      company: "Codepen",
-      start: new Date(2013, 8, 1),
-      end: new Date(2014, 2, 1),
-    },
-    {
-      icon: "codesandbox",
-      label: "Junior Designer",
-      company: "CodeSandbox",
-      start: new Date(2012, 1, 1),
-      end: new Date(2013, 8, 1),
-    },
-    {
-      icon: "dribbble",
-      label: "Entry-level Designer",
-      company: "Dribbble",
-      start: new Date(2008, 11, 1),
-      end: new Date(2012, 1, 1),
-    },
-  ];
-
   return (
-    <SafeAreaView style={{ backgroundColor: "#fff" }}>
-      <ScrollView contentContainerStyle={styles.container}>
-        {items.map(({ icon, label, company, start, end }, index) => {
+    <SafeAreaView>
+      <StatusBar style="dark" />
+      <ScrollView contentContainerStyle={{ padding: 24 }}>
+        {expenses.map((expense: Expense, index: number) => {
+          const parsedDate = moment(expense.payDate, "YYYY-MM-DD");
+          const formattedDate = parsedDate.format("D MMMM");
+
           return (
-            <View
-              key={index}
-              //style={styles.cardWrapper}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  // handle onPress
-                }}
-              >
-                <View style={styles.card}>
-                  <View style={styles.cardIcon}>
-                    <MaterialCommunityIcons
-                      name="airplane"
-                      size={24}
-                      //   color={COLORS.MUTED[700]}
-                    />
-                  </View>
-
-                  <View style={styles.cardDelimiter}>
-                    {index !== items.length - 1 && (
-                      <View style={styles.cardDelimiterLine} />
-                    )}
-
-                    <View
-                      style={[
-                        styles.cardDelimiterInset,
-                        { backgroundColor: "#ffcb05" },
-                      ]}
-                    />
-                  </View>
-
-                  <View style={styles.cardBody}>
-                    <View style={styles.cardBodyContent}>
-                      <Text style={styles.cardTitle}>{label}</Text>
-
-                      {/* <Text style={styles.cardSubtitle}>{company}</Text> */}
-
-                      <Text style={styles.cardDates}>{`${start.toLocaleString(
-                        "en-US",
-                        {
-                          month: "short",
-                          year: "numeric",
-                        }
-                      )} - ${
-                        end
-                          ? end.toLocaleString("en-US", {
-                              month: "short",
-                              year: "numeric",
-                            })
-                          : "Present"
-                      }`}</Text>
-                    </View>
-                    <View style={styles.cardBodyAction}>
-                      {/* <MaterialCommunityIcons
-                        color="#181818"
-                        name="airplane"
-                        size={16}
-                      /> */}
-                      <Text>50$</Text>
-                    </View>
-                  </View>
+            <View key={index}>
+              <HStack alignItems="center">
+                <View
+                  width={"48px"}
+                  height={"48px"}
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  {getCategoryIcon(expense.name, 24, COLORS.MUTED[900])}
                 </View>
-              </TouchableOpacity>
+
+                <View
+                  position="relative"
+                  width="60px"
+                  alignItems="center"
+                  justifyContent="center"
+                  alignSelf="stretch"
+                >
+                  {index !== expenses.length - 1 && (
+                    <View
+                      position="absolute"
+                      left="30px"
+                      top="50%"
+                      borderLeftWidth={1}
+                      borderColor={expense.color}
+                      height="100%"
+                      zIndex={1}
+                    />
+                  )}
+
+                  <View
+                    width="12px"
+                    height="12px"
+                    borderWidth="3px"
+                    borderRadius={9999}
+                    zIndex={9}
+                    borderColor={expense.color}
+                    position={"relative"}
+                    backgroundColor={COLORS.MUTED[50]}
+                  />
+                </View>
+
+                <HStack
+                  padding="12px"
+                  alignItems="center"
+                  justifyContent="center"
+                  flexGrow={1}
+                  flexShrink={1}
+                  flexBasis={0}
+                >
+                  <View flexGrow={1} flexShrink={1} flexBasis={0}>
+                    <Text
+                      fontSize={17}
+                      fontFamily="SourceBold"
+                      color="muted.700"
+                    >
+                      # {index}
+                    </Text>
+
+                    <Text>{expense.description}</Text>
+
+                    <Text
+                      fontSize={14}
+                      fontFamily="SourceSansPro"
+                      color="muted.500"
+                    >
+                      {formattedDate}
+                    </Text>
+                  </View>
+                  <View>
+                    <Text fontSize={18} fontFamily="SourceBold">
+                      {expense.amount} $
+                    </Text>
+                  </View>
+                </HStack>
+              </HStack>
             </View>
           );
         })}
@@ -259,92 +142,3 @@ const CategoryExpensesScreen: React.FC<CategoryExpenseScreenProps> = ({
 };
 
 export default CategoryExpensesScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 24,
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "700",
-    color: "#1d1d1d",
-    marginBottom: 12,
-  },
-  card: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  cardIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 12,
-    alignItems: "center",
-    justifyContent: "center",
-    // borderColor: "red",
-    // borderWidth: 2,
-  },
-  cardDelimiter: {
-    position: "relative",
-    width: 60,
-    alignItems: "center",
-    justifyContent: "center",
-    alignSelf: "stretch",
-  },
-  cardDelimiterInset: {
-    width: 12,
-    height: 12,
-    borderWidth: 3,
-    borderRadius: 9999,
-    backgroundColor: "#fff",
-    borderColor: "#ffcb05",
-    zIndex: 9,
-    position: "relative",
-  },
-  cardDelimiterLine: {
-    position: "absolute",
-    left: 30,
-    top: "50%",
-    borderLeftWidth: 1,
-    borderColor: "#eee",
-    height: "100%",
-    zIndex: 1,
-  },
-  cardBody: {
-    padding: 12,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-  },
-  cardBodyContent: {
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-  },
-  cardBodyAction: {
-    flexGrow: 1,
-    flexShrink: 1,
-    flexBasis: 0,
-    maxWidth: 28,
-    alignItems: "flex-end",
-  },
-  cardTitle: {
-    fontSize: 17,
-    fontWeight: "600",
-    color: "#2a2a2a",
-    marginBottom: 3,
-  },
-  cardSubtitle: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#464646",
-    marginBottom: 3,
-  },
-  cardDates: {
-    fontSize: 14,
-    fontWeight: "500",
-    color: "#ababab",
-  },
-});

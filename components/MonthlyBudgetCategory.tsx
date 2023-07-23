@@ -53,7 +53,7 @@ const MonthlyBudgetCategory: React.FC<MonthlyBudgetCategoryProps> = ({
             justifyContent="center"
             alignItems="center"
           >
-            {getCategoryIcon(category, 24)}
+            {getCategoryIcon(category, 24, COLORS.MUTED[50])}
           </Box>
           <Text fontFamily="SourceBold" fontSize={18}>
             {category}

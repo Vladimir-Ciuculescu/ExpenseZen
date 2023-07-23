@@ -4,6 +4,7 @@ import { GraphCategory } from "../interfaces/GraphCategory";
 import { getCategoryIcon } from "../utils/getCategoryIcon";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import COLORS from "../colors";
 
 interface GraphCategoryItemProps {
   graphCategory: GraphCategory;
@@ -27,7 +28,7 @@ const GraphCategoryItem: React.FC<GraphCategoryItemProps> = ({
           justifyContent="center"
           alignItems="center"
         >
-          {getCategoryIcon(name, 22)}
+          {getCategoryIcon(name, 22, COLORS.MUTED[50])}
         </Box>
         <VStack>
           <Text fontFamily="SourceBold" fontSize={15}>

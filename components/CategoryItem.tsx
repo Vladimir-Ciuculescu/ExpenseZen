@@ -56,7 +56,7 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
           justifyContent="center"
           alignItems="center"
         >
-          {getCategoryIcon(name, 24)}
+          {getCategoryIcon(name, 24, COLORS.MUTED[50])}
         </Box>
         <Text fontFamily="SourceBold" style={{ flex: 1 }} fontSize={17}>
           {name}

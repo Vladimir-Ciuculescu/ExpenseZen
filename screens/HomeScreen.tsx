@@ -98,12 +98,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     return todayTotal;
   };
 
-  const getMonthTotal = async () => {
-    const monthTotal = await ExpenseService.getMonthTotalExpenses(
-      Number(user.id)
-    );
-    return monthTotal;
-  };
+  // const getMonthTotal = async () => {
+  //   const monthTotal = await ExpenseService.getMonthTotalExpenses(
+  //     Number(user.id)
+  //   );
+  //   return monthTotal;
+  // };
 
   const getTopSpendingCategories = async (userId: number) => {
     const categories = await CategoryService.getTopSpendingCategories(userId);
@@ -132,6 +132,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       getMonthlyExpenses(user.id),
     ]);
 
+    // console.log(expenses);
+
     setTodayTotal(todayTotal);
     setMonthTotal(
       expenses.reduce(
@@ -142,7 +144,20 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     );
     setTopCategories(categories);
     setMonthlyBudgets(budgets.filter((item: Budget) => item.budget !== 0));
-    setExpenses(expenses);
+
+    setExpenses(
+      expenses.map((expense: any) => {
+        const item = {
+          ...expense,
+        };
+
+        delete item.paydate;
+        return {
+          ...item,
+          payDate: expense.paydate,
+        };
+      })
+    );
     setLoading(false);
   };
 
@@ -204,7 +219,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                   />
                 ) : (
                   <Text fontFamily="SourceBold" color="muted.900" fontSize={35}>
-                    {user.symbol} {monthTotal}
+                    {user.symbol} {monthTotal.toFixed(2)}
                   </Text>
                 )}
                 {isFocused && (
@@ -240,7 +255,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                   horizontal={true}
                   data={topCategories}
                   keyExtractor={(item: any) => item.id}
-                  renderItem={({ item }) => <TopSpendingCategory item={item} />}
+                  renderItem={({ item }) => (
+                    <TopSpendingCategory
+                      expenses={expenses.filter(
+                        (expense) => expense.name === item.name
+                      )}
+                      item={item}
+                    />
+                  )}
                 />
               ) : (
                 <HStack justifyContent="center">

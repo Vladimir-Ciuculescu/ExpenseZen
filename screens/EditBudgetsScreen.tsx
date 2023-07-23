@@ -61,7 +61,7 @@ const EditBudgetScreen: React.FC<EditBudgetScreenProps> = ({ navigation }) => {
         id: category.id,
         name: category.name,
         color: category.color,
-        icon: getCategoryIcon(category.name, 24),
+        icon: getCategoryIcon(category.name, 24, COLORS.MUTED[50]),
         budget: budget ? budget.budget : 0,
       };
     });
