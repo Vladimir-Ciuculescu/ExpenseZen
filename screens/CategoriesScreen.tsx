@@ -40,7 +40,6 @@ const CategoriesScreen: React.FC<CategoriesScrennProps> = ({ navigation }) => {
 
   const getCategories = async () => {
     const categories = await CategoryService.getAllCategories();
-    console.log(categories);
     setCategories(
       categories!.map((category: Category) => {
         return {

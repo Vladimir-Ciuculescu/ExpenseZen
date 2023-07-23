@@ -166,21 +166,23 @@ const GraphScreen: React.FC<GraphScreenProps> = ({ navigation }) => {
                 </VStack>
               ) : (
                 <>
-                  {graphCategories.map((graphCategory: GraphCategory) => {
-                    const categoryPercent =
-                      (graphCategory.amount * 100) / total;
-                    return (
-                      <HStack space={2} alignItems="center">
-                        <Circle
-                          size="10px"
-                          style={{ backgroundColor: graphCategory.color }}
-                        />
-                        <Text fontFamily="SourceBold">
-                          {graphCategory.name} ({categoryPercent.toFixed(2)}%)
-                        </Text>
-                      </HStack>
-                    );
-                  })}
+                  {graphCategories.map(
+                    (graphCategory: GraphCategory, key: number) => {
+                      const categoryPercent =
+                        (graphCategory.amount * 100) / total;
+                      return (
+                        <HStack space={2} alignItems="center" key={key}>
+                          <Circle
+                            size="10px"
+                            style={{ backgroundColor: graphCategory.color }}
+                          />
+                          <Text fontFamily="SourceBold">
+                            {graphCategory.name} ({categoryPercent.toFixed(2)}%)
+                          </Text>
+                        </HStack>
+                      );
+                    }
+                  )}
                 </>
               )}
             </VStack>

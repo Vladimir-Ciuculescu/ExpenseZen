@@ -16,8 +16,6 @@ const GraphCategoryItem: React.FC<GraphCategoryItemProps> = ({
 
   const user = useSelector((state: RootState) => state.user);
 
-  console.log("3333", color);
-
   return (
     <HStack alignItems="center" width="100%" justifyContent="space-between">
       <HStack alignItems="center" space={4}>

@@ -18,6 +18,7 @@ import AddExpenseScreen from "./screens/AddExpenseScreen";
 import { TAB_BAR_HEIGHT } from "./constants/NavigationConstants";
 import AddCurrencyScreen from "./screens/AddCurrencyScreen";
 import EditBudgetScreen from "./screens/EditBudgetsScreen";
+import CategoryExpensesScreen from "./screens/CategoryExpensesScreen";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -198,6 +199,19 @@ const Navigation: React.FC<any> = () => {
             component={AddCurrencyScreen}
             name="Currency"
             options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            component={CategoryExpensesScreen}
+            name="CategoryExpenses"
+            options={({ route }) => ({
+              //title: route.params.title,
+              headerTintColor: "#fff",
+              headerStyle: {
+                //backgroundColor: route.params.color,
+              },
+              //headerShadowVisible: false, // applied here
+              headerBackTitleVisible: false,
+            })}
           />
         </Stack.Group>
         <Stack.Group screenOptions={{ presentation: "containedModal" }}>
