@@ -31,6 +31,7 @@ import COLORS from "../colors";
 import { ExpenseService } from "../api/services/ExpenseService";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import { StatusBar } from "expo-status-bar";
 
 interface AddExpenseScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -127,6 +128,7 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView style={{ flex: 1 }}>
+          <StatusBar style="dark" />
           <ScrollView flex={1}>
             <Pressable
               style={{ position: "absolute", right: 40, top: 25, zIndex: 9999 }}

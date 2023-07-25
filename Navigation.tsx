@@ -19,6 +19,7 @@ import { TAB_BAR_HEIGHT } from "./constants/NavigationConstants";
 import AddCurrencyScreen from "./screens/AddCurrencyScreen";
 import EditBudgetScreen from "./screens/EditBudgetsScreen";
 import CategoryExpensesScreen from "./screens/CategoryExpensesScreen";
+import { Expense } from "./interfaces/Expense";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -209,6 +210,7 @@ const Navigation: React.FC<any> = () => {
               headerStyle: {
                 //backgroundColor: route.params.color,
               },
+
               //headerShadowVisible: false, // applied here
               headerBackTitleVisible: false,
             })}

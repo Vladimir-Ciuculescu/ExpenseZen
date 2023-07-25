@@ -108,82 +108,83 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
   }, [navigation]);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar style="dark" />
-      <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.profile}>
-          <TouchableOpacity
-            onPress={() => {
-              // handle onPress
-            }}
-          >
-            <View style={styles.profileAvatarWrapper}>
-              <Image
-                alt=""
-                source={{
-                  uri: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2.5&w=256&h=256&q=80",
-                }}
-                style={styles.profileAvatar}
-              />
+    // <SafeAreaView style={{ flex: 1 }}>
+    //   <StatusBar style="dark" />
+    //   <ScrollView contentContainerStyle={styles.container}>
+    //     <View style={styles.profile}>
+    //       <TouchableOpacity
+    //         onPress={() => {
+    //           // handle onPress
+    //         }}
+    //       >
+    //         <View style={styles.profileAvatarWrapper}>
+    //           <Image
+    //             alt=""
+    //             source={{
+    //               uri: "https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=facearea&facepad=2.5&w=256&h=256&q=80",
+    //             }}
+    //             style={styles.profileAvatar}
+    //           />
 
-              <TouchableOpacity
-                onPress={() => {
-                  // handle onPress
-                }}
-              >
-                <View style={styles.profileAction}>
-                  <FeatherIcon color="#fff" name="edit-3" size={15} />
-                </View>
-              </TouchableOpacity>
-            </View>
-          </TouchableOpacity>
+    //           <TouchableOpacity
+    //             onPress={() => {
+    //               // handle onPress
+    //             }}
+    //           >
+    //             <View style={styles.profileAction}>
+    //               <FeatherIcon color="#fff" name="edit-3" size={15} />
+    //             </View>
+    //           </TouchableOpacity>
+    //         </View>
+    //       </TouchableOpacity>
 
-          <View style={styles.profileBody}>
-            <Text style={styles.profileName}>John Doe</Text>
+    //       <View style={styles.profileBody}>
+    //         <Text style={styles.profileName}>John Doe</Text>
 
-            <Text style={styles.profileAddress}>
-              123 Maple Street. Anytown, PA 17101
-            </Text>
-          </View>
-        </View>
+    //         <Text style={styles.profileAddress}>
+    //           123 Maple Street. Anytown, PA 17101
+    //         </Text>
+    //       </View>
+    //     </View>
 
-        {SECTIONS.map(({ header, items }) => (
-          <View style={styles.section} key={header}>
-            <Text style={styles.sectionHeader}>{header}</Text>
-            {items.map(({ label, icon, type, value, color }, index) => {
-              return (
-                <TouchableOpacity
-                  key={label}
-                  onPress={() => {
-                    // handle onPress
-                  }}
-                >
-                  <View style={styles.row}>
-                    <View style={[styles.rowIcon, { backgroundColor: color }]}>
-                      <FeatherIcon color="#fff" name={icon} size={18} />
-                    </View>
+    //     {SECTIONS.map(({ header, items }) => (
+    //       <View style={styles.section} key={header}>
+    //         <Text style={styles.sectionHeader}>{header}</Text>
+    //         {items.map(({ label, icon, type, value, color }, index) => {
+    //           return (
+    //             <TouchableOpacity
+    //               key={label}
+    //               onPress={() => {
+    //                 // handle onPress
+    //               }}
+    //             >
+    //               <View style={styles.row}>
+    //                 <View style={[styles.rowIcon, { backgroundColor: color }]}>
+    //                   <FeatherIcon color="#fff" name={icon} size={18} />
+    //                 </View>
 
-                    <Text style={styles.rowLabel}>{label}</Text>
+    //                 <Text style={styles.rowLabel}>{label}</Text>
 
-                    <View style={styles.rowSpacer} />
+    //                 <View style={styles.rowSpacer} />
 
-                    {type === "boolean" && <Switch value={value} />}
+    //                 {type === "boolean" && <Switch value={value} />}
 
-                    {type === "link" && (
-                      <FeatherIcon
-                        color="#0c0c0c"
-                        name="chevron-right"
-                        size={22}
-                      />
-                    )}
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-        ))}
-      </ScrollView>
-    </SafeAreaView>
+    //                 {type === "link" && (
+    //                   <FeatherIcon
+    //                     color="#0c0c0c"
+    //                     name="chevron-right"
+    //                     size={22}
+    //                   />
+    //                 )}
+    //               </View>
+    //             </TouchableOpacity>
+    //           );
+    //         })}
+    //       </View>
+    //     ))}
+    //   </ScrollView>
+    // </SafeAreaView>
+    <View style={{ flex: 1, backgroundColor: "red" }}></View>
   );
 };
 
@@ -192,7 +193,8 @@ export default SettingsScreen;
 const styles = StyleSheet.create({
   container: {
     paddingVertical: 24,
-    backgroundColor: "#fff",
+    backgroundColor: "white",
+    flex: 1,
   },
   section: {
     paddingHorizontal: 24,
