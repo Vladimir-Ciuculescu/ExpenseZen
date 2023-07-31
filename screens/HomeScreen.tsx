@@ -20,7 +20,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign } from "@expo/vector-icons";
 import { TAB_BAR_HEIGHT } from "../constants/NavigationConstants";
 import { ExpenseService } from "../api/services/ExpenseService";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import TopSpendingCategory from "../components/TopSpendingCategory";
 import { Category } from "../interfaces/Category";
@@ -35,6 +35,11 @@ import { UserService } from "../api/services/UserService";
 import { Budget } from "../interfaces/Budget";
 import { Expense } from "../interfaces/Expense";
 import { StatusBar } from "expo-status-bar";
+import moment from "moment";
+import {
+  setExpensesAction,
+  setTodayTotalAction,
+} from "../redux/expensesReducers";
 
 interface HomeScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -43,11 +48,20 @@ interface HomeScreenProps {
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState<boolean>(false);
-  const [todayTotal, setTodayTotal] = useState<number>(0);
+  // const [todayTotal, setTodayTotal] = useState<number>(0);
   const [monthTotal, setMonthTotal] = useState<number>(0);
   const [topCategories, setTopCategories] = useState<Category[]>([]);
   const [monthlyBudgets, setMonthlyBudgets] = useState<Budget[]>([]);
-  const [expenses, setExpenses] = useState<Expense[]>([]);
+  // const [expenses, setExpenses] = useState<Expense[]>([]);
+  const dispatch = useDispatch();
+
+  const { expenses, todayTotal } = useSelector(
+    (state: RootState) => state.expenses
+  );
+
+  console.log(todayTotal);
+  //console.log(expensers);
+  //console.log(expenses);
 
   const user = useSelector((state: RootState) => state.user);
 
@@ -85,25 +99,17 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     });
   }, [navigation, todayTotal, loading]);
 
+  // useEffect(() => {
+  //   if (isFocused) {
+  //     getGeneralInfo();
+  //   }
+  // }, [isFocused]);
+
   useEffect(() => {
-    if (isFocused) {
+    if (expenses.length === 0) {
       getGeneralInfo();
     }
-  }, [isFocused]);
-
-  const getTodayTotal = async () => {
-    const todayTotal = await ExpenseService.getTodayTotalExpenses(
-      Number(user.id)
-    );
-    return todayTotal;
-  };
-
-  // const getMonthTotal = async () => {
-  //   const monthTotal = await ExpenseService.getMonthTotalExpenses(
-  //     Number(user.id)
-  //   );
-  //   return monthTotal;
-  // };
+  }, []);
 
   const getTopSpendingCategories = async (userId: number) => {
     const categories = await CategoryService.getTopSpendingCategories(userId);
@@ -123,18 +129,16 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   };
 
   const getGeneralInfo = async () => {
+    const todayDate = moment().format("YYYY-MM-DD");
+
     setLoading(true);
 
-    const [todayTotal, categories, budgets, expenses] = await Promise.all([
-      getTodayTotal(),
+    const [categories, budgets, expenses] = await Promise.all([
       getTopSpendingCategories(user.id),
       getMonthlyBudgets(user.id),
       getMonthlyExpenses(user.id),
     ]);
 
-    // console.log(expenses);
-
-    setTodayTotal(todayTotal);
     setMonthTotal(
       expenses.reduce(
         (accumulator: any, currentValue: Expense) =>
@@ -142,22 +146,35 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         0
       )
     );
+
+    // setTodayTotal(
+    //   expenses
+    //     .filter((expense: Expense) => expense.paydate === todayDate)
+    //     .reduce(
+    //       (accumulator: any, currentValue: Expense) =>
+    //         accumulator + currentValue.amount,
+    //       0
+    //     )
+    // );
+
     setTopCategories(categories);
     setMonthlyBudgets(budgets.filter((item: Budget) => item.budget !== 0));
 
-    setExpenses(
-      expenses.map((expense: any) => {
-        const item = {
-          ...expense,
-        };
+    // setExpenses(
+    //   expenses.map((expense: Expense) => {
+    //     const item = {
+    //       ...expense,
+    //     };
 
-        delete item.paydate;
-        return {
-          ...item,
-          payDate: expense.paydate,
-        };
-      })
-    );
+    //     delete item.paydate;
+    //     return {
+    //       ...item,
+    //       payDate: expense.paydate,
+    //     };
+    //   })
+    // );
+    dispatch(setExpensesAction(expenses));
+    dispatch(setTodayTotalAction({ expenses, todayDate }));
     setLoading(false);
   };
 
