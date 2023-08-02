@@ -6,6 +6,5 @@ export interface Expense {
   description?: string;
   name?: string;
   payDate?: any;
-  paydate?: any;
   color?: string | undefined;
 }

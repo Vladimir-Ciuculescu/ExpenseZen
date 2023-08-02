@@ -25,7 +25,7 @@
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import React, { useLayoutEffect } from "react";
-import { Text } from "native-base";
+import { Button, Text } from "native-base";
 import {
   StyleSheet,
   SafeAreaView,
@@ -36,6 +36,8 @@ import {
   Switch,
 } from "react-native";
 import FeatherIcon from "react-native-vector-icons/Feather";
+import { removeCurrency, removeUser } from "../redux/userReducer";
+import { useDispatch } from "react-redux";
 
 const SECTIONS = [
   {
@@ -106,6 +108,13 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
       ),
     });
   }, [navigation]);
+  const dispatch = useDispatch();
+
+  const logout = () => {
+    dispatch(removeUser());
+    dispatch(removeCurrency());
+    navigation.navigate("Login");
+  };
 
   return (
     // <SafeAreaView style={{ flex: 1 }}>
@@ -184,7 +193,9 @@ const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
     //     ))}
     //   </ScrollView>
     // </SafeAreaView>
-    <View style={{ flex: 1, backgroundColor: "red" }}></View>
+    <View style={{ flex: 1, backgroundColor: "red" }}>
+      <Button onPress={logout}>Logout</Button>
+    </View>
   );
 };
 

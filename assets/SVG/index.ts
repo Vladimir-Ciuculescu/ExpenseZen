@@ -5,5 +5,15 @@ import Google from "./Google.svg";
 import Facebook from "./Facebook.svg";
 import NoData from "./NoData.svg";
 import SetBudget from "./SetBudget.svg";
+import NoChartData from "./NoChartData.svg";
 
-export { Savings, PieChart, Progress, Google, Facebook, NoData, SetBudget };
+export {
+  Savings,
+  PieChart,
+  Progress,
+  Google,
+  Facebook,
+  NoData,
+  SetBudget,
+  NoChartData,
+};

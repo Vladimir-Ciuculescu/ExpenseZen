@@ -17,8 +17,6 @@ const TopSpendingCategory: React.FC<TopSpendingCategoryProps> = ({
 }) => {
   const { name, color, id } = item;
 
-  // console.log(111, expenses, expenses.length);
-
   const navigation = useNavigation();
 
   const goToCategoryExpenses = () => {

@@ -35,11 +35,16 @@ import { UserService } from "../api/services/UserService";
 import { Budget } from "../interfaces/Budget";
 import { Expense } from "../interfaces/Expense";
 import { StatusBar } from "expo-status-bar";
-import moment from "moment";
 import {
+  monthlyBudgetsSelector,
+  monthTotalSelector,
+  setBudgetsActions,
+  setCategoriesAction,
   setExpensesAction,
-  setTodayTotalAction,
+  todayTotalSelector,
+  topSpedingCategoriesSelector,
 } from "../redux/expensesReducers";
+import { getCategoryIcon } from "../utils/getCategoryIcon";
 
 interface HomeScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -47,21 +52,13 @@ interface HomeScreenProps {
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const isFocused = useIsFocused();
-  const [loading, setLoading] = useState<boolean>(false);
-  // const [todayTotal, setTodayTotal] = useState<number>(0);
-  const [monthTotal, setMonthTotal] = useState<number>(0);
-  const [topCategories, setTopCategories] = useState<Category[]>([]);
-  const [monthlyBudgets, setMonthlyBudgets] = useState<Budget[]>([]);
-  // const [expenses, setExpenses] = useState<Expense[]>([]);
   const dispatch = useDispatch();
-
-  const { expenses, todayTotal } = useSelector(
-    (state: RootState) => state.expenses
-  );
-
-  console.log(todayTotal);
-  //console.log(expensers);
-  //console.log(expenses);
+  const [loading, setLoading] = useState<boolean>(false);
+  const { expenses } = useSelector((state: RootState) => state.expenses);
+  const todayTotal = useSelector(todayTotalSelector);
+  const monthTotal = useSelector(monthTotalSelector);
+  const topSpendingCategories = useSelector(topSpedingCategoriesSelector);
+  const monthlyBudgets = useSelector(monthlyBudgetsSelector);
 
   const user = useSelector((state: RootState) => state.user);
 
@@ -99,22 +96,22 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     });
   }, [navigation, todayTotal, loading]);
 
-  // useEffect(() => {
-  //   if (isFocused) {
-  //     getGeneralInfo();
-  //   }
-  // }, [isFocused]);
-
   useEffect(() => {
     if (expenses.length === 0) {
       getGeneralInfo();
     }
-  }, []);
+  }, [navigation]);
 
-  const getTopSpendingCategories = async (userId: number) => {
-    const categories = await CategoryService.getTopSpendingCategories(userId);
-
-    return categories;
+  const getAllCategories = async () => {
+    const cateogries = await CategoryService.getAllCategories();
+    return cateogries!.map((category: Category) => {
+      return {
+        id: category.id,
+        name: category.name,
+        color: category.color,
+        icon: getCategoryIcon(category.name, 24),
+      };
+    });
   };
 
   const getMonthlyBudgets = async (userId: number) => {
@@ -129,52 +126,20 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   };
 
   const getGeneralInfo = async () => {
-    const todayDate = moment().format("YYYY-MM-DD");
-
     setLoading(true);
 
     const [categories, budgets, expenses] = await Promise.all([
-      getTopSpendingCategories(user.id),
+      getAllCategories(),
       getMonthlyBudgets(user.id),
       getMonthlyExpenses(user.id),
     ]);
 
-    setMonthTotal(
-      expenses.reduce(
-        (accumulator: any, currentValue: Expense) =>
-          accumulator + currentValue.amount,
-        0
-      )
+    dispatch(setCategoriesAction(categories));
+    dispatch(
+      setBudgetsActions(budgets.filter((item: Budget) => item.budget !== 0))
     );
-
-    // setTodayTotal(
-    //   expenses
-    //     .filter((expense: Expense) => expense.paydate === todayDate)
-    //     .reduce(
-    //       (accumulator: any, currentValue: Expense) =>
-    //         accumulator + currentValue.amount,
-    //       0
-    //     )
-    // );
-
-    setTopCategories(categories);
-    setMonthlyBudgets(budgets.filter((item: Budget) => item.budget !== 0));
-
-    // setExpenses(
-    //   expenses.map((expense: Expense) => {
-    //     const item = {
-    //       ...expense,
-    //     };
-
-    //     delete item.paydate;
-    //     return {
-    //       ...item,
-    //       payDate: expense.paydate,
-    //     };
-    //   })
-    // );
     dispatch(setExpensesAction(expenses));
-    dispatch(setTodayTotalAction({ expenses, todayDate }));
+
     setLoading(false);
   };
 
@@ -236,7 +201,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                   />
                 ) : (
                   <Text fontFamily="SourceBold" color="muted.900" fontSize={35}>
-                    {user.symbol} {monthTotal.toFixed(2)}
+                    {user.symbol}
+
+                    {monthTotal.toFixed(2)}
                   </Text>
                 )}
                 {isFocused && (
@@ -263,14 +230,15 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               <Text fontFamily="SourceBold" fontSize={25}>
                 Top Spending
               </Text>
-              {topCategories.length !== 0 ? (
+              {topSpendingCategories.length !== 0 ? (
                 <FlatList
                   mx={-7}
                   contentContainerStyle={{ paddingHorizontal: 28 }}
                   showsHorizontalScrollIndicator={false}
                   ItemSeparatorComponent={() => <View p="10px" />}
                   horizontal={true}
-                  data={topCategories}
+                  data={topSpendingCategories}
+                  //data={topCategories}
                   keyExtractor={(item: any) => item.id}
                   renderItem={({ item }) => (
                     <TopSpendingCategory

@@ -29,19 +29,25 @@ import { expenseSchema } from "../schemas/expenseSchema";
 import EZButton from "../components/shared/EZButton";
 import COLORS from "../colors";
 import { ExpenseService } from "../api/services/ExpenseService";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { StatusBar } from "expo-status-bar";
+import {
+  addExpenseAction,
+  categoriesSelector,
+} from "../redux/expensesReducers";
+import moment from "moment";
 
 interface AddExpenseScreenProps {
   navigation: NavigationProp<ParamListBase>;
 }
 
 const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
-  const [categories, setCategories] = useState<Category[]>([]);
   const { width } = useWindowDimensions();
+  const dispatch = useDispatch();
 
   const user = useSelector((state: RootState) => state.user);
+  const categories = useSelector(categoriesSelector);
   const [loading, setLoading] = useState<boolean>(false);
   const formik = useFormik({
     initialValues: {
@@ -55,20 +61,25 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
 
       try {
         const currentCategory = categories.find(
-          (item) => item.name === category
+          (item: Category) => item.name === category
         );
 
         const formatAmount = amount.replace(",", ".");
         const numericFormat = Number(formatAmount);
 
-        const Expense = {
+        const expense = {
           userId: Number(user.id),
           categoryId: Number(currentCategory!.id),
           amount: numericFormat,
           description,
         };
 
-        await ExpenseService.AddExpense(Expense);
+        const today = moment().format("YYYY-MM-DD");
+        await ExpenseService.AddExpense(expense);
+
+        dispatch(
+          addExpenseAction({ ...expense, payDate: today, name: category })
+        );
 
         navigation.goBack();
       } catch (error) {
@@ -76,25 +87,6 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
       }
     },
   });
-
-  useLayoutEffect(() => {
-    const getCategories = async () => {
-      const data = await CategoryService.getAllCategories();
-
-      setCategories(
-        data!.map((category: Category) => {
-          return {
-            id: category.id,
-            name: category.name,
-            color: category.color,
-            icon: getCategoryIcon(category.name, 24),
-          };
-        })
-      );
-    };
-
-    getCategories();
-  }, [navigation]);
 
   const handleValue = (label: string, value: string) => {
     if (

@@ -27,7 +27,6 @@ const CategoryExpensesScreen: React.FC<CategoryExpenseScreenProps> = ({
   const { params } = route;
   const { expenses } = params;
 
-  console.log("111", expenses);
 
   useLayoutEffect(() => {
     navigation.setOptions({
