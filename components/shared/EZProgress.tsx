@@ -1,18 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Animated } from "react-native";
-import { Text, View } from "native-base";
+import { View } from "native-base";
 
 interface EZProgresssProps {
   height: string | number;
   value: number;
-  max: number;
+  maxValue: number;
   color: string | undefined;
 }
 
 const EZProgress: React.FC<EZProgresssProps> = ({
   height,
   value,
-  max,
+  maxValue,
   color,
 }) => {
   const animatedValue = useRef(new Animated.Value(-1000)).current;
@@ -28,8 +28,14 @@ const EZProgress: React.FC<EZProgresssProps> = ({
   }, []);
 
   useEffect(() => {
-    reactive.setValue(-width + (width * value) / max);
-  }, [value, width, max]);
+    let progressValue: number;
+    if (value >= maxValue) {
+      progressValue = 1;
+    } else {
+      progressValue = -width + (width * value) / maxValue;
+    }
+    reactive.setValue(progressValue);
+  }, [value, width, maxValue]);
 
   const AnimatedView = Animated.createAnimatedComponent(View);
 

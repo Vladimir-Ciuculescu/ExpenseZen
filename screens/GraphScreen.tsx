@@ -32,6 +32,7 @@ const GraphScreen: React.FC<GraphScreenProps> = ({ navigation }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [series, setSeries] = useState<any[]>([1, 2, 3]);
   const [colors, setColors] = useState<string[]>(["red", "blue", "green"]);
+  const { expenses } = useSelector((state: RootState) => state.expenses);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -53,29 +54,20 @@ const GraphScreen: React.FC<GraphScreenProps> = ({ navigation }) => {
     getGeneralInfo();
   }, [navigation]);
 
-  const getMonthlyExpenses = async (userId: number) => {
-    const expenses = await ExpenseService.getMonthExpenses(userId);
-    return expenses;
-  };
-
   const getGeneralInfo = async () => {
     setLoading(true);
-    const expenses = await getMonthlyExpenses(user.id);
 
-    const categorySummary = expenses.reduce(
-      (acc: any, current: GraphCategory) => {
-        const { name, amount, color } = current;
-        if (acc.hasOwnProperty(name)) {
-          acc[name].amount += amount;
-          acc[name].expenses += 1;
-          acc[name].color = color;
-        } else {
-          acc[name] = { amount, expenses: 1, color };
-        }
-        return acc;
-      },
-      {}
-    );
+    const categorySummary = expenses.reduce((acc: any, current: any) => {
+      const { name, amount, color } = current;
+      if (acc.hasOwnProperty(name)) {
+        acc[name].amount += amount;
+        acc[name].expenses += 1;
+        acc[name].color = color;
+      } else {
+        acc[name] = { amount, expenses: 1, color };
+      }
+      return acc;
+    }, {});
 
     const graphCategories = Object.keys(categorySummary).map((category) => ({
       name: category,

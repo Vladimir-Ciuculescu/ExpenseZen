@@ -8,4 +8,5 @@ export interface User {
   password: string;
   repeatPassword?: string;
   provider: Provider;
+  currency?: string;
 }

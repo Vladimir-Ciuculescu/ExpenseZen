@@ -60,7 +60,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const topSpendingCategories = useSelector(topSpedingCategoriesSelector);
   const monthlyBudgets = useSelector(monthlyBudgetsSelector);
 
-  const user = useSelector((state: RootState) => state.user);
+  const user: any = useSelector((state: RootState) => state.user);
 
   useLayoutEffect(() => {
     navigation.setOptions({

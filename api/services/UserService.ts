@@ -107,7 +107,7 @@ const saveUserBudgets = async (userId: number, budgets: Budget[]) => {
       const { data } = await supabase
         .from(MONTHLY_BUDGETS)
         .select("*")
-        .filter("category_id", "eq", item.categoryId)
+        .filter("category_id", "eq", item.id)
         .filter("user_id", "eq", userId)
         .single();
 
@@ -115,7 +115,7 @@ const saveUserBudgets = async (userId: number, budgets: Budget[]) => {
         await supabase
           .from(MONTHLY_BUDGETS)
           .update({ budget: item.budget })
-          .filter("category_id", "eq", item.categoryId)
+          .filter("category_id", "eq", item.id)
           .filter("user_id", "eq", userId);
       } else {
         await supabase.from(MONTHLY_BUDGETS).insert({

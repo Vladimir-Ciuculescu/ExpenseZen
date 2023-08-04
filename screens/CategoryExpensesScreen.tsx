@@ -1,12 +1,7 @@
 import React, { useLayoutEffect } from "react";
-import { StyleSheet, SafeAreaView, TouchableOpacity } from "react-native";
+import { SafeAreaView } from "react-native";
 import { Pressable, Text, ScrollView, HStack, View } from "native-base";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import {
-  NavigationProp,
-  ParamListBase,
-  RouteProp,
-} from "@react-navigation/native";
+import { NavigationProp, ParamListBase, RouteProp } from "@react-navigation/native";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 import { Expense } from "../interfaces/Expense";
@@ -14,19 +9,18 @@ import moment from "moment";
 import { StatusBar } from "expo-status-bar";
 import { getCategoryIcon } from "../utils/getCategoryIcon";
 import COLORS from "../colors";
+import { AppStackParamList } from "../interfaces/Navigation";
 
-interface CategoryExpenseScreenProps {
+//
+
+type Props = {
   navigation: NavigationProp<ParamListBase>;
-  route: RouteProp<{ params: { expenses: Expense[] } }, "params">;
-}
+  route: RouteProp<AppStackParamList, "CategoryExpenses">;
+};
 
-const CategoryExpensesScreen: React.FC<CategoryExpenseScreenProps> = ({
-  navigation,
-  route,
-}) => {
+const CategoryExpensesScreen: React.FC<Props> = ({ navigation, route }) => {
   const { params } = route;
-  const { expenses } = params;
-
+  const { expenses, name } = params;
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -36,7 +30,7 @@ const CategoryExpensesScreen: React.FC<CategoryExpenseScreenProps> = ({
       headerShadowVisible: false,
       headerTitle: () => (
         <Text fontFamily="SourceBold" fontSize={24}>
-          Travelling
+          {name}
         </Text>
       ),
       headerLeft: () => (
@@ -58,12 +52,7 @@ const CategoryExpensesScreen: React.FC<CategoryExpenseScreenProps> = ({
           return (
             <View key={index}>
               <HStack alignItems="center">
-                <View
-                  width={"48px"}
-                  height={"48px"}
-                  alignItems="center"
-                  justifyContent="center"
-                >
+                <View width={"48px"} height={"48px"} alignItems="center" justifyContent="center">
                   {getCategoryIcon(expense.name, 24, COLORS.MUTED[900])}
                 </View>
 
@@ -107,21 +96,13 @@ const CategoryExpensesScreen: React.FC<CategoryExpenseScreenProps> = ({
                   flexBasis={0}
                 >
                   <View flexGrow={1} flexShrink={1} flexBasis={0}>
-                    <Text
-                      fontSize={17}
-                      fontFamily="SourceBold"
-                      color="muted.700"
-                    >
-                      # {index}
+                    <Text fontSize={17} fontFamily="SourceBold" color="muted.700">
+                      # {index + 1}
                     </Text>
 
                     <Text>{expense.description}</Text>
 
-                    <Text
-                      fontSize={14}
-                      fontFamily="SourceSansPro"
-                      color="muted.500"
-                    >
+                    <Text fontSize={14} fontFamily="SourceSansPro" color="muted.500">
                       {formattedDate}
                     </Text>
                   </View>

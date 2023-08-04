@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { AppStackParamList, StackConfig } from "../interfaces/Navigation";
 import { RootState } from "../redux/store";
 import AddCurrencyScreen from "../screens/AddCurrencyScreen";
 import AddExpenseScreen from "../screens/AddExpenseScreen";
@@ -11,21 +12,12 @@ import OnboardingScreen from "../screens/OnboardingScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import TabNavigator from "./TabNavigator";
 
-type AppStackParamList = {
-  Onboarding: undefined;
-  Login: undefined;
-  Register: undefined;
-  Tabs: undefined;
-  Currency: undefined;
-  CategoryExpenses: undefined;
-  AddExpense: undefined;
-  EditBudgets: undefined;
-};
-
 const Stack = createNativeStackNavigator<AppStackParamList>();
 
 const StackNavigator: React.FC<any> = () => {
-  const [initialScreen, setInitialScreen] = useState<string | null>(null);
+  const [initialScreen, setInitialScreen] = useState<keyof AppStackParamList | undefined>(
+    undefined
+  );
   const { onboarded } = useSelector((state: RootState) => state.onboard);
   const user = useSelector((state: RootState) => state.user);
 
@@ -50,53 +42,34 @@ const StackNavigator: React.FC<any> = () => {
     return null;
   }
 
+  const routes: StackConfig[] = [
+    { name: "Onboarding", component: OnboardingScreen, options: { headerShown: false } },
+    { name: "Login", component: LoginScreen, options: { headerShown: false } },
+    { name: "Register", component: RegisterScreen },
+    { name: "Tabs", component: TabNavigator, options: { headerShown: false } },
+    { name: "Currency", component: AddCurrencyScreen, options: { headerShown: false } },
+    {
+      name: "CategoryExpenses",
+      component: CategoryExpensesScreen,
+      options: { headerTintColor: "#fff", headerBackTitleVisible: false },
+    },
+    {
+      name: "AddExpense",
+      component: AddExpenseScreen,
+      options: { presentation: "containedModal", headerShown: false },
+    },
+    {
+      name: "EditBudgets",
+      component: EditBudgetScreen,
+      options: { presentation: "containedModal", headerShown: false },
+    },
+  ];
+
   return (
     <Stack.Navigator initialRouteName={initialScreen!}>
-      <Stack.Group>
-        <Stack.Screen
-          component={OnboardingScreen}
-          name="Onboarding"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          component={LoginScreen}
-          name="Login"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen component={RegisterScreen} name="Register" />
-        <Stack.Screen
-          component={TabNavigator}
-          name="Tabs"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          component={AddCurrencyScreen}
-          name="Currency"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          component={CategoryExpensesScreen}
-          name="CategoryExpenses"
-          options={({ route }) => ({
-            headerTintColor: "#fff",
-            headerStyle: {},
-
-            headerBackTitleVisible: false,
-          })}
-        />
-      </Stack.Group>
-      <Stack.Group screenOptions={{ presentation: "containedModal" }}>
-        <Stack.Screen
-          component={AddExpenseScreen}
-          name="AddExpense"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          component={EditBudgetScreen}
-          name="EditBudgets"
-          options={{ headerShown: false }}
-        />
-      </Stack.Group>
+      {routes.map((route: StackConfig, key) => (
+        <Stack.Screen key={key} {...route} />
+      ))}
     </Stack.Navigator>
   );
 };

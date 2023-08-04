@@ -46,6 +46,27 @@ const expensesReducer = createSlice({
     setBudgets: (state, action) => {
       state.budgets = action.payload;
     },
+    editBudgets: (state, action) => {
+      const budgets = action.payload;
+
+      console.log("payload", action.payload);
+      console.log(state.budgets);
+
+      state.budgets = state.budgets.map((budget) => {
+        const budgetToEdit = budgets.find(
+          (item: Budget) => item.category === budget.category
+        );
+
+        if (budgetToEdit) {
+          return {
+            ...budget,
+            budget: budgetToEdit.budget,
+          };
+        } else {
+          return budget;
+        }
+      });
+    },
   },
 });
 
@@ -54,6 +75,7 @@ export const setExpensesAction = expensesReducer.actions.setExpenses;
 export const addExpenseAction = expensesReducer.actions.addExpense;
 export const setCategoriesAction = expensesReducer.actions.setCategories;
 export const setBudgetsActions = expensesReducer.actions.setBudgets;
+export const editBudgetsActions = expensesReducer.actions.editBudgets;
 
 //selectors
 const generalState = (state: RootState) => state.expenses;

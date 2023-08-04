@@ -22,9 +22,8 @@ const TopSpendingCategory: React.FC<TopSpendingCategoryProps> = ({
   const goToCategoryExpenses = () => {
     // @ts-ignore
     navigation.navigate("CategoryExpenses", {
-      //category: name,
-      //categoryId: id,
       expenses,
+      name,
     });
   };
 

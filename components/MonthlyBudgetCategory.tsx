@@ -17,10 +17,31 @@ const MonthlyBudgetCategory: React.FC<MonthlyBudgetCategoryProps> = ({
 }) => {
   const { budget: amount, category, color } = budget;
 
-  const isAlmostExceeded = () => {
+  const budgetStatus = () => {
     const threshold = (amount * 75) / 100;
 
-    return monthlyTotal > threshold;
+    let statusMessage = "";
+
+    if (monthlyTotal >= threshold && monthlyTotal < amount) {
+      statusMessage = "Almost exceeding";
+    } else if (monthlyTotal >= amount) {
+      statusMessage = "Budget exceeded !";
+    }
+
+    if (statusMessage) {
+      return (
+        <HStack pb={2} pl={4} alignItems="center" space={2}>
+          <AntDesign
+            name="exclamationcircle"
+            size={15}
+            color={COLORS.DANGER[500]}
+          />
+          <Text>{statusMessage}</Text>
+        </HStack>
+      );
+    }
+
+    return null;
   };
 
   return (
@@ -36,14 +57,7 @@ const MonthlyBudgetCategory: React.FC<MonthlyBudgetCategoryProps> = ({
       bg="muted.50"
       borderRadius={20}
     >
-      <VStack
-        flex={1}
-        pt={4}
-        pl={4}
-        pr={4}
-        space={3}
-        //justifyContent="space-between"
-      >
+      <VStack flex={1} pt={4} pl={4} pr={4} space={3}>
         <HStack space={3} alignItems="center">
           <Box
             borderRadius={22}
@@ -66,13 +80,13 @@ const MonthlyBudgetCategory: React.FC<MonthlyBudgetCategoryProps> = ({
           </Text>
           <EZProgress
             height="20px"
-            max={amount}
+            maxValue={amount}
             value={monthlyTotal}
             color={color}
           />
         </VStack>
       </VStack>
-      {isAlmostExceeded() && (
+      {/* {isAlmostExceeded() && (
         <HStack pb={2} pl={4} alignItems="center" space={2}>
           <AntDesign
             name="exclamationcircle"
@@ -81,7 +95,8 @@ const MonthlyBudgetCategory: React.FC<MonthlyBudgetCategoryProps> = ({
           />
           <Text>Almost exceeded</Text>
         </HStack>
-      )}
+      )} */}
+      {budgetStatus()}
     </Box>
   );
 };
