@@ -11,8 +11,6 @@ import { getCategoryIcon } from "../utils/getCategoryIcon";
 import COLORS from "../colors";
 import { AppStackParamList } from "../interfaces/Navigation";
 
-//
-
 type Props = {
   navigation: NavigationProp<ParamListBase>;
   route: RouteProp<AppStackParamList, "CategoryExpenses">;

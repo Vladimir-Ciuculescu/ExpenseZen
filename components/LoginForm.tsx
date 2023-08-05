@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Alert } from "react-native";
-import { VStack, Text, Pressable, Icon, Button } from "native-base";
+import { VStack, Text, Pressable, Icon } from "native-base";
 import { Feather } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { setCurrency, setUser } from "../redux/userReducer";
-import { RootState } from "../redux/store";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
-
 import { UserService } from "../api/services/UserService";
 import { Provider } from "../interfaces/Provider";
 import { useFormik } from "formik";
@@ -15,7 +13,7 @@ import EZInput from "./shared/EZInput";
 import COLORS from "../colors";
 import EZButton from "./shared/EZButton";
 import { CurrencyService } from "../api/services/CurrencyService";
-import LoginProviders from "./LoginProviders";
+import { authInput } from "../commonStyles";
 
 interface LoginFormProps {
   navigation: NavigationProp<ParamListBase>;
@@ -32,18 +30,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ navigation }) => {
     validationSchema: loginSchema,
     onSubmit: async (values) => {
       const { email, password } = values;
-      const response = await UserService.loginUser(
-        email,
-        password,
-        Provider.DIRECT
-      );
+      const response = await UserService.loginUser(email, password, Provider.DIRECT);
       const message: any = response.message;
       if (message === "User exists") {
         const { id, first_name, last_name, email } = response.data;
 
-        dispatch(
-          setUser({ firstName: first_name, lastName: last_name, email, id })
-        );
+        dispatch(setUser({ firstName: first_name, lastName: last_name, email, id }));
 
         const userCurrency = await CurrencyService.getUserCurrency(id);
 
@@ -99,57 +91,43 @@ const LoginForm: React.FC<LoginFormProps> = ({ navigation }) => {
         <Text fontFamily="SourceBold" fontSize={30} textAlign="center">
           Welcome to ExpenseZen
         </Text>
-        <Text textAlign="center" fontFamily="SourceSansPro" fontSize={17}>
-          Please sign in to track your expenses and stay on top of your finances
+        <Text textAlign="center" fontFamily="SourceSansPro" fontSize={17} color={COLORS.MUTED[400]}>
+          Sign in to your account !
         </Text>
       </VStack>
       <VStack space={6}>
         <EZInput
+          style={authInput}
+          borderRadius="12px"
+          borderColor="muted.200"
+          label="Email address"
           returnKeyType="next"
           type="text"
           value={values.email}
           placeholder="Enter your email"
           onChangeText={(e: string) => handleValue("email", e)}
-          color="purple.700"
-          fontSize={15}
-          pl={5}
-          fontFamily="SourceSansPro"
-          borderRadius={8}
-          height="55px"
-          borderColor="purple.700"
-          focusOutlineColor={
-            touched.email && errors.email ? "red.500" : "purple.700"
-          }
-          _focus={{ backgroundColor: "transparent" }}
           error={touched.email && errors.email}
           onSubmitEditing={() => {
             focusNextInput(passwordRef);
           }}
         />
         <EZInput
+          style={authInput}
+          label="Password"
           returnKeyType="done"
           ref={passwordRef}
           type={passwordVisilble ? "text" : "password"}
           value={values.password}
           placeholder="Password"
           onChangeText={(e: string) => handleValue("password", e)}
-          color="purple.700"
-          fontSize={15}
-          pl={5}
-          fontFamily="SourceSansPro"
-          borderRadius={8}
-          height="55px"
-          borderColor="purple.700"
-          focusOutlineColor={
-            touched.password && errors.password ? "red.500" : "purple.700"
-          }
-          _focus={{ backgroundColor: "transparent" }}
+          borderRadius="12px"
+          borderColor="muted.200"
           error={touched.password && errors.password}
           InputRightElement={
             <Pressable mr={4} onPress={togglePasswordVisible}>
               <Icon
                 size={5}
-                color="purple.700"
+                color={COLORS.MUTED[400]}
                 as={<Feather name={passwordVisilble ? "eye" : "eye-off"} />}
               />
             </Pressable>
@@ -163,7 +141,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ navigation }) => {
         onPress={login}
         bg="purple.700"
         borderRadius={8}
-        height="55px"
+        height="44px"
         _text={{ fontFamily: "SourceSansPro", fontSize: 17 }}
         _pressed={{ backgroundColor: COLORS.PURPLE[700], opacity: 0.7 }}
       >

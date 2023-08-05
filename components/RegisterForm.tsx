@@ -10,8 +10,9 @@ import { User } from "../interfaces/User";
 import { Provider } from "../interfaces/Provider";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../interfaces/RootStackParamList";
 import EZButton from "./shared/EZButton";
+import { AppStackParamList } from "../interfaces/Navigation";
+import { authInput } from "../commonStyles";
 
 const RegisterForm: React.FC<any> = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -21,8 +22,7 @@ const RegisterForm: React.FC<any> = () => {
   const passwordRef = useRef(null);
   const repeatPasswordRef = useRef(null);
 
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
 
   const formik = useFormik({
     initialValues: {
@@ -87,21 +87,14 @@ const RegisterForm: React.FC<any> = () => {
       </VStack>
       <VStack space={6}>
         <EZInput
+          style={authInput}
+          label="First name"
           returnKeyType="next"
           type="text"
           value={values.firstName}
           placeholder="First name"
-          fontSize={15}
-          color="purple.700"
-          pl={5}
-          fontFamily="SourceSansPro"
-          borderRadius={8}
-          focusOutlineColor={
-            touched.firstName && errors.firstName ? "red.500" : "purple.700"
-          }
-          height="55px"
-          borderColor="purple.700"
-          _focus={{ backgroundColor: "transparent" }}
+          borderRadius={12}
+          borderColor="muted.200"
           onChangeText={(e: string) => handleValue("firstName", e)}
           error={touched.firstName && errors.firstName}
           onSubmitEditing={() => {
@@ -109,22 +102,15 @@ const RegisterForm: React.FC<any> = () => {
           }}
         />
         <EZInput
+          style={authInput}
           returnKeyType="next"
           ref={lastNameRef}
           type="text"
           value={values.lastName}
           placeholder="Last name"
-          fontSize={15}
-          color="purple.700"
-          pl={5}
-          fontFamily="SourceSansPro"
-          borderRadius={8}
-          focusOutlineColor={
-            touched.lastName && errors.lastName ? "red.500" : "purple.700"
-          }
-          height="55px"
-          borderColor="purple.700"
-          _focus={{ backgroundColor: "transparent" }}
+          label="Last name"
+          borderRadius={12}
+          borderColor="muted.200"
           onChangeText={(e: string) => handleValue("lastName", e)}
           error={touched.lastName && errors.lastName}
           onSubmitEditing={() => {
@@ -132,22 +118,15 @@ const RegisterForm: React.FC<any> = () => {
           }}
         />
         <EZInput
+          style={authInput}
           returnKeyType="next"
           ref={emailRef}
           type="text"
           value={values.email}
           placeholder="Email"
-          fontSize={15}
-          color="purple.700"
-          pl={5}
-          fontFamily="SourceSansPro"
-          borderRadius={8}
-          focusOutlineColor={
-            touched.email && errors.email ? "red.500" : "purple.700"
-          }
-          height="55px"
-          borderColor="purple.700"
-          _focus={{ backgroundColor: "transparent" }}
+          label="Email address"
+          borderRadius={12}
+          borderColor="muted.200"
           onChangeText={(e: string) => handleValue("email", e)}
           error={touched.email && errors.email}
           onSubmitEditing={() => {
@@ -155,23 +134,16 @@ const RegisterForm: React.FC<any> = () => {
           }}
         />
         <EZInput
+          style={authInput}
           returnKeyType="next"
           ref={passwordRef}
           type="password"
           textContentType="oneTimeCode"
           value={values.password}
           placeholder="Password"
-          fontSize={15}
-          color="purple.700"
-          pl={5}
-          fontFamily="SourceSansPro"
-          borderRadius={8}
-          focusOutlineColor={
-            touched.password && errors.password ? "red.500" : "purple.700"
-          }
-          height="55px"
-          borderColor="purple.700"
-          _focus={{ backgroundColor: "transparent" }}
+          label="Password"
+          borderRadius={12}
+          borderColor="muted.200"
           onChangeText={(e: string) => handleValue("password", e)}
           error={touched.password && errors.password}
           onSubmitEditing={() => {
@@ -179,25 +151,16 @@ const RegisterForm: React.FC<any> = () => {
           }}
         />
         <EZInput
+          style={authInput}
           returnKeyType="done"
           ref={repeatPasswordRef}
           type="password"
           textContentType="oneTimeCode"
           value={values.repeatPassword}
           placeholder="Repeat password"
-          fontSize={15}
-          color="purple.700"
-          pl={5}
-          fontFamily="SourceSansPro"
-          borderRadius={8}
-          focusOutlineColor={
-            touched.repeatPassword && errors.repeatPassword
-              ? "red.500"
-              : "purple.700"
-          }
-          height="55px"
-          borderColor="purple.700"
-          _focus={{ backgroundColor: "transparent" }}
+          label="Repeat password"
+          borderRadius={12}
+          borderColor="muted.200"
           onChangeText={(e: string) => handleValue("repeatPassword", e)}
           error={touched.repeatPassword && errors.repeatPassword}
         />
@@ -207,7 +170,7 @@ const RegisterForm: React.FC<any> = () => {
         variant="solid"
         bg="purple.700"
         borderRadius={8}
-        height="55px"
+        height="44px"
         _text={{ fontFamily: "SourceSansPro", fontSize: 17 }}
         onPress={submit}
         isLoading={loading}

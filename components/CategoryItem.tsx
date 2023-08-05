@@ -10,12 +10,14 @@ interface CategoryItemProps {
   category: Category;
   selectCategory?: (e: string) => void;
   selectedCategory?: string;
+  disabled: boolean;
 }
 
 const CategoryItem: React.FC<CategoryItemProps> = ({
   category,
   selectCategory,
   selectedCategory,
+  disabled,
 }) => {
   const { name, color } = category;
 
@@ -23,6 +25,7 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
 
   return (
     <Pressable
+      disabled={disabled}
       onPress={() => selectCategory!(name)}
       _pressed={{ opacity: 0.4 }}
       marginX={3}
@@ -42,12 +45,7 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
       borderRadius={20}
       px={2}
     >
-      <HStack
-        flex={1}
-        space={3}
-        alignItems="center"
-        justifyContent="flex-start"
-      >
+      <HStack flex={1} space={3} alignItems="center" justifyContent="flex-start">
         <Box
           width="45px"
           height="45px"
@@ -63,13 +61,7 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
         </Text>
       </HStack>
       {isSelected && (
-        <Box
-          position="absolute"
-          right="-5px"
-          bottom="-5px"
-          bg="muted.100"
-          borderRadius={20}
-        >
+        <Box position="absolute" right="-5px" bottom="-5px" bg="muted.100" borderRadius={20}>
           <AntDesign name="checkcircle" size={24} color={COLORS.EMERALD[400]} />
         </Box>
       )}

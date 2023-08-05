@@ -1,19 +1,11 @@
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
-import {
-  Text,
-  ScrollView,
-  Pressable,
-  VStack,
-  HStack,
-  Skeleton,
-} from "native-base";
-import React, { useState, useEffect } from "react";
-import { Keyboard, TouchableWithoutFeedback, SafeAreaView } from "react-native";
+import { Text, VStack } from "native-base";
+import React, { useState } from "react";
+import { SafeAreaView, TouchableOpacity } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { AntDesign } from "@expo/vector-icons";
 import MonthlyBudgetItem from "../components/MonthlyBudgetItem";
 import { Category } from "../interfaces/Category";
-import { CategoryService } from "../api/services/CategoryService";
 import { getCategoryIcon } from "../utils/getCategoryIcon";
 import { UserService } from "../api/services/UserService";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,7 +18,6 @@ import {
   categoriesSelector,
   editBudgetsActions,
   monthlyBudgetsSelector,
-  setBudgetsActions,
 } from "../redux/expensesReducers";
 
 interface EditBudgetScreenProps {
@@ -41,64 +32,12 @@ const EditBudgetScreen: React.FC<EditBudgetScreenProps> = ({ navigation }) => {
   const monthlyBudgets = useSelector(monthlyBudgetsSelector);
   const categories = useSelector(categoriesSelector);
 
-  // useEffect(() => {
-  //   getInfo();
-  // }, [navigation]);
-
-  // const getInfo = async () => {
-  //   setDataLoading(true);
-  //   const [categories, budgets] = await Promise.all([
-  //     getCategories(),
-  //     getBudgets(),
-  //   ]);
-
-  //   const budgetValues: Budget[] = [];
-
-  //   const categoriesValues = categories!.map((category: Category) => {
-  //     const budget = budgets.find(
-  //       (item: Budget) => item.category === category.name
-  //     );
-
-  //     budgetValues.push(
-  //       budget
-  //         ? { ...budget, categoryId: category.id }
-  //         : { budget: 0, category: category.name, categoryId: category.id }
-  //     );
-
-  //     return {
-  //       id: category.id,
-  //       name: category.name,
-  //       color: category.color,
-  //       icon: getCategoryIcon(category.name, 24, COLORS.MUTED[50]),
-  //       budget: budget ? budget.budget : 0,
-  //     };
-  //   });
-
-  //   setCategories(categoriesValues);
-  //   setBudgets(budgetValues);
-
-  //   setDataLoading(false);
-  // };
-
-  // const getCategories = async () => {
-  //   const data = await CategoryService.getAllCategories();
-  //   return data;
-  // };
-
-  // const getBudgets = async () => {
-  //   const data = await UserService.getUserBudgets(user.id);
-
-  //   return data;
-  // };
-
   const closeModal = () => {
     navigation.goBack();
   };
 
   const handleValues = (value: string, category: Category) => {
-    const element = budgets.find(
-      (item: Budget) => item.category === category.name
-    );
+    const element = budgets.find((item: Budget) => item.category === category.name);
 
     let newValues;
     const formatAmount = value.replace(",", ".");
@@ -125,9 +64,7 @@ const EditBudgetScreen: React.FC<EditBudgetScreenProps> = ({ navigation }) => {
 
   const saveBudgets = async () => {
     setButtonLoading(true);
-    console.log(1111, budgets);
     await UserService.saveUserBudgets(user.id, budgets);
-    // dispatch(setBudgetsActions(budgets));
     dispatch(editBudgetsActions(budgets));
     setButtonLoading(false);
     navigation.goBack();
@@ -136,9 +73,7 @@ const EditBudgetScreen: React.FC<EditBudgetScreenProps> = ({ navigation }) => {
   const budgetValues: Budget[] = [];
 
   const budgetCategories = categories!.map((category: Category) => {
-    const budget = monthlyBudgets.find(
-      (item: Budget) => item.category === category.name
-    );
+    const budget = monthlyBudgets.find((item: Budget) => item.category === category.name);
 
     budgetValues.push(
       budget
@@ -160,7 +95,7 @@ const EditBudgetScreen: React.FC<EditBudgetScreenProps> = ({ navigation }) => {
       <StatusBar style="dark" />
       <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
         <VStack mt={10} space={10} px={7}>
-          <Pressable
+          <TouchableOpacity
             style={{
               position: "absolute",
               right: 30,
@@ -170,7 +105,7 @@ const EditBudgetScreen: React.FC<EditBudgetScreenProps> = ({ navigation }) => {
             onPress={closeModal}
           >
             <AntDesign name="close" color="black" size={24} />
-          </Pressable>
+          </TouchableOpacity>
           <Text textAlign="center" fontFamily="SourceBold" fontSize={26}>
             Edit your monthly budgets
           </Text>

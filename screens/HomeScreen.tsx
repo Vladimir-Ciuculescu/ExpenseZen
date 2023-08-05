@@ -11,12 +11,7 @@ import {
   FlatList,
   ScrollView,
 } from "native-base";
-import {
-  NavigationProp,
-  ParamListBase,
-  useIsFocused,
-} from "@react-navigation/native";
-import { LinearGradient } from "expo-linear-gradient";
+import { NavigationProp, ParamListBase, useIsFocused } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { TAB_BAR_HEIGHT } from "../constants/NavigationConstants";
 import { ExpenseService } from "../api/services/ExpenseService";
@@ -45,6 +40,7 @@ import {
   topSpedingCategoriesSelector,
 } from "../redux/expensesReducers";
 import { getCategoryIcon } from "../utils/getCategoryIcon";
+import EZHeaderBackground from "../components/shared/EZHeaderBackground";
 
 interface HomeScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -64,14 +60,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerBackground: () => (
-        <LinearGradient
-          colors={["#8E2DE2", "#4A00E0"]}
-          style={{ flex: 1 }}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 0, y: 1 }}
-        />
-      ),
+      headerBackground: () => <EZHeaderBackground />,
       headerTitle: () => (
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <HStack space="1" alignItems="center">
@@ -79,12 +68,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               Today:
             </Text>
             {loading ? (
-              <Skeleton
-                h="3"
-                width={10}
-                rounded="full"
-                startColor="indigo.300"
-              />
+              <Skeleton h="3" width={10} rounded="full" startColor="indigo.300" />
             ) : (
               <Text fontFamily="SourceBold" color="muted.100" fontSize={20}>
                 {user.symbol} {todayTotal}
@@ -135,9 +119,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     ]);
 
     dispatch(setCategoriesAction(categories));
-    dispatch(
-      setBudgetsActions(budgets.filter((item: Budget) => item.budget !== 0))
-    );
+    dispatch(setBudgetsActions(budgets.filter((item: Budget) => item.budget !== 0)));
     dispatch(setExpensesAction(expenses));
 
     setLoading(false);
@@ -146,8 +128,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const getCategoryMonthlyTotal = (category: string) => {
     const categoryExpenses = expenses.filter((item) => item.name === category);
     return categoryExpenses.reduce(
-      (accumulator: any, currentValue: Expense) =>
-        accumulator + currentValue.amount,
+      (accumulator: any, currentValue: Expense) => accumulator + currentValue.amount,
       0
     );
   };
@@ -183,22 +164,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                 px={5}
                 py={3}
               >
-                <Text
-                  fontFamily="SourceSansPro"
-                  color="muted.400"
-                  fontSize={20}
-                >
+                <Text fontFamily="SourceSansPro" color="muted.400" fontSize={20}>
                   {currentMonth}
                 </Text>
                 {loading ? (
-                  <Skeleton
-                    mt={5}
-                    mb={3}
-                    h="5"
-                    width={20}
-                    rounded="full"
-                    startColor="indigo.300"
-                  />
+                  <Skeleton mt={5} mb={3} h="5" width={20} rounded="full" startColor="indigo.300" />
                 ) : (
                   <Text fontFamily="SourceBold" color="muted.900" fontSize={35}>
                     {user.symbol}
@@ -215,13 +185,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                     _pressed={{ bg: "purple.600" }}
                     bg="purple.700"
                     bottom={`${TAB_BAR_HEIGHT + 20}px`}
-                    icon={
-                      <Icon
-                        color="white"
-                        size={26}
-                        as={<AntDesign name="plus" />}
-                      />
-                    }
+                    icon={<Icon color="white" size={26} as={<AntDesign name="plus" />} />}
                   />
                 )}
               </Box>
@@ -238,13 +202,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                   ItemSeparatorComponent={() => <View p="10px" />}
                   horizontal={true}
                   data={topSpendingCategories}
-                  //data={topCategories}
                   keyExtractor={(item: any) => item.id}
                   renderItem={({ item }) => (
                     <TopSpendingCategory
-                      expenses={expenses.filter(
-                        (expense) => expense.name === item.name
-                      )}
+                      expenses={expenses.filter((expense) => expense.name === item.name)}
                       item={item}
                     />
                   )}
@@ -294,13 +255,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                       }}
                       variant="unstyled"
                       onPress={openEditBudgetsModal}
-                      leftIcon={
-                        <Feather
-                          name="plus"
-                          size={22}
-                          color={COLORS.PURPLE[700]}
-                        />
-                      }
+                      leftIcon={<Feather name="plus" size={22} color={COLORS.PURPLE[700]} />}
                     >
                       Add
                     </EZButton>

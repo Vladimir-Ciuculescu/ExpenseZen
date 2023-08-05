@@ -5,16 +5,14 @@ import { getCategoryIcon } from "../utils/getCategoryIcon";
 import { useNavigation } from "@react-navigation/native";
 import { Expense } from "../interfaces/Expense";
 import COLORS from "../colors";
+import { TouchableOpacity } from "react-native";
 
 interface TopSpendingCategoryProps {
   item: Category;
   expenses: Expense[];
 }
 
-const TopSpendingCategory: React.FC<TopSpendingCategoryProps> = ({
-  item,
-  expenses,
-}) => {
+const TopSpendingCategory: React.FC<TopSpendingCategoryProps> = ({ item, expenses }) => {
   const { name, color, id } = item;
 
   const navigation = useNavigation();
@@ -28,7 +26,7 @@ const TopSpendingCategory: React.FC<TopSpendingCategoryProps> = ({
   };
 
   return (
-    <Pressable onPress={goToCategoryExpenses}>
+    <TouchableOpacity onPress={goToCategoryExpenses}>
       <VStack alignItems="center" space={3}>
         <Box
           style={{ backgroundColor: color }}
@@ -43,7 +41,7 @@ const TopSpendingCategory: React.FC<TopSpendingCategoryProps> = ({
         </Box>
         <Text fontFamily="SourceBold">{name}</Text>
       </VStack>
-    </Pressable>
+    </TouchableOpacity>
   );
 };
 

@@ -1,46 +1,33 @@
-import React, { useLayoutEffect } from "react";
-import {
-  Keyboard,
-  KeyboardAvoidingView,
-  TouchableWithoutFeedback,
-} from "react-native";
-import { Pressable, View, VStack } from "native-base";
+import React from "react";
+import { SafeAreaView, TouchableOpacity } from "react-native";
+import { VStack } from "native-base";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
 import RegisterForm from "../components/RegisterForm";
 import { StatusBar } from "expo-status-bar";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 interface RegisterScreenProps {
   navigation: NavigationProp<ParamListBase>;
 }
 
 const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerStyle: {
-        borderBottomWidth: 0,
-      },
-      headerLeft: () => (
-        <Pressable onPress={navigation.goBack}>
-          <MaterialIcons name="arrow-back-ios" size={24} color="black" />
-        </Pressable>
-      ),
-      title: null,
-      headerShadowVisible: false,
-    });
-  }, []);
-
   return (
-    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+    <SafeAreaView style={{ flex: 1 }}>
       <StatusBar style="dark" />
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View bg="white" flex={1} justifyContent="center">
-          <VStack space={10} px={10}>
-            <RegisterForm />
-          </VStack>
-        </View>
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+
+      <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
+        <TouchableOpacity
+          onPress={navigation.goBack}
+          style={{ top: 20, left: 20, position: "absolute", zIndex: 999 }}
+        >
+          <MaterialIcons name="arrow-back-ios" size={24} color="black" />
+        </TouchableOpacity>
+        <VStack space={10} px={10} paddingTop={24}>
+          <RegisterForm />
+        </VStack>
+      </KeyboardAwareScrollView>
+    </SafeAreaView>
   );
 };
 

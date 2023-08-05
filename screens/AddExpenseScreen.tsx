@@ -1,14 +1,6 @@
 import React, { useState } from "react";
-import {
-  FormControl,
-  HStack,
-  Pressable,
-  Text,
-  VStack,
-  View,
-  WarningOutlineIcon,
-} from "native-base";
-import { SafeAreaView, FlatList, useWindowDimensions } from "react-native";
+import { FormControl, HStack, Text, VStack, View, WarningOutlineIcon } from "native-base";
+import { SafeAreaView, FlatList, useWindowDimensions, TouchableOpacity } from "react-native";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import EZInput from "../components/shared/EZInput";
@@ -23,11 +15,9 @@ import { ExpenseService } from "../api/services/ExpenseService";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { StatusBar } from "expo-status-bar";
-import {
-  addExpenseAction,
-  categoriesSelector,
-} from "../redux/expensesReducers";
+import { addExpenseAction, categoriesSelector } from "../redux/expensesReducers";
 import moment from "moment";
+import { authInput } from "../commonStyles";
 
 interface AddExpenseScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -51,9 +41,7 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
       const { amount, category, description } = values;
 
       try {
-        const currentCategory = categories.find(
-          (item: Category) => item.name === category
-        );
+        const currentCategory = categories.find((item: Category) => item.name === category);
 
         const formatAmount = amount.replace(",", ".");
         const numericFormat = Number(formatAmount);
@@ -85,11 +73,7 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
   });
 
   const handleValue = (label: string, value: string) => {
-    if (
-      label === "amount" &&
-      values.amount.includes(",") &&
-      value.slice(-1) === ","
-    ) {
+    if (label === "amount" && values.amount.includes(",") && value.slice(-1) === ",") {
       formik.setFieldValue(label, value.slice(0, -1));
     } else {
       formik.setFieldValue(label, value);
@@ -112,63 +96,36 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar style="dark" />
       <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
-        <Pressable
+        <TouchableOpacity
           style={{ position: "absolute", right: 40, top: 25, zIndex: 9999 }}
-          onPress={() => navigation.goBack()}
-        >
+          onPress={() => navigation.goBack()}>
           <AntDesign name="close" size={24} color="black" />
-        </Pressable>
-        <View
-          flex={1}
-          pt={16}
-          alignItems="center"
-          justifyContent="space-between"
-        >
+        </TouchableOpacity>
+        <View flex={1} pt={16} alignItems="center" justifyContent="space-between">
           <VStack alignItems="center" width="100%" px={12} space={10}>
             <VStack space={4} alignItems="center" width="100%">
               <Text fontFamily="SourceBold" fontSize={35}>
                 Add new expense
               </Text>
-              <FormControl w={"100%"}>
-                <Text fontFamily="SourceSansPro" fontSize={20}>
-                  Enter amount {user.symbol}
-                </Text>
-
-                <EZInput
-                  keyboardType="decimal-pad"
-                  type="text"
-                  value={values.amount}
-                  onChangeText={(e: string) => handleValue("amount", e)}
-                  fontSize={22}
-                  color="purple.700"
-                  pl={5}
-                  fontFamily="SourceSansPro"
-                  textAlign="center"
-                  borderRadius={8}
-                  focusOutlineColor={
-                    touched.amount && errors.amount ? "red.500" : "purple.700"
-                  }
-                  height="55px"
-                  borderColor="muted.300"
-                  placeholderTextColor="muted.300"
-                  _focus={{
-                    backgroundColor: "transparent",
-                    color: "purple.700",
-                    placeholderTextColor: "purple.700",
-                  }}
-                  error={touched.amount && errors.amount}
-                />
-                <FormControl.ErrorMessage
-                  leftIcon={<WarningOutlineIcon size="xs" />}
-                >
-                  Try different from previous passwords.
-                </FormControl.ErrorMessage>
-              </FormControl>
-              <Text
-                alignSelf="flex-start"
-                fontFamily="SourceSansPro"
-                fontSize={20}
-              >
+              <EZInput
+                returnKeyType="done"
+                style={authInput}
+                keyboardType="decimal-pad"
+                type="text"
+                value={values.amount}
+                onChangeText={(e: string) => handleValue("amount", e)}
+                label={`Enter amount ${user.symbol}`}
+                borderRadius={12}
+                borderColor="muted.200"
+                placeholderTextColor="muted.300"
+                _focus={{
+                  backgroundColor: "transparent",
+                  color: "purple.700",
+                  placeholderTextColor: "purple.700",
+                }}
+                error={touched.amount && errors.amount}
+              />
+              <Text alignSelf="flex-start" fontFamily="SourceSansPro" fontSize={20}>
                 Category
               </Text>
               <FlatList
@@ -183,64 +140,32 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
                 data={categories}
                 renderItem={({ item }) => (
                   <CategoryItem
+                    disabled={false}
                     selectedCategory={values.category}
                     category={item}
                     selectCategory={selectCategory}
                   />
                 )}
               />
-
               {touched.category && errors.category && (
                 <HStack alignSelf="flex-start" alignItems="center" space={1}>
-                  <FontAwesome
-                    name="close"
-                    size={20}
-                    color={COLORS.DANGER[500]}
-                  />
+                  <FontAwesome name="close" size={20} color={COLORS.DANGER[500]} />
                   <Text color="danger.500" fontFamily="SourceBold">
                     {errors.category}
                   </Text>
                 </HStack>
               )}
-
-              <FormControl w={"100%"}>
-                <Text fontFamily="SourceSansPro" fontSize={20}>
-                  Description
-                </Text>
-
-                <EZInput
-                  returnKeyType="done"
-                  type="text"
-                  value={values.description}
-                  onChangeText={(e: string) => handleValue("description", e)}
-                  fontSize={22}
-                  color="purple.700"
-                  pl={5}
-                  pt={3}
-                  fontFamily="SourceSansPro"
-                  borderRadius={8}
-                  focusOutlineColor={
-                    touched.description && errors.description
-                      ? "red.500"
-                      : "purple.700"
-                  }
-                  height="55px"
-                  borderColor="muted.300"
-                  placeholderTextColor="muted.300"
-                  _focus={{
-                    backgroundColor: "transparent",
-                    color: "purple.700",
-                    placeholderTextColor: "purple.700",
-                  }}
-                  error={touched.description && errors.description}
-                />
-
-                <FormControl.ErrorMessage
-                  leftIcon={<WarningOutlineIcon size="xs" />}
-                >
-                  Try different from previous passwords.
-                </FormControl.ErrorMessage>
-              </FormControl>
+              <EZInput
+                style={authInput}
+                returnKeyType="done"
+                type="text"
+                label="Description"
+                value={values.description}
+                onChangeText={(e: string) => handleValue("description", e)}
+                borderRadius={12}
+                borderColor="muted.200"
+                error={touched.description && errors.description}
+              />
             </VStack>
             <EZButton
               variant="solid"
@@ -254,8 +179,7 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
               _pressed={{
                 backgroundColor: COLORS.PURPLE[700],
                 opacity: 0.7,
-              }}
-            >
+              }}>
               SAVE
             </EZButton>
           </VStack>

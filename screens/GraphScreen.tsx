@@ -1,5 +1,4 @@
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
-import { LinearGradient } from "expo-linear-gradient";
 import {
   View,
   Text,
@@ -14,12 +13,14 @@ import {
 import React, { useLayoutEffect, useState } from "react";
 import PieChart from "react-native-pie-chart";
 import { useSelector } from "react-redux";
-import { ExpenseService } from "../api/services/ExpenseService";
 import { Expense } from "../interfaces/Expense";
 import { RootState } from "../redux/store";
 import { GraphCategory } from "../interfaces/GraphCategory";
 import GraphCategoryItem from "../components/GraphCategory";
 import { StatusBar } from "expo-status-bar";
+import { monthTotalSelector } from "../redux/expensesReducers";
+import EZHeaderBackground from "../components/shared/EZHeaderBackground";
+import EZHeaderTitle from "../components/shared/EzHeaderTitle";
 
 interface GraphScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -27,28 +28,17 @@ interface GraphScreenProps {
 
 const GraphScreen: React.FC<GraphScreenProps> = ({ navigation }) => {
   const user = useSelector((state: RootState) => state.user);
-  const [total, setTotal] = useState<number>(0);
   const [graphCategories, setGraphCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [series, setSeries] = useState<any[]>([1, 2, 3]);
   const [colors, setColors] = useState<string[]>(["red", "blue", "green"]);
   const { expenses } = useSelector((state: RootState) => state.expenses);
+  const monthTotal = useSelector(monthTotalSelector);
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerBackground: () => (
-        <LinearGradient
-          colors={["#8E2DE2", "#4A00E0"]}
-          style={{ flex: 1 }}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 0, y: 1 }}
-        />
-      ),
-      headerTitle: () => (
-        <Text color="muted.50" fontFamily="SourceBold" fontSize={20}>
-          Graph Reports
-        </Text>
-      ),
+      headerBackground: () => <EZHeaderBackground />,
+      headerTitle: () => <EZHeaderTitle>Graph Reports</EZHeaderTitle>,
     });
 
     getGeneralInfo();
@@ -78,14 +68,6 @@ const GraphScreen: React.FC<GraphScreenProps> = ({ navigation }) => {
 
     setGraphCategories(graphCategories);
 
-    setTotal(
-      expenses.reduce(
-        (accumulator: any, currentValue: Expense) =>
-          accumulator + currentValue.amount,
-        0
-      )
-    );
-
     setSeries(graphCategories.map((item: Expense) => item.amount));
     setColors(graphCategories.map((item: GraphCategory) => item.color));
 
@@ -93,13 +75,7 @@ const GraphScreen: React.FC<GraphScreenProps> = ({ navigation }) => {
   };
 
   return (
-    <View
-      pt={10}
-      flex={1}
-      alignItems="center"
-      flexDirection="column"
-      style={{ gap: 20 }}
-    >
+    <View pt={10} flex={1} alignItems="center" flexDirection="column" style={{ gap: 20 }}>
       <StatusBar style="light" />
       <Box
         flexDirection="row"
@@ -135,7 +111,7 @@ const GraphScreen: React.FC<GraphScreenProps> = ({ navigation }) => {
                   Total
                 </Text>
                 <Text fontSize={22} fontFamily="SourceBold">
-                  {user.symbol} {total.toFixed(2)}
+                  {user.symbol} {monthTotal.toFixed(2)}
                 </Text>
               </VStack>
             )}
@@ -144,39 +120,17 @@ const GraphScreen: React.FC<GraphScreenProps> = ({ navigation }) => {
         <VStack space={2}>
           <ScrollView flex={1} showsVerticalScrollIndicator={false}>
             <VStack space={2}>
-              {loading ? (
-                <VStack space={2}>
-                  {Array.from(Array(6).keys()).map((_, key) => (
-                    <Skeleton
-                      mb="3"
-                      width="110px"
-                      height="10px"
-                      rounded="20"
-                      key={key}
-                    />
-                  ))}
-                </VStack>
-              ) : (
-                <>
-                  {graphCategories.map(
-                    (graphCategory: GraphCategory, key: number) => {
-                      const categoryPercent =
-                        (graphCategory.amount * 100) / total;
-                      return (
-                        <HStack space={2} alignItems="center" key={key}>
-                          <Circle
-                            size="10px"
-                            style={{ backgroundColor: graphCategory.color }}
-                          />
-                          <Text fontFamily="SourceBold">
-                            {graphCategory.name} ({categoryPercent.toFixed(2)}%)
-                          </Text>
-                        </HStack>
-                      );
-                    }
-                  )}
-                </>
-              )}
+              {graphCategories.map((graphCategory: GraphCategory, key: number) => {
+                const categoryPercent = (graphCategory.amount * 100) / monthTotal;
+                return (
+                  <HStack space={2} alignItems="center" key={key}>
+                    <Circle size="10px" style={{ backgroundColor: graphCategory.color }} />
+                    <Text fontFamily="SourceBold">
+                      {graphCategory.name} ({categoryPercent.toFixed(2)}%)
+                    </Text>
+                  </HStack>
+                );
+              })}
             </VStack>
           </ScrollView>
         </VStack>
@@ -188,7 +142,7 @@ const GraphScreen: React.FC<GraphScreenProps> = ({ navigation }) => {
         px={5}
         data={graphCategories}
         showsVerticalScrollIndicator={false}
-        keyExtractor={(item: any) => item.id}
+        keyExtractor={(item: any) => item.name}
         ItemSeparatorComponent={() => <View p="10px" />}
         renderItem={({ item }) => <GraphCategoryItem graphCategory={item} />}
       />

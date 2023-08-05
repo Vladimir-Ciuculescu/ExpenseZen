@@ -1,23 +1,19 @@
 import { Box, HStack, Text } from "native-base";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import EZInput from "./shared/EZInput";
 import { Category } from "../interfaces/Category";
+import { authInput } from "../commonStyles";
 
 interface MonthlyBudgetItemProps {
   category: Category;
   onChange: (e: string) => void;
 }
 
-const MonthlyBudgetItem: React.FC<MonthlyBudgetItemProps> = ({
-  category,
-  onChange,
-}) => {
+const MonthlyBudgetItem: React.FC<MonthlyBudgetItemProps> = ({ category, onChange }) => {
   const { color, icon, name, budget } = category;
 
-  const [amount, setAmount] = useState<string>(
-    budget!.toString().replace(".", ",")
-  );
+  const [amount, setAmount] = useState<string>(budget!.toString().replace(".", ","));
 
   const handleChange = (e: string) => {
     setAmount(e);
@@ -33,13 +29,13 @@ const MonthlyBudgetItem: React.FC<MonthlyBudgetItemProps> = ({
           height="60px"
           style={{ backgroundColor: color }}
           justifyContent="center"
-          alignItems="center"
-        >
+          alignItems="center">
           {icon}
         </Box>
         <Text>{name}</Text>
       </HStack>
       <EZInput
+        style={{ ...authInput, fontSize: 18 }}
         formHeight="45px"
         flex={1}
         keyboardType="decimal-pad"
@@ -47,19 +43,8 @@ const MonthlyBudgetItem: React.FC<MonthlyBudgetItemProps> = ({
         width="140px"
         value={amount}
         onChangeText={(e: string) => handleChange(e)}
-        fontSize={22}
-        color="purple.700"
-        pl={5}
-        fontFamily="SourceSansPro"
-        borderRadius={8}
-        focusOutlineColor="purple.700"
-        borderColor="muted.300"
-        placeholderTextColor="muted.300"
-        _focus={{
-          backgroundColor: "transparent",
-          color: "purple.700",
-          placeholderTextColor: "purple.700",
-        }}
+        borderRadius={12}
+        borderColor="muted.200"
         alignItems="flex-end"
       />
     </HStack>

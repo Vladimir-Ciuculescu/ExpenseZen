@@ -45,7 +45,7 @@ const StackNavigator: React.FC<any> = () => {
   const routes: StackConfig[] = [
     { name: "Onboarding", component: OnboardingScreen, options: { headerShown: false } },
     { name: "Login", component: LoginScreen, options: { headerShown: false } },
-    { name: "Register", component: RegisterScreen },
+    { name: "Register", component: RegisterScreen, options: { headerShown: false } },
     { name: "Tabs", component: TabNavigator, options: { headerShown: false } },
     { name: "Currency", component: AddCurrencyScreen, options: { headerShown: false } },
     {
