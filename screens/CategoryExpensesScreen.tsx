@@ -1,6 +1,6 @@
 import React, { useLayoutEffect } from "react";
-import { SafeAreaView } from "react-native";
-import { Pressable, Text, ScrollView, HStack, View } from "native-base";
+import { SafeAreaView, TouchableOpacity } from "react-native";
+import { Text, ScrollView, HStack, View } from "native-base";
 import { NavigationProp, ParamListBase, RouteProp } from "@react-navigation/native";
 import { FontAwesome5 } from "@expo/vector-icons";
 
@@ -32,9 +32,9 @@ const CategoryExpensesScreen: React.FC<Props> = ({ navigation, route }) => {
         </Text>
       ),
       headerLeft: () => (
-        <Pressable onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <FontAwesome5 name="arrow-left" size={24} color="black" />
-        </Pressable>
+        </TouchableOpacity>
       ),
     });
   }, [navigation]);
@@ -59,8 +59,7 @@ const CategoryExpensesScreen: React.FC<Props> = ({ navigation, route }) => {
                   width="60px"
                   alignItems="center"
                   justifyContent="center"
-                  alignSelf="stretch"
-                >
+                  alignSelf="stretch">
                   {index !== expenses.length - 1 && (
                     <View
                       position="absolute"
@@ -91,8 +90,7 @@ const CategoryExpensesScreen: React.FC<Props> = ({ navigation, route }) => {
                   justifyContent="center"
                   flexGrow={1}
                   flexShrink={1}
-                  flexBasis={0}
-                >
+                  flexBasis={0}>
                   <View flexGrow={1} flexShrink={1} flexBasis={0}>
                     <Text fontSize={17} fontFamily="SourceBold" color="muted.700">
                       # {index + 1}

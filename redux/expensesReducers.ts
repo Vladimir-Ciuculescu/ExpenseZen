@@ -3,7 +3,6 @@ import moment from "moment";
 import { Budget } from "../interfaces/Budget";
 import { Category } from "../interfaces/Category";
 import { Expense } from "../interfaces/Expense";
-import { GraphCategory } from "../interfaces/GraphCategory";
 import { RootState } from "./store";
 
 const todayDate = moment().format("YYYY-MM-DD");
@@ -47,15 +46,10 @@ const expensesReducer = createSlice({
       state.budgets = action.payload;
     },
     editBudgets: (state, action) => {
-      const budgets = action.payload;
-
-      console.log("payload", action.payload);
-      console.log(state.budgets);
+      let budgets = action.payload;
 
       state.budgets = state.budgets.map((budget) => {
-        const budgetToEdit = budgets.find(
-          (item: Budget) => item.category === budget.category
-        );
+        const budgetToEdit = budgets.find((item: Budget) => item.category === budget.category);
 
         if (budgetToEdit) {
           return {
@@ -66,6 +60,20 @@ const expensesReducer = createSlice({
           return budget;
         }
       });
+
+      let budgetsToAdd: Budget[] = budgets.filter((item: any) => {
+        const existentBudget = state.budgets.find((budget) => budget.category === item.category);
+
+        if (!existentBudget) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+
+      if (budgetsToAdd && budgetsToAdd.length > 0) {
+        state.budgets = [...state.budgets, ...budgetsToAdd];
+      }
     },
   },
 });
@@ -80,82 +88,49 @@ export const editBudgetsActions = expensesReducer.actions.editBudgets;
 //selectors
 const generalState = (state: RootState) => state.expenses;
 
-export const todayTotalSelector = createSelector(
-  [generalState],
-  (expenses: any) => {
-    return expenses.expenses
-      .filter((expense: Expense) => expense.payDate === todayDate)
-      .reduce(
-        (accumulator: any, currentValue: Expense) =>
-          accumulator + currentValue.amount,
-        0
+export const todayTotalSelector = createSelector([generalState], (expenses: any) => {
+  return expenses.expenses
+    .filter((expense: Expense) => expense.payDate === todayDate)
+    .reduce((accumulator: any, currentValue: Expense) => accumulator + currentValue.amount, 0);
+});
+
+export const monthTotalSelector = createSelector([generalState], (expenses: any) => {
+  return expenses.expenses
+    .filter((expense: Expense) => expense.payDate >= startOfMonth && expense.payDate <= endOfMonth)
+    .reduce((accumulator: any, currentValue: Expense) => accumulator + currentValue.amount, 0);
+});
+
+export const categoriesSelector = createSelector([generalState], (expenses: any) => {
+  return expenses.categories;
+});
+
+export const topSpedingCategoriesSelector = createSelector([generalState], (expenses: any) => {
+  const topSpendingCategories = expenses.expenses.reduce((accumulator: any, expense: any) => {
+    const categoryName = expense.name;
+    const existingCategory = accumulator.find((item: any) => item.name === categoryName);
+
+    if (!existingCategory) {
+      const { color, id } = expenses.categories.find(
+        (item: Category) => item.name === categoryName
       );
-  }
-);
+      accumulator.push({
+        name: categoryName,
+        amount: expense.amount,
+        color,
+        id,
+      });
+    } else {
+      existingCategory.amount += expense.amount;
+    }
 
-export const monthTotalSelector = createSelector(
-  [generalState],
-  (expenses: any) => {
-    return expenses.expenses
-      .filter(
-        (expense: Expense) =>
-          expense.payDate >= startOfMonth && expense.payDate <= endOfMonth
-      )
-      .reduce(
-        (accumulator: any, currentValue: Expense) =>
-          accumulator + currentValue.amount,
-        0
-      );
-  }
-);
+    return accumulator;
+  }, []);
 
-export const categoriesSelector = createSelector(
-  [generalState],
-  (expenses: any) => {
-    return expenses.categories;
-  }
-);
+  return topSpendingCategories.sort((a: Category, b: Category) => b.amount! - a.amount!);
+});
 
-export const topSpedingCategoriesSelector = createSelector(
-  [generalState],
-  (expenses: any) => {
-    const topSpendingCategories = expenses.expenses.reduce(
-      (accumulator: any, expense: any) => {
-        const categoryName = expense.name;
-        const existingCategory = accumulator.find(
-          (item: any) => item.name === categoryName
-        );
-
-        if (!existingCategory) {
-          const { color, id } = expenses.categories.find(
-            (item: Category) => item.name === categoryName
-          );
-          accumulator.push({
-            name: categoryName,
-            amount: expense.amount,
-            color,
-            id,
-          });
-        } else {
-          existingCategory.amount += expense.amount;
-        }
-
-        return accumulator;
-      },
-      []
-    );
-
-    return topSpendingCategories.sort(
-      (a: Category, b: Category) => b.amount! - a.amount!
-    );
-  }
-);
-
-export const monthlyBudgetsSelector = createSelector(
-  [generalState],
-  (expenses: any) => {
-    return expenses.budgets;
-  }
-);
+export const monthlyBudgetsSelector = createSelector([generalState], (expenses: any) => {
+  return expenses.budgets;
+});
 
 export default expensesReducer.reducer;

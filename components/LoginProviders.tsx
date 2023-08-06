@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { makeRedirectUri, startAsync } from "expo-auth-session";
 import { Google, Facebook } from "../assets/SVG";
-import { HStack, Pressable, Text } from "native-base";
+import { HStack, Pressable } from "native-base";
 import { supabase } from "../api/supabase";
 import { SUPABASE_URL } from "@env";
 
@@ -34,8 +34,7 @@ const LoginProviders: React.FC<any> = () => {
         borderWidth={1}
         borderRadius={10}
         justifyContent="center"
-        alignItems="center"
-      >
+        alignItems="center">
         <Google width={35} height={35} />
       </Pressable>
 
@@ -46,8 +45,7 @@ const LoginProviders: React.FC<any> = () => {
         borderWidth={1}
         borderRadius={10}
         justifyContent="center"
-        alignItems="center"
-      >
+        alignItems="center">
         <Facebook width={35} height={35} />
       </Pressable>
     </HStack>

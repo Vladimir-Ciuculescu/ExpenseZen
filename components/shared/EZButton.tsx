@@ -6,9 +6,7 @@ interface EZButtonProps {
   children: any;
   onPress: () => void;
   isLoading?: boolean;
-  variant?: ResponsiveValue<
-    "link" | "subtle" | "solid" | "ghost" | "outline" | "unstyled"
-  >;
+  variant?: ResponsiveValue<"link" | "subtle" | "solid" | "ghost" | "outline" | "unstyled">;
   leftIcon?: JSX.Element;
 }
 
@@ -25,8 +23,7 @@ const EZButton: React.FC<EZButtonProps & EZButtonStypeProp> = (props) => {
       onPress={onPress}
       isLoading={isLoading}
       variant={variant || "solid"}
-      leftIcon={leftIcon || undefined}
-    >
+      leftIcon={leftIcon || undefined}>
       {children}
     </Button>
   );

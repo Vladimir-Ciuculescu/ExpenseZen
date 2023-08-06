@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FormControl, HStack, Text, VStack, View, WarningOutlineIcon } from "native-base";
+import { HStack, Text, VStack, View } from "native-base";
 import { SafeAreaView, FlatList, useWindowDimensions, TouchableOpacity } from "react-native";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";

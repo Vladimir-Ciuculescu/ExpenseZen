@@ -65,6 +65,7 @@ const EditBudgetScreen: React.FC<EditBudgetScreenProps> = ({ navigation }) => {
   const saveBudgets = async () => {
     setButtonLoading(true);
     await UserService.saveUserBudgets(user.id, budgets);
+    console.log(user.id, budgets);
     dispatch(editBudgetsActions(budgets));
     setButtonLoading(false);
     navigation.goBack();
@@ -102,30 +103,12 @@ const EditBudgetScreen: React.FC<EditBudgetScreenProps> = ({ navigation }) => {
               top: 0,
               zIndex: 9999,
             }}
-            onPress={closeModal}
-          >
+            onPress={closeModal}>
             <AntDesign name="close" color="black" size={24} />
           </TouchableOpacity>
           <Text textAlign="center" fontFamily="SourceBold" fontSize={26}>
             Edit your monthly budgets
           </Text>
-          {/* {dataLoading
-            ? Array.from(Array(10).keys()).map((_, key) => {
-                return (
-                  <HStack space="2" alignItems="center" key={key}>
-                    <Skeleton size="20" rounded="2xl" />
-                    <Skeleton h="12" flex="1.5" rounded="full" />
-                    <Skeleton h="10" flex="1" rounded="2xl" />
-                  </HStack>
-                );
-              })
-            : CATEGORIES.map((category: Category, index) => (
-                <MonthlyBudgetItem
-                  category={category}
-                  key={index}
-                  onChange={(e: string) => handleValues(e, category)}
-                />
-              ))} */}
           {budgetCategories.map((category: Category, index: number) => (
             <MonthlyBudgetItem
               category={category}
@@ -141,13 +124,12 @@ const EditBudgetScreen: React.FC<EditBudgetScreenProps> = ({ navigation }) => {
             w="100%"
             bg="purple.700"
             borderRadius={8}
-            height="55px"
+            height="44px"
             _text={{ fontFamily: "SourceSansPro", fontSize: 17 }}
             _pressed={{
               backgroundColor: COLORS.PURPLE[700],
               opacity: 0.7,
-            }}
-          >
+            }}>
             SAVE
           </EZButton>
         </VStack>

@@ -77,12 +77,12 @@ const RegisterForm: React.FC<any> = () => {
 
   return (
     <VStack space={10}>
-      <VStack space={2}>
-        <Text fontFamily="SourceBold" fontSize={30} textAlign="center">
+      <VStack>
+        <Text fontFamily="SourceBold" fontSize={35}>
           Register account
         </Text>
-        <Text textAlign="center" fontFamily="SourceSansPro" fontSize={17}>
-          Fill your information
+        <Text fontFamily="SourceSansPro" fontSize={17} color={COLORS.MUTED[400]}>
+          Create an account to continue
         </Text>
       </VStack>
       <VStack space={6}>
@@ -174,8 +174,7 @@ const RegisterForm: React.FC<any> = () => {
         _text={{ fontFamily: "SourceSansPro", fontSize: 17 }}
         onPress={submit}
         isLoading={loading}
-        _pressed={{ backgroundColor: COLORS.PURPLE[700], opacity: 0.7 }}
-      >
+        _pressed={{ backgroundColor: COLORS.PURPLE[700], opacity: 0.7 }}>
         Register
       </EZButton>
     </VStack>

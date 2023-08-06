@@ -54,11 +54,7 @@ const registerUser = async (user: User) => {
   }
 };
 
-const loginUser = async (
-  email: string,
-  password: string,
-  provider: Provider
-) => {
+const loginUser = async (email: string, password: string, provider: Provider) => {
   try {
     const { data } = await supabase
       .from(USERS)
@@ -120,7 +116,7 @@ const saveUserBudgets = async (userId: number, budgets: Budget[]) => {
       } else {
         await supabase.from(MONTHLY_BUDGETS).insert({
           user_id: userId,
-          category_id: item.categoryId,
+          category_id: item.id,
           budget: item.budget,
         });
       }

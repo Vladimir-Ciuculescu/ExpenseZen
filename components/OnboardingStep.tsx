@@ -1,6 +1,6 @@
 import React from "react";
 import { useWindowDimensions } from "react-native";
-import { Text, View, VStack } from "native-base";
+import { Text, VStack } from "native-base";
 import { Step } from "../interfaces/Step";
 
 interface OnboardingStepProps {
@@ -16,20 +16,10 @@ const OnboardingStep: React.FC<OnboardingStepProps> = ({ step }) => {
       <VStack space={5} alignItems="center">
         {image}
         <VStack space={2} alignItems="center" mx={10}>
-          <Text
-            fontFamily="SourceBold"
-            fontSize={28}
-            color="purple.700"
-            textAlign="center"
-          >
+          <Text fontFamily="SourceBold" fontSize={28} color="purple.700" textAlign="center">
             {title}
           </Text>
-          <Text
-            fontFamily="SourceSansPro"
-            textAlign="center"
-            color="muted.900"
-            fontSize={16}
-          >
+          <Text fontFamily="SourceSansPro" textAlign="center" color="muted.900" fontSize={16}>
             {description}
           </Text>
         </VStack>

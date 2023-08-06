@@ -1,7 +1,6 @@
 import { NativeBaseProvider } from "native-base";
 import { useFonts } from "expo-font";
 import { LogBox } from "react-native";
-import { StatusBar } from "expo-status-bar";
 import SourceSansPro from "./assets/fonts/SourceSansProRegular.ttf";
 import SourceBold from "./assets/fonts/SourceSansProBold.ttf";
 import Navigation from "./navigation/Navigation";
@@ -26,7 +25,6 @@ export default function App() {
     <NativeBaseProvider>
       <Provider store={store}>
         <PersistGate persistor={persistor}>
-          {/* <StatusBar style="auto" /> */}
           <Navigation />
         </PersistGate>
       </Provider>

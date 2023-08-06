@@ -9,6 +9,7 @@ import CategoriesScreen from "../screens/CategoriesScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import { Animated, useWindowDimensions } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
+import EZHeaderBackground from "../components/shared/EZHeaderBackground";
 
 const Tab = createBottomTabNavigator();
 
@@ -52,8 +53,8 @@ const TabNavigator: React.FC<any> = () => {
           tabBarStyle: {
             height: TAB_BAR_HEIGHT,
           },
-        }}
-      >
+          headerBackground: () => <EZHeaderBackground />,
+        }}>
         <Tab.Screen
           component={HomeScreen}
           name="Home"

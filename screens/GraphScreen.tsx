@@ -10,7 +10,7 @@ import {
   ScrollView,
   FlatList,
 } from "native-base";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState, Fragment } from "react";
 import PieChart from "react-native-pie-chart";
 import { useSelector } from "react-redux";
 import { Expense } from "../interfaces/Expense";
@@ -19,8 +19,8 @@ import { GraphCategory } from "../interfaces/GraphCategory";
 import GraphCategoryItem from "../components/GraphCategory";
 import { StatusBar } from "expo-status-bar";
 import { monthTotalSelector } from "../redux/expensesReducers";
-import EZHeaderBackground from "../components/shared/EZHeaderBackground";
 import EZHeaderTitle from "../components/shared/EzHeaderTitle";
+import { NoChartData } from "../assets/SVG";
 
 interface GraphScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -30,14 +30,13 @@ const GraphScreen: React.FC<GraphScreenProps> = ({ navigation }) => {
   const user = useSelector((state: RootState) => state.user);
   const [graphCategories, setGraphCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [series, setSeries] = useState<any[]>([1, 2, 3]);
-  const [colors, setColors] = useState<string[]>(["red", "blue", "green"]);
+  const [series, setSeries] = useState<any[]>([1]);
+  const [colors, setColors] = useState<string[]>(["red"]);
   const { expenses } = useSelector((state: RootState) => state.expenses);
   const monthTotal = useSelector(monthTotalSelector);
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerBackground: () => <EZHeaderBackground />,
       headerTitle: () => <EZHeaderTitle>Graph Reports</EZHeaderTitle>,
     });
 
@@ -59,17 +58,19 @@ const GraphScreen: React.FC<GraphScreenProps> = ({ navigation }) => {
       return acc;
     }, {});
 
-    const graphCategories = Object.keys(categorySummary).map((category) => ({
-      name: category,
-      amount: categorySummary[category].amount,
-      expenses: categorySummary[category].expenses,
-      color: categorySummary[category].color,
-    }));
+    if (expenses && expenses.length > 0) {
+      const graphCategories = Object.keys(categorySummary).map((category) => ({
+        name: category,
+        amount: categorySummary[category].amount,
+        expenses: categorySummary[category].expenses,
+        color: categorySummary[category].color,
+      }));
 
-    setGraphCategories(graphCategories);
+      setGraphCategories(graphCategories);
 
-    setSeries(graphCategories.map((item: Expense) => item.amount));
-    setColors(graphCategories.map((item: GraphCategory) => item.color));
+      setSeries(graphCategories.map((item: Expense) => item.amount));
+      setColors(graphCategories.map((item: GraphCategory) => item.color));
+    }
 
     setLoading(false);
   };
@@ -79,7 +80,7 @@ const GraphScreen: React.FC<GraphScreenProps> = ({ navigation }) => {
       <StatusBar style="light" />
       <Box
         flexDirection="row"
-        justifyContent="space-between"
+        justifyContent={expenses && expenses.length > 0 ? "space-between" : "center"}
         w="90%"
         py={4}
         px={2}
@@ -90,50 +91,60 @@ const GraphScreen: React.FC<GraphScreenProps> = ({ navigation }) => {
           shadowRadius: 4,
         }}
         bg="muted.50"
-        borderRadius={20}
-      >
-        <Box style={{ alignItems: "center", justifyContent: "center" }}>
-          {loading ? (
-            <Skeleton style={{ width: 170, height: 170 }} rounded="full" />
-          ) : (
-            <PieChart
-              widthAndHeight={170}
-              series={series}
-              sliceColor={colors}
-              coverRadius={0.75}
-              coverFill={"#FFF"}
-            />
-          )}
-          <View position="absolute" alignItems="center" justifyContent="center">
-            {!loading && (
-              <VStack alignItems="center">
-                <Text fontSize={16} fontFamily="SourceBold" color="muted.500">
-                  Total
-                </Text>
-                <Text fontSize={22} fontFamily="SourceBold">
-                  {user.symbol} {monthTotal.toFixed(2)}
-                </Text>
-              </VStack>
-            )}
-          </View>
-        </Box>
-        <VStack space={2}>
-          <ScrollView flex={1} showsVerticalScrollIndicator={false}>
-            <VStack space={2}>
-              {graphCategories.map((graphCategory: GraphCategory, key: number) => {
-                const categoryPercent = (graphCategory.amount * 100) / monthTotal;
-                return (
-                  <HStack space={2} alignItems="center" key={key}>
-                    <Circle size="10px" style={{ backgroundColor: graphCategory.color }} />
-                    <Text fontFamily="SourceBold">
-                      {graphCategory.name} ({categoryPercent.toFixed(2)}%)
+        borderRadius={20}>
+        {expenses && expenses.length > 0 ? (
+          <Fragment>
+            <Box style={{ alignItems: "center", justifyContent: "center" }}>
+              {loading ? (
+                <Skeleton style={{ width: 170, height: 170 }} rounded="full" />
+              ) : (
+                <PieChart
+                  widthAndHeight={170}
+                  series={series}
+                  sliceColor={colors}
+                  coverRadius={0.75}
+                  coverFill={"#FFF"}
+                />
+              )}
+              <View position="absolute" alignItems="center" justifyContent="center">
+                {!loading && (
+                  <VStack alignItems="center">
+                    <Text fontSize={16} fontFamily="SourceBold" color="muted.500">
+                      Total
                     </Text>
-                  </HStack>
-                );
-              })}
+                    <Text fontSize={22} fontFamily="SourceBold">
+                      {user.symbol} {monthTotal.toFixed(2)}
+                    </Text>
+                  </VStack>
+                )}
+              </View>
+            </Box>
+            <VStack space={2}>
+              <ScrollView flex={1} showsVerticalScrollIndicator={false}>
+                <VStack space={2}>
+                  {graphCategories.map((graphCategory: GraphCategory, key: number) => {
+                    const categoryPercent = (graphCategory.amount * 100) / monthTotal;
+                    return (
+                      <HStack space={2} alignItems="center" key={key}>
+                        <Circle size="10px" style={{ backgroundColor: graphCategory.color }} />
+                        <Text fontFamily="SourceBold">
+                          {graphCategory.name} ({categoryPercent.toFixed(2)}%)
+                        </Text>
+                      </HStack>
+                    );
+                  })}
+                </VStack>
+              </ScrollView>
             </VStack>
-          </ScrollView>
-        </VStack>
+          </Fragment>
+        ) : (
+          <VStack space="10px">
+            <NoChartData height={140} width={200} />
+            <Text textAlign="center" fontSize={17} fontFamily="SourceBold">
+              No data to display
+            </Text>
+          </VStack>
+        )}
       </Box>
 
       <FlatList

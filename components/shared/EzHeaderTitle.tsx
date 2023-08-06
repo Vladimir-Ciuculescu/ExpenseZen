@@ -1,5 +1,4 @@
 import { Text } from "native-base";
-import { ReactPortal } from "react";
 
 interface Props {
   children: string;

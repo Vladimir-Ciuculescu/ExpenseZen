@@ -5,7 +5,6 @@ import React, { useLayoutEffect } from "react";
 import { FlatList } from "react-native";
 import CategoryItem from "../components/CategoryItem";
 import { useWindowDimensions } from "react-native";
-import EZHeaderBackground from "../components/shared/EZHeaderBackground";
 import EZHeaderTitle from "../components/shared/EzHeaderTitle";
 import { useSelector } from "react-redux";
 import { categoriesSelector } from "../redux/expensesReducers";
@@ -20,7 +19,6 @@ const CategoriesScreen: React.FC<CategoriesScrennProps> = ({ navigation }) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerBackground: () => <EZHeaderBackground />,
       headerTitle: () => <EZHeaderTitle>Categories</EZHeaderTitle>,
     });
   }, [navigation]);

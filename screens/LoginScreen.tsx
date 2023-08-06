@@ -19,7 +19,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar style="dark" />
       <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
-        <VStack space={10} px={10} paddingTop={24}>
+        <VStack space={10} px={5} paddingTop={24}>
           <LoginForm navigation={navigation} />
 
           {/* <HStack alignItems="center" space={3}>
@@ -37,8 +37,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                 fontFamily="SourceBold"
                 fontSize={17}
                 color="purple.700"
-                style={{ backgroundColor: "transparent" }}
-              >
+                style={{ backgroundColor: "transparent" }}>
                 Sign up
               </Text>
             </Pressable>

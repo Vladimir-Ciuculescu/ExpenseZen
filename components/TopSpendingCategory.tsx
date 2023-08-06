@@ -1,4 +1,4 @@
-import { Box, Pressable, Text, VStack } from "native-base";
+import { Box, Text, VStack } from "native-base";
 import React from "react";
 import { Category } from "../interfaces/Category";
 import { getCategoryIcon } from "../utils/getCategoryIcon";
@@ -35,8 +35,7 @@ const TopSpendingCategory: React.FC<TopSpendingCategoryProps> = ({ item, expense
           bg="red.400"
           justifyContent="center"
           alignItems="center"
-          borderRadius={22}
-        >
+          borderRadius={22}>
           {getCategoryIcon(name, 32, COLORS.MUTED[50])}
         </Box>
         <Text fontFamily="SourceBold">{name}</Text>

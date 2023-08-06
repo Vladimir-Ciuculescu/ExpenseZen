@@ -40,7 +40,6 @@ import {
   topSpedingCategoriesSelector,
 } from "../redux/expensesReducers";
 import { getCategoryIcon } from "../utils/getCategoryIcon";
-import EZHeaderBackground from "../components/shared/EZHeaderBackground";
 
 interface HomeScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -60,7 +59,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      headerBackground: () => <EZHeaderBackground />,
       headerTitle: () => (
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <HStack space="1" alignItems="center">
@@ -81,10 +79,11 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   }, [navigation, todayTotal, loading]);
 
   useEffect(() => {
-    if (expenses.length === 0) {
-      getGeneralInfo();
-    }
-  }, [navigation]);
+    // if (expenses.length === 0) {
+    //   getGeneralInfo();
+    // }
+    getGeneralInfo();
+  }, []);
 
   const getAllCategories = async () => {
     const cateogries = await CategoryService.getAllCategories();
@@ -162,8 +161,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                 shadow={2}
                 borderRadius={10}
                 px={5}
-                py={3}
-              >
+                py={3}>
                 <Text fontFamily="SourceSansPro" color="muted.400" fontSize={20}>
                   {currentMonth}
                 </Text>
@@ -235,6 +233,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                         fontSize: 17,
                       }}
                       variant="unstyled"
+                      _pressed={{ opacity: 0.4 }}
                       onPress={openEditBudgetsModal}
                       leftIcon={
                         <MaterialCommunityIcons
@@ -242,8 +241,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                           size={22}
                           color={COLORS.PURPLE[700]}
                         />
-                      }
-                    >
+                      }>
                       Edit
                     </EZButton>
                   ) : (
@@ -255,8 +253,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                       }}
                       variant="unstyled"
                       onPress={openEditBudgetsModal}
-                      leftIcon={<Feather name="plus" size={22} color={COLORS.PURPLE[700]} />}
-                    >
+                      leftIcon={<Feather name="plus" size={22} color={COLORS.PURPLE[700]} />}>
                       Add
                     </EZButton>
                   )}

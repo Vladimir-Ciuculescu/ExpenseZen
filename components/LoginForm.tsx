@@ -87,12 +87,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ navigation }) => {
 
   return (
     <VStack space={10}>
-      <VStack space={2}>
-        <Text fontFamily="SourceBold" fontSize={30} textAlign="center">
+      <VStack>
+        <Text fontFamily="SourceBold" fontSize={35} textAlign="center">
           Welcome to ExpenseZen
         </Text>
         <Text textAlign="center" fontFamily="SourceSansPro" fontSize={17} color={COLORS.MUTED[400]}>
-          Sign in to your account !
+          Sign in to your account
         </Text>
       </VStack>
       <VStack space={6}>
@@ -143,8 +143,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ navigation }) => {
         borderRadius={8}
         height="44px"
         _text={{ fontFamily: "SourceSansPro", fontSize: 17 }}
-        _pressed={{ backgroundColor: COLORS.PURPLE[700], opacity: 0.7 }}
-      >
+        _pressed={{ backgroundColor: COLORS.PURPLE[700], opacity: 0.7 }}>
         Sign in
       </EZButton>
     </VStack>
