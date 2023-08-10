@@ -104,7 +104,7 @@ const CategoryExpensesScreen: React.FC<Props> = ({ navigation, route }) => {
                   </View>
                   <View>
                     <Text fontSize={18} fontFamily="SourceBold">
-                      {expense.amount} $
+                      {expense.amount.toFixed(2)} $
                     </Text>
                   </View>
                 </HStack>

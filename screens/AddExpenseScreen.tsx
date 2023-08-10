@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { HStack, Text, VStack, View } from "native-base";
 import { SafeAreaView, FlatList, useWindowDimensions, TouchableOpacity } from "react-native";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
@@ -26,6 +26,7 @@ interface AddExpenseScreenProps {
 const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
   const { width } = useWindowDimensions();
   const dispatch = useDispatch();
+  const scrollRef = useRef<any>(null);
 
   const user = useSelector((state: RootState) => state.user);
   const categories = useSelector(categoriesSelector);
@@ -95,7 +96,10 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar style="dark" />
-      <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
+      <KeyboardAwareScrollView
+        showsVerticalScrollIndicator={false}
+        ref={scrollRef}
+        onKeyboardWillHide={() => scrollRef.current.scrollToEnd()}>
         <TouchableOpacity
           style={{ position: "absolute", right: 40, top: 25, zIndex: 9999 }}
           onPress={() => navigation.goBack()}>
@@ -147,6 +151,7 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
                   />
                 )}
               />
+
               {touched.category && errors.category && (
                 <HStack alignSelf="flex-start" alignItems="center" space={1}>
                   <FontAwesome name="close" size={20} color={COLORS.DANGER[500]} />
@@ -174,7 +179,7 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
               isLoading={loading}
               bg="purple.700"
               borderRadius={8}
-              height="55px"
+              height="44px"
               _text={{ fontFamily: "SourceSansPro", fontSize: 17 }}
               _pressed={{
                 backgroundColor: COLORS.PURPLE[700],

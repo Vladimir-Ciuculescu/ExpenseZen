@@ -1,4 +1,5 @@
 import {
+  CONVERT_EXPENSES_CURRENCY,
   GET_MONTHLY_CATEGORY_EXPENSES,
   GET_MONTH_EXPENSES,
   GET_MONTH_TOTAL,
@@ -50,15 +51,22 @@ const getMonthExpenses = async (userId: number) => {
   }
 };
 
-// const convertExpensesCurrency = async (userId:number, conversionRate:number) => {
+const convertExpensesCurrency = async (userId: number, conversionRate: number) => {
+  try {
+    const { error } = await supabase.rpc(CONVERT_EXPENSES_CURRENCY, {
+      user_id: userId,
+      conversion_rate: conversionRate,
+    });
 
-//   try {
-//     const {data} = await supabase.from(EXPENSES).update({amount:amount * conversionRate})
-//   } catch (error) {
-
-//   }
-
-// }
+    if (error) {
+      throw error;
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error);
+    }
+  }
+};
 
 // const getMonthlyCategoryExpenses = async (userId: number, categoryId: number) => {
 //   try {
@@ -80,5 +88,6 @@ const getMonthExpenses = async (userId: number) => {
 export const ExpenseService = {
   AddExpense,
   getMonthExpenses,
+  convertExpensesCurrency,
   //getMonthlyCategoryExpenses,
 };

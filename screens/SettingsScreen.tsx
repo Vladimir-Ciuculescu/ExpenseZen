@@ -1,9 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { removeCurrency, removeUser, setCurrency } from "../redux/userReducer";
-import React, { Fragment, useLayoutEffect, useRef, useState } from "react";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import { View, Text, ScrollView, HStack, VStack, Circle, Button } from "native-base";
-import { TouchableOpacity, Switch, StyleSheet } from "react-native";
+import { TouchableOpacity, Alert, Switch } from "react-native";
 import EZHeaderTitle from "../components/shared/EzHeaderTitle";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import RNPickerSelect from "react-native-picker-select";
@@ -12,11 +12,19 @@ import { RootState } from "../redux/store";
 import COLORS from "../colors";
 import { FREECURRENCY_API_KEY } from "@env";
 import axios from "axios";
+import { ExpenseService } from "../api/services/ExpenseService";
+import { setExpensesAction } from "../redux/expensesReducers";
+import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
+
+import { AntDesign } from "@expo/vector-icons";
 
 const SettingsScreen: React.FC<any> = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const [currencies, setCurrencies] = useState<any[]>([]);
+  const [notificationsAllowed, toggleNotificationsAllowed] = useState<boolean>(false);
+  const [darkTheme, toggleDarkTheme] = useState<boolean>(false);
   const user: any = useSelector((state: RootState) => state.user);
 
   const [selectedCurrency, setSelectedCurrency] = useState<string | null>(null);
@@ -53,7 +61,7 @@ const SettingsScreen: React.FC<any> = () => {
     }
   };
 
-  const getConversionRate = async () => {
+  const changeCurrency = async () => {
     const baseCurrency = selectedCurrency!.split(" ");
     const currentCurrency = user.currency;
     const currencyToChange = baseCurrency[1];
@@ -68,8 +76,16 @@ const SettingsScreen: React.FC<any> = () => {
     const conversionRate = data.data[currencyToChange];
 
     await CurrencyService.updateUserCurrency(user.id, baseCurrency[0], baseCurrency[1]);
+    await ExpenseService.convertExpensesCurrency(user.id, conversionRate);
+
+    const expenses = await ExpenseService.getMonthExpenses(user.id);
 
     dispatch(setCurrency({ name: baseCurrency[1], symbol: baseCurrency[0] }));
+    dispatch(setExpensesAction(expenses));
+
+    Alert.alert("Currency updated", "All your expenses were updated with the new currency", [
+      { text: "OK" },
+    ]);
   };
 
   const SECTIONS = [
@@ -78,7 +94,7 @@ const SettingsScreen: React.FC<any> = () => {
       icon: "settings",
       items: [
         {
-          icon: <MaterialCommunityIcons name="currency-eur" size={18} color="white" />,
+          icon: <MaterialCommunityIcons name="currency-eur" size={18} color={COLORS.MUTED[50]} />,
           color: "#fe9400",
           label: "Currency ",
           onPress: () => pickerRef.current.togglePicker(true),
@@ -114,19 +130,69 @@ const SettingsScreen: React.FC<any> = () => {
               onValueChange={(value) => setSelectedCurrency(value)}
               items={currencies}
               value={selectedCurrency || `${user.symbol} ${user.currency}`}
-              onClose={getConversionRate}
+              onClose={changeCurrency}
             />
           ),
+        },
+        {
+          icon: (
+            <Ionicons
+              name={notificationsAllowed ? "notifications" : "notifications-off"}
+              size={18}
+              color={COLORS.MUTED[50]}
+            />
+          ),
+          color: "primary.500",
+          label: "Notifications",
+          onPress: () => toggleNotificationsAllowed(!notificationsAllowed),
+          rightElement: (
+            <Switch
+              value={notificationsAllowed}
+              onValueChange={() => toggleNotificationsAllowed(!notificationsAllowed)}
+            />
+          ),
+        },
+        {
+          icon: <Ionicons name={darkTheme ? "moon" : "sunny"} size={18} color={COLORS.MUTED[50]} />,
+          color: "violet.800",
+          label: "Light theme",
+          onPress: () => toggleDarkTheme(!darkTheme),
+          rightElement: (
+            <Switch value={darkTheme} onValueChange={() => toggleDarkTheme(!darkTheme)} />
+          ),
+        },
+        {
+          icon: <MaterialCommunityIcons name="eraser" size={18} color={COLORS.MUTED[50]} />,
+          color: "rose.600",
+          label: "Erase data",
+          onPress: () => toggleDarkTheme(!darkTheme),
         },
       ],
     },
 
     {
-      header: "Content",
+      header: "Help",
       icon: "align-center",
       items: [
-        { icon: "save", color: "#32c759", label: "Saved", type: "boolean" },
-        { icon: "download", color: "#fd2d54", label: "Downloads", type: "boolean" },
+        {
+          icon: <FontAwesome name="lock" size={18} color={COLORS.MUTED[50]} />,
+          color: "orange.800",
+          label: "Change password",
+          rightElement: <FontAwesome name="angle-right" size={26} color="black" />,
+        },
+        {
+          icon: <Ionicons name="newspaper-sharp" size={18} color={COLORS.MUTED[50]} />,
+          color: "green.500",
+          label: "About",
+          rightElement: <FontAwesome name="angle-right" size={26} color="black" />,
+        },
+        {
+          icon: <AntDesign name="logout" size={18} color={COLORS.MUTED[50]} />,
+          color: "yellow.500",
+          label: "Logout",
+          onPress: () => logout(),
+          rightElement: <FontAwesome name="angle-right" size={26} color="black" />,
+        },
       ],
     },
   ];
@@ -157,7 +223,7 @@ const SettingsScreen: React.FC<any> = () => {
                     paddingX={"12px"}>
                     {/* <View style={[styles.rowIcon, { backgroundColor: color }]}>{icon}</View> */}
                     <HStack space="12px" alignItems="center">
-                      <Circle style={{ backgroundColor: color }} size="32px">
+                      <Circle bg={color} size="32px">
                         {icon}
                       </Circle>
                       <Text fontSize={17} color="muted.900">
@@ -165,21 +231,6 @@ const SettingsScreen: React.FC<any> = () => {
                       </Text>
                     </HStack>
                     {rightElement}
-                    {/* {type === "boolean" && <Switch value={value} />}
-                    {type === "link" && <Feather name="chevron-right" size={24} color="black" />} */}
-                    {/* <RNPickerSelect
-                      placeholder={{
-                        value: 0,
-                        label: "USD",
-                      }}
-                      value={0}
-                      onValueChange={(value) => console.log(value)}
-                      items={[
-                        { label: "Football", value: "football" },
-                        { label: "Baseball", value: "baseball" },
-                        { label: "Hockey", value: "hockey" },
-                      ]}
-                    /> */}
                   </HStack>
                 </TouchableOpacity>
               );
@@ -187,8 +238,6 @@ const SettingsScreen: React.FC<any> = () => {
           </VStack>
         </View>
       ))}
-
-      <Button onPress={logout}>Log out</Button>
     </ScrollView>
   );
 };

@@ -37,9 +37,11 @@ const updateUserCurrency = async (userId: number, currencySymbol: string, curren
 };
 
 const getAllCurrencies = async () => {
+  console.log(FREECURRENCY_API_KEY);
   const { data } = await axios.get("https://api.freecurrencyapi.com/v1/currencies", {
     params: { apikey: FREECURRENCY_API_KEY },
   });
+  console.log(data);
   return data.data;
 };
 

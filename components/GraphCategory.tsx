@@ -10,9 +10,7 @@ interface GraphCategoryItemProps {
   graphCategory: GraphCategory;
 }
 
-const GraphCategoryItem: React.FC<GraphCategoryItemProps> = ({
-  graphCategory,
-}) => {
+const GraphCategoryItem: React.FC<GraphCategoryItemProps> = ({ graphCategory }) => {
   const { amount, color, name, expenses } = graphCategory;
 
   const user = useSelector((state: RootState) => state.user);
@@ -26,8 +24,7 @@ const GraphCategoryItem: React.FC<GraphCategoryItemProps> = ({
           height="60px"
           style={{ backgroundColor: color }}
           justifyContent="center"
-          alignItems="center"
-        >
+          alignItems="center">
           {getCategoryIcon(name, 22, COLORS.MUTED[50])}
         </Box>
         <VStack>
@@ -40,8 +37,7 @@ const GraphCategoryItem: React.FC<GraphCategoryItemProps> = ({
         </VStack>
       </HStack>
       <Text fontFamily="SourceBold" fontSize={17}>
-        {user.symbol}
-        {amount}
+        {user.symbol} {amount.toFixed(2)}
       </Text>
     </HStack>
   );
