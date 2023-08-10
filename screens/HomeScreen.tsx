@@ -69,7 +69,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
               <Skeleton h="3" width={10} rounded="full" startColor="indigo.300" />
             ) : (
               <Text fontFamily="SourceBold" color="muted.100" fontSize={20}>
-                {user.symbol} {todayTotal}
+                {user.symbol} {todayTotal.toFixed(2)}
               </Text>
             )}
           </HStack>
@@ -79,9 +79,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   }, [navigation, todayTotal, loading]);
 
   useEffect(() => {
-    // if (expenses.length === 0) {
-    //   getGeneralInfo();
-    // }
     getGeneralInfo();
   }, []);
 
@@ -116,6 +113,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       getMonthlyBudgets(user.id),
       getMonthlyExpenses(user.id),
     ]);
+
+    console.log(expenses);
 
     dispatch(setCategoriesAction(categories));
     dispatch(setBudgetsActions(budgets.filter((item: Budget) => item.budget !== 0)));

@@ -31,22 +31,18 @@ const LoginForm: React.FC<LoginFormProps> = ({ navigation }) => {
     onSubmit: async (values) => {
       const { email, password } = values;
       const response = await UserService.loginUser(email, password, Provider.DIRECT);
+      console.log(response);
       const message: any = response.message;
       if (message === "User exists") {
-        const { id, first_name, last_name, email } = response.data;
+        const { id, first_name, last_name, email, currency_code, currency_symbol } = response.data;
 
         dispatch(setUser({ firstName: first_name, lastName: last_name, email, id }));
 
-        const userCurrency = await CurrencyService.getUserCurrency(id);
-
-        if (userCurrency) {
-          const { currencies } = userCurrency;
-
-          dispatch(setCurrency(currencies));
-
-          navigation.navigate("Tabs", { screen: "Home" });
-        } else {
+        if (!currency_code || !currency_symbol) {
           navigation.navigate("Currency");
+        } else {
+          dispatch(setCurrency({ name: currency_code, symbol: currency_symbol }));
+          navigation.navigate("Tabs", { screen: "Home" });
         }
       } else {
         Alert.alert("Error", message);

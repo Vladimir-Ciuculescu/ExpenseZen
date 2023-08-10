@@ -4,6 +4,7 @@ import {
   GET_MONTH_TOTAL,
   GET_TODAY_TOTAL,
 } from "../../constants/PostgresFunctions";
+import { EXPENSES } from "../../constants/Tables";
 import { Expense } from "../../interfaces/Expense";
 import { getCurrentDate } from "../../utils/getCurrentDate";
 import { supabase } from "../supabase";
@@ -33,40 +34,6 @@ const AddExpense = async (expense: Expense) => {
   }
 };
 
-const getTodayTotalExpenses = async (userId: number) => {
-  try {
-    const { data } = await supabase.rpc(GET_TODAY_TOTAL, { user_id: userId });
-
-    if (data) {
-      return data;
-    }
-    return 0;
-  } catch (error) {
-    if (error instanceof Error) {
-      console.log(error);
-    }
-  }
-};
-
-const getMonthTotalExpenses = async (userId: number) => {
-  try {
-    const { data } = await supabase.rpc(GET_MONTH_TOTAL, {
-      start_month: startMonth,
-      end_month: endMonth,
-      user_id: userId,
-    });
-
-    if (data) {
-      return data;
-    }
-    return 0;
-  } catch (error) {
-    if (error instanceof Error) {
-      console.log(error);
-    }
-  }
-};
-
 const getMonthExpenses = async (userId: number) => {
   try {
     const { data } = await supabase.rpc(GET_MONTH_EXPENSES, {
@@ -83,30 +50,35 @@ const getMonthExpenses = async (userId: number) => {
   }
 };
 
-const getMonthlyCategoryExpenses = async (
-  userId: number,
-  categoryId: number
-) => {
-  try {
-    const { data } = await supabase.rpc(GET_MONTHLY_CATEGORY_EXPENSES, {
-      start_month: startMonth,
-      end_month: endMonth,
-      user_id: userId,
-      category_id: categoryId,
-    });
+// const convertExpensesCurrency = async (userId:number, conversionRate:number) => {
 
-    return data;
-  } catch (error) {
-    if (error instanceof Error) {
-      console.log(error);
-    }
-  }
-};
+//   try {
+//     const {data} = await supabase.from(EXPENSES).update({amount:amount * conversionRate})
+//   } catch (error) {
+
+//   }
+
+// }
+
+// const getMonthlyCategoryExpenses = async (userId: number, categoryId: number) => {
+//   try {
+//     const { data } = await supabase.rpc(GET_MONTHLY_CATEGORY_EXPENSES, {
+//       start_month: startMonth,
+//       end_month: endMonth,
+//       user_id: userId,
+//       category_id: categoryId,
+//     });
+
+//     return data;
+//   } catch (error) {
+//     if (error instanceof Error) {
+//       console.log(error);
+//     }
+//   }
+// };
 
 export const ExpenseService = {
   AddExpense,
-  getTodayTotalExpenses,
-  getMonthTotalExpenses,
   getMonthExpenses,
-  getMonthlyCategoryExpenses,
+  //getMonthlyCategoryExpenses,
 };

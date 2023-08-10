@@ -5,17 +5,17 @@ import EZProgress from "./shared/EZProgress";
 import { Budget } from "../interfaces/Budget";
 import { AntDesign } from "@expo/vector-icons";
 import COLORS from "../colors";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 interface MonthlyBudgetCategoryProps {
   budget: Budget;
   monthlyTotal: number;
 }
 
-const MonthlyBudgetCategory: React.FC<MonthlyBudgetCategoryProps> = ({
-  budget,
-  monthlyTotal,
-}) => {
+const MonthlyBudgetCategory: React.FC<MonthlyBudgetCategoryProps> = ({ budget, monthlyTotal }) => {
   const { budget: amount, category, color } = budget;
+  const user: any = useSelector((state: RootState) => state.user);
 
   const budgetStatus = () => {
     const threshold = (amount * 75) / 100;
@@ -31,11 +31,7 @@ const MonthlyBudgetCategory: React.FC<MonthlyBudgetCategoryProps> = ({
     if (statusMessage) {
       return (
         <HStack pb={2} pl={4} alignItems="center" space={2}>
-          <AntDesign
-            name="exclamationcircle"
-            size={15}
-            color={COLORS.DANGER[500]}
-          />
+          <AntDesign name="exclamationcircle" size={15} color={COLORS.DANGER[500]} />
           <Text>{statusMessage}</Text>
         </HStack>
       );
@@ -55,8 +51,7 @@ const MonthlyBudgetCategory: React.FC<MonthlyBudgetCategoryProps> = ({
         shadowRadius: 4,
       }}
       bg="muted.50"
-      borderRadius={20}
-    >
+      borderRadius={20}>
       <VStack flex={1} pt={4} pl={4} pr={4} space={3}>
         <HStack space={3} alignItems="center">
           <Box
@@ -65,8 +60,7 @@ const MonthlyBudgetCategory: React.FC<MonthlyBudgetCategoryProps> = ({
             height="60px"
             style={{ backgroundColor: color }}
             justifyContent="center"
-            alignItems="center"
-          >
+            alignItems="center">
             {getCategoryIcon(category, 24, COLORS.MUTED[50])}
           </Box>
           <Text fontFamily="SourceBold" fontSize={18}>
@@ -76,14 +70,9 @@ const MonthlyBudgetCategory: React.FC<MonthlyBudgetCategoryProps> = ({
 
         <VStack>
           <Text>
-            {monthlyTotal}$ / {amount}$
+            {monthlyTotal} {user.symbol} / {amount} {user.symbol}
           </Text>
-          <EZProgress
-            height="20px"
-            maxValue={amount}
-            value={monthlyTotal}
-            color={color}
-          />
+          <EZProgress height="20px" maxValue={amount} value={monthlyTotal} color={color} />
         </VStack>
       </VStack>
       {/* {isAlmostExceeded() && (

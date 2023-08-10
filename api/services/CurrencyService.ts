@@ -1,5 +1,7 @@
-import { CURRENCIES, USERS_CURRENCIES } from "../../constants/Tables";
+import { FREECURRENCY_API_KEY } from "@env";
+import { USERS, USERS_CURRENCIES } from "../../constants/Tables";
 import { supabase } from "../supabase";
+import axios from "axios";
 
 const getUserCurrency = async (userId: number) => {
   try {
@@ -17,11 +19,13 @@ const getUserCurrency = async (userId: number) => {
   }
 };
 
-const addUserCurrency = async (userId: number, currencyId: number) => {
+const updateUserCurrency = async (userId: number, currencySymbol: string, currencyCode: string) => {
   try {
     const { error } = await supabase
-      .from(USERS_CURRENCIES)
-      .insert([{ user_id: userId, currency_id: currencyId }]);
+      .from(USERS)
+      .update({ currency_code: currencyCode, currency_symbol: currencySymbol })
+      .filter("id", "eq", userId);
+
     if (error) {
       throw error;
     }
@@ -33,19 +37,14 @@ const addUserCurrency = async (userId: number, currencyId: number) => {
 };
 
 const getAllCurrencies = async () => {
-  try {
-    const { data } = await supabase.from(CURRENCIES).select("*");
-
-    return data;
-  } catch (error) {
-    if (error instanceof Error) {
-      console.log(error);
-    }
-  }
+  const { data } = await axios.get("https://api.freecurrencyapi.com/v1/currencies", {
+    params: { apikey: FREECURRENCY_API_KEY },
+  });
+  return data.data;
 };
 
 export const CurrencyService = {
   getUserCurrency,
+  updateUserCurrency,
   getAllCurrencies,
-  addUserCurrency,
 };

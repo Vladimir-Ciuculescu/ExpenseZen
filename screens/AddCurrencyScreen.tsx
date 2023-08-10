@@ -1,7 +1,6 @@
 import { Text, View, VStack } from "native-base";
 import { SafeAreaView, StyleSheet } from "react-native";
 import React, { useState, useEffect } from "react";
-// import { Picker } from "@react-native-picker/picker";
 import EZButton from "../components/shared/EZButton";
 import COLORS from "../colors";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
@@ -24,38 +23,42 @@ const AddCurrencyScreen: React.FC<AddCurrencyScreenProps> = ({ navigation }) => 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const getAllCurrencies = async () => {
-      const data = await CurrencyService.getAllCurrencies();
-      setCurrencies(data!);
-      setSelectedCurrency(
-        data![0].name === data![0].symbol ? data![0].name : `${data![0].symbol} ${data![0].name}`
-      );
-    };
-
-    getAllCurrencies();
+    getCurrencies();
   }, [navigation]);
+
+  const getCurrencies = async () => {
+    const data = await CurrencyService.getAllCurrencies();
+
+    let currenciesArray = [];
+
+    for (const item in data) {
+      currenciesArray.push({
+        label: `${data[item].symbol_native} ${data[item].code}`,
+        value: `${data[item].symbol_native} ${data[item].code}`,
+      });
+    }
+
+    setCurrencies(currenciesArray);
+  };
 
   const saveCurrency = async () => {
     setLoading(true);
-    const currentCurrency = currencies.find((item) => selectedCurrency.includes(item.name));
 
-    await CurrencyService.addUserCurrency(id, currentCurrency.id);
-    setLoading(false);
+    const currencyText = selectedCurrency.split(" ");
 
-    let payload;
-    if (selectedCurrency.split(" ")[1]) {
-      payload = {
-        name: selectedCurrency.split(" ")[1],
-        symbol: selectedCurrency.split(" ")[0],
-      };
-    } else {
-      payload = {
-        name: selectedCurrency.split(" ")[0],
-        symbol: selectedCurrency.split(" ")[0],
-      };
-    }
+    const currencySymbol = currencyText[0];
+    const currencyCode = currencyText[1];
+
+    await CurrencyService.updateUserCurrency(id, currencySymbol, currencyCode);
+
+    const payload = {
+      name: currencyCode,
+      symbol: currencySymbol,
+    };
 
     dispatch(setCurrency(payload));
+
+    setLoading(false);
 
     goToTabs();
   };
@@ -63,19 +66,6 @@ const AddCurrencyScreen: React.FC<AddCurrencyScreenProps> = ({ navigation }) => 
   const goToTabs = () => {
     navigation.navigate("Tabs");
   };
-
-  const CURRENCIES = currencies.map((currency, key) => {
-    let value;
-    if (currency.symbol === currency.name) {
-      value = currency.name;
-    } else {
-      value = `${currency.symbol} ${currency.name}`;
-    }
-    return {
-      label: value,
-      value: value,
-    };
-  });
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -88,7 +78,7 @@ const AddCurrencyScreen: React.FC<AddCurrencyScreenProps> = ({ navigation }) => 
             placeholder={{}}
             style={pickerSelectStyles}
             onValueChange={(value) => setSelectedCurrency(value)}
-            items={CURRENCIES}
+            items={currencies}
           />
         </VStack>
 

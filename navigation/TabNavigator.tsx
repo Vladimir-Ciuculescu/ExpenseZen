@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Fragment, useRef } from "react";
+import { Fragment, useRef, useEffect } from "react";
 import COLORS from "../colors";
 import { TAB_BAR_HEIGHT } from "../constants/NavigationConstants";
 import HomeScreen from "../screens/HomeScreen";
@@ -10,12 +10,16 @@ import SettingsScreen from "../screens/SettingsScreen";
 import { Animated, useWindowDimensions } from "react-native";
 import { useIsFocused } from "@react-navigation/native";
 import EZHeaderBackground from "../components/shared/EZHeaderBackground";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 const Tab = createBottomTabNavigator();
 
 const TabNavigator: React.FC<any> = () => {
   const { width } = useWindowDimensions();
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
+  const user = useSelector((state: RootState) => state.user);
+
   const isFocused = useIsFocused();
   const tabWidth = width / 4;
 
@@ -32,12 +36,14 @@ const TabNavigator: React.FC<any> = () => {
       toValue: 0,
       speed: 0,
       useNativeDriver: true,
-    });
+    }).start();
   };
 
-  if (isFocused) {
-    resetOffset();
-  }
+  useEffect(() => {
+    if (!isFocused) {
+      resetOffset();
+    }
+  }, [isFocused]);
 
   return (
     <Fragment>

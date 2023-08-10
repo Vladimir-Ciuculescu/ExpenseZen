@@ -5,4 +5,5 @@ declare module "@env" {
   export const SUPABASE_ANON_KEY: string;
   export const HASH_WARNING: string;
   export const VIRTUALIZED_WARNING: string;
+  export const FREECURRENCY_API_KEY: string;
 }
