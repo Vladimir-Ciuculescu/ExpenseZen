@@ -16,7 +16,7 @@ import { useSelector } from "react-redux";
 import { Expense } from "../interfaces/Expense";
 import { RootState } from "../redux/store";
 import { GraphCategory } from "../interfaces/GraphCategory";
-import GraphCategoryItem from "../components/GraphCategory";
+import GraphCategoryItem from "../components/GraphCategoryItem";
 import { StatusBar } from "expo-status-bar";
 import { monthTotalSelector } from "../redux/expensesReducers";
 import EZHeaderTitle from "../components/shared/EzHeaderTitle";
@@ -46,7 +46,7 @@ const GraphScreen: React.FC<GraphScreenProps> = ({ navigation }) => {
   const getGeneralInfo = async () => {
     setLoading(true);
 
-    const categorySummary = expenses.reduce((acc: any, current: any) => {
+    const categorySummary = expenses!.reduce((acc: any, current: any) => {
       const { name, amount, color } = current;
       if (acc.hasOwnProperty(name)) {
         acc[name].amount += amount;
@@ -155,7 +155,12 @@ const GraphScreen: React.FC<GraphScreenProps> = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
         keyExtractor={(item: any) => item.name}
         ItemSeparatorComponent={() => <View p="10px" />}
-        renderItem={({ item }) => <GraphCategoryItem graphCategory={item} />}
+        renderItem={({ item }) => (
+          <GraphCategoryItem
+            expenses={expenses!.filter((expense) => expense.name === item.name)}
+            graphCategory={item}
+          />
+        )}
       />
     </View>
   );

@@ -16,7 +16,7 @@ import COLORS from "../colors";
 import { StatusBar } from "expo-status-bar";
 import {
   categoriesSelector,
-  editBudgetsActions,
+  editBudgetsAction,
   monthlyBudgetsSelector,
 } from "../redux/expensesReducers";
 
@@ -65,8 +65,7 @@ const EditBudgetScreen: React.FC<EditBudgetScreenProps> = ({ navigation }) => {
   const saveBudgets = async () => {
     setButtonLoading(true);
     await UserService.saveUserBudgets(user.id, budgets);
-    console.log(user.id, budgets);
-    dispatch(editBudgetsActions(budgets));
+    dispatch(editBudgetsAction(budgets));
     setButtonLoading(false);
     navigation.goBack();
   };

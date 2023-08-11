@@ -1,11 +1,4 @@
-import {
-  CONVERT_EXPENSES_CURRENCY,
-  GET_MONTHLY_CATEGORY_EXPENSES,
-  GET_MONTH_EXPENSES,
-  GET_MONTH_TOTAL,
-  GET_TODAY_TOTAL,
-} from "../../constants/PostgresFunctions";
-import { EXPENSES } from "../../constants/Tables";
+import { CONVERT_EXPENSES_CURRENCY, GET_MONTH_EXPENSES } from "../../constants/PostgresFunctions";
 import { Expense } from "../../interfaces/Expense";
 import { getCurrentDate } from "../../utils/getCurrentDate";
 import { supabase } from "../supabase";
@@ -68,26 +61,8 @@ const convertExpensesCurrency = async (userId: number, conversionRate: number) =
   }
 };
 
-// const getMonthlyCategoryExpenses = async (userId: number, categoryId: number) => {
-//   try {
-//     const { data } = await supabase.rpc(GET_MONTHLY_CATEGORY_EXPENSES, {
-//       start_month: startMonth,
-//       end_month: endMonth,
-//       user_id: userId,
-//       category_id: categoryId,
-//     });
-
-//     return data;
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       console.log(error);
-//     }
-//   }
-// };
-
 export const ExpenseService = {
   AddExpense,
   getMonthExpenses,
   convertExpensesCurrency,
-  //getMonthlyCategoryExpenses,
 };

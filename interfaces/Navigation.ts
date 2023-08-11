@@ -5,6 +5,7 @@ export type AppStackParamList = {
   Onboarding: undefined;
   Login: undefined;
   Register: undefined;
+  ResetPassword: undefined;
   Tabs: undefined;
   Currency: undefined;
   CategoryExpenses: { expenses: Expense[]; name: string };

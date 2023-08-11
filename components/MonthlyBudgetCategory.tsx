@@ -70,7 +70,8 @@ const MonthlyBudgetCategory: React.FC<MonthlyBudgetCategoryProps> = ({ budget, m
 
         <VStack>
           <Text>
-            {monthlyTotal} {user.symbol} / {amount} {user.symbol}
+            {monthlyTotal.toFixed(2)} {user.symbol} /{" "}
+            {Number.isInteger(amount) ? amount : amount.toFixed(2)} {user.symbol}
           </Text>
           <EZProgress height="20px" maxValue={amount} value={monthlyTotal} color={color} />
         </VStack>

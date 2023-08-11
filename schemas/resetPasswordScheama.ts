@@ -1,10 +1,8 @@
 import * as Yup from "yup";
 
-export const registerSchema = Yup.object({
-  firstName: Yup.string().required("Please add your first name !"),
-  lastName: Yup.string().required("Please add your second name !"),
+export const resetPasswordSchema = Yup.object({
   email: Yup.string()
-    .email(`That's not a valid email address !`)
+    .email(`That's not a valid email address`)
     .required("Please add your email address !"),
   password: Yup.string()
     .required("Please provide a password")

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Alert } from "react-native";
+import { Alert, TouchableOpacity } from "react-native";
 import { VStack, Text, Pressable, Icon } from "native-base";
 import { Feather } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
@@ -12,7 +12,6 @@ import { loginSchema } from "../schemas/loginSchema";
 import EZInput from "./shared/EZInput";
 import COLORS from "../colors";
 import EZButton from "./shared/EZButton";
-import { CurrencyService } from "../api/services/CurrencyService";
 import { authInput } from "../commonStyles";
 
 interface LoginFormProps {
@@ -31,7 +30,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ navigation }) => {
     onSubmit: async (values) => {
       const { email, password } = values;
       const response = await UserService.loginUser(email, password, Provider.DIRECT);
-      console.log(response);
       const message: any = response.message;
       if (message === "User exists") {
         const { id, first_name, last_name, email, currency_code, currency_symbol } = response.data;
@@ -77,6 +75,10 @@ const LoginForm: React.FC<LoginFormProps> = ({ navigation }) => {
 
   const focusNextInput = (nextInputRef: any) => {
     nextInputRef.current.focus();
+  };
+
+  const goToForgotPassword = () => {
+    navigation.navigate("ResetPassword");
   };
 
   const { values, errors, touched, submitForm } = formik;
@@ -129,6 +131,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ navigation }) => {
             </Pressable>
           }
         />
+        <TouchableOpacity onPress={goToForgotPassword}>
+          <Text fontFamily="SourceBold" textAlign="right" fontSize={17} color="purple.700">
+            Forgot your password ?
+          </Text>
+        </TouchableOpacity>
       </VStack>
 
       <EZButton

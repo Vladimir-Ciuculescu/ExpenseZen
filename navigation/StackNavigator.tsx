@@ -11,6 +11,7 @@ import LoginScreen from "../screens/LoginScreen";
 import OnboardingScreen from "../screens/OnboardingScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import TabNavigator from "./TabNavigator";
+import ResetPasswordScreen from "../screens/ResetPasswordScreen";
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
 
@@ -46,6 +47,7 @@ const StackNavigator: React.FC<any> = () => {
     { name: "Onboarding", component: OnboardingScreen, options: { headerShown: false } },
     { name: "Login", component: LoginScreen, options: { headerShown: false } },
     { name: "Register", component: RegisterScreen, options: { headerShown: false } },
+    { name: "ResetPassword", component: ResetPasswordScreen, options: { headerShown: false } },
     { name: "Tabs", component: TabNavigator, options: { headerShown: false } },
     { name: "Currency", component: AddCurrencyScreen, options: { headerShown: false } },
     {

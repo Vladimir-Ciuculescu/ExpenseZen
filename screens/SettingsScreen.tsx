@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { removeCurrency, removeUser, setCurrency } from "../redux/userReducer";
 import React, { useLayoutEffect, useRef, useState } from "react";
-import { View, Text, ScrollView, HStack, VStack, Circle, Button } from "native-base";
+import { View, Text, ScrollView, HStack, VStack, Circle } from "native-base";
 import { TouchableOpacity, Alert, Switch } from "react-native";
 import EZHeaderTitle from "../components/shared/EzHeaderTitle";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -10,18 +10,22 @@ import RNPickerSelect from "react-native-picker-select";
 import { CurrencyService } from "../api/services/CurrencyService";
 import { RootState } from "../redux/store";
 import COLORS from "../colors";
-import { FREECURRENCY_API_KEY } from "@env";
-import axios from "axios";
 import { ExpenseService } from "../api/services/ExpenseService";
-import { setExpensesAction } from "../redux/expensesReducers";
+import {
+  removeExpensesAction,
+  setBudgetsAction,
+  setExpensesAction,
+} from "../redux/expensesReducers";
 import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
-
 import { AntDesign } from "@expo/vector-icons";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { AppStackParamList } from "../interfaces/Navigation";
+import { UserService } from "../api/services/UserService";
 
 const SettingsScreen: React.FC<any> = () => {
   const dispatch = useDispatch();
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
   const [currencies, setCurrencies] = useState<any[]>([]);
   const [notificationsAllowed, toggleNotificationsAllowed] = useState<boolean>(false);
   const [darkTheme, toggleDarkTheme] = useState<boolean>(false);
@@ -31,10 +35,10 @@ const SettingsScreen: React.FC<any> = () => {
 
   let pickerRef = useRef<any>(null);
 
-  const logout = () => {
+  const logout: any = () => {
     dispatch(removeUser());
     dispatch(removeCurrency());
-    //@ts-ignore
+    dispatch(removeExpensesAction());
     navigation.navigate("Login");
   };
 
@@ -65,23 +69,21 @@ const SettingsScreen: React.FC<any> = () => {
     const baseCurrency = selectedCurrency!.split(" ");
     const currentCurrency = user.currency;
     const currencyToChange = baseCurrency[1];
-    const { data } = await axios.get("https://api.freecurrencyapi.com/v1/latest", {
-      params: {
-        apikey: FREECURRENCY_API_KEY,
-        currencies: currencyToChange,
-        base_currency: currentCurrency,
-      },
-    });
 
-    const conversionRate = data.data[currencyToChange];
+    const data = await CurrencyService.getCurrencyConversionRate(currentCurrency, currencyToChange);
+
+    const conversionRate = data[currencyToChange];
 
     await CurrencyService.updateUserCurrency(user.id, baseCurrency[0], baseCurrency[1]);
     await ExpenseService.convertExpensesCurrency(user.id, conversionRate);
+    await UserService.convertUserBudgetsCurrency(user.id, conversionRate);
 
     const expenses = await ExpenseService.getMonthExpenses(user.id);
+    const budgets = await UserService.getUserBudgets(user.id);
 
     dispatch(setCurrency({ name: baseCurrency[1], symbol: baseCurrency[0] }));
     dispatch(setExpensesAction(expenses));
+    dispatch(setBudgetsAction(budgets));
 
     Alert.alert("Currency updated", "All your expenses were updated with the new currency", [
       { text: "OK" },
@@ -211,7 +213,7 @@ const SettingsScreen: React.FC<any> = () => {
             {header}
           </Text>
           <VStack space={"12px"}>
-            {items.map(({ label, icon, type, value, color, rightElement, onPress }, index) => {
+            {items.map(({ label, icon, color, rightElement, onPress }, index) => {
               return (
                 <TouchableOpacity key={index} onPress={onPress}>
                   <HStack

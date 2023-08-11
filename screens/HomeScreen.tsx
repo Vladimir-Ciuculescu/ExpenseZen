@@ -33,7 +33,7 @@ import { StatusBar } from "expo-status-bar";
 import {
   monthlyBudgetsSelector,
   monthTotalSelector,
-  setBudgetsActions,
+  setBudgetsAction,
   setCategoriesAction,
   setExpensesAction,
   todayTotalSelector,
@@ -79,8 +79,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   }, [navigation, todayTotal, loading]);
 
   useEffect(() => {
-    getGeneralInfo();
-  }, []);
+    if (!expenses.length) {
+      getGeneralInfo();
+    }
+  }, [user]);
 
   const getAllCategories = async () => {
     const cateogries = await CategoryService.getAllCategories();
@@ -114,13 +116,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
       getMonthlyExpenses(user.id),
     ]);
 
-    console.log(expenses);
-
     dispatch(setCategoriesAction(categories));
-    dispatch(setBudgetsActions(budgets.filter((item: Budget) => item.budget !== 0)));
+    dispatch(setBudgetsAction(budgets.filter((item: Budget) => item.budget !== 0)));
     dispatch(setExpensesAction(expenses));
 
     setLoading(false);
+    console.log("here");
   };
 
   const getCategoryMonthlyTotal = (category: string) => {

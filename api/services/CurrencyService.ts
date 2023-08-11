@@ -1,23 +1,9 @@
 import { FREECURRENCY_API_KEY } from "@env";
-import { USERS, USERS_CURRENCIES } from "../../constants/Tables";
+import { USERS } from "../../constants/Tables";
 import { supabase } from "../supabase";
 import axios from "axios";
 
-const getUserCurrency = async (userId: number) => {
-  try {
-    const { data } = await supabase
-      .from(USERS_CURRENCIES)
-      .select("*, currencies(name, symbol)")
-      .eq("user_id", userId)
-      .single();
-
-    return data;
-  } catch (error) {
-    if (error instanceof Error) {
-      console.log(error);
-    }
-  }
-};
+const apiUrl = "https://api.freecurrencyapi.com/v1";
 
 const updateUserCurrency = async (userId: number, currencySymbol: string, currencyCode: string) => {
   try {
@@ -37,16 +23,29 @@ const updateUserCurrency = async (userId: number, currencySymbol: string, curren
 };
 
 const getAllCurrencies = async () => {
-  console.log(FREECURRENCY_API_KEY);
-  const { data } = await axios.get("https://api.freecurrencyapi.com/v1/currencies", {
+  const { data } = await axios.get(`${apiUrl}/currencies`, {
     params: { apikey: FREECURRENCY_API_KEY },
   });
-  console.log(data);
   return data.data;
 };
 
+const getCurrencyConversionRate = async (baseCurrency: string, currencyToChange: string) => {
+  try {
+    const { data } = await axios.get(`${apiUrl}/latest`, {
+      params: {
+        apikey: FREECURRENCY_API_KEY,
+        currencies: currencyToChange,
+        base_currency: baseCurrency,
+      },
+    });
+    return data.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const CurrencyService = {
-  getUserCurrency,
   updateUserCurrency,
   getAllCurrencies,
+  getCurrencyConversionRate,
 };

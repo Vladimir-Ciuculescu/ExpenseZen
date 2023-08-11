@@ -6,6 +6,8 @@ import { useNavigation } from "@react-navigation/native";
 import { Expense } from "../interfaces/Expense";
 import COLORS from "../colors";
 import { TouchableOpacity } from "react-native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { AppStackParamList } from "../interfaces/Navigation";
 
 interface TopSpendingCategoryProps {
   item: Category;
@@ -15,10 +17,9 @@ interface TopSpendingCategoryProps {
 const TopSpendingCategory: React.FC<TopSpendingCategoryProps> = ({ item, expenses }) => {
   const { name, color, id } = item;
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
 
   const goToCategoryExpenses = () => {
-    // @ts-ignore
     navigation.navigate("CategoryExpenses", {
       expenses,
       name,

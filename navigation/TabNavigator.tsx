@@ -8,7 +8,6 @@ import GraphScreen from "../screens/GraphScreen";
 import CategoriesScreen from "../screens/CategoriesScreen";
 import SettingsScreen from "../screens/SettingsScreen";
 import { Animated, useWindowDimensions } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
 import EZHeaderBackground from "../components/shared/EZHeaderBackground";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
@@ -20,7 +19,6 @@ const TabNavigator: React.FC<any> = () => {
   const tabOffsetValue = useRef(new Animated.Value(0)).current;
   const user = useSelector((state: RootState) => state.user);
 
-  const isFocused = useIsFocused();
   const tabWidth = width / 4;
 
   const animateTabOffset = (index: number) => {
@@ -40,10 +38,8 @@ const TabNavigator: React.FC<any> = () => {
   };
 
   useEffect(() => {
-    if (!isFocused) {
-      resetOffset();
-    }
-  }, [isFocused]);
+    resetOffset();
+  }, [user.id]);
 
   return (
     <Fragment>
