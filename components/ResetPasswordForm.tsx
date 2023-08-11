@@ -1,6 +1,6 @@
 import { Text, VStack } from "native-base";
 import React, { useState } from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, Alert } from "react-native";
 import COLORS from "../colors";
 import EZInput from "./shared/EZInput";
 import { authInput } from "../commonStyles";
@@ -11,6 +11,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AppStackParamList } from "../interfaces/Navigation";
 import { useFormik } from "formik";
 import { resetPasswordSchema } from "../schemas/resetPasswordScheama";
+import { UserService } from "../api/services/UserService";
 
 const ResetPasswordForm: React.FC<any> = () => {
   const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
@@ -23,7 +24,29 @@ const ResetPasswordForm: React.FC<any> = () => {
       repeatPassword: "",
     },
     validationSchema: resetPasswordSchema,
-    onSubmit: async () => {},
+    onSubmit: async (values) => {
+      const { email, password } = values;
+
+      try {
+        const response = await UserService.resetPassword(email, password);
+
+        if (response?.message === "This user does not exist !") {
+          Alert.alert("Error", response.message, [
+            { text: "OK", onPress: () => console.log("OK Pressed"), style: "destructive" },
+          ]);
+        } else if (response?.message === "Password resetted succesfully !") {
+          Alert.alert("Success", response.message, [
+            {
+              text: "OK",
+              onPress: () => {
+                formik.resetForm();
+                navigation.goBack();
+              },
+            },
+          ]);
+        }
+      } catch (error) {}
+    },
   });
 
   const { values, errors, submitForm, touched } = formik;

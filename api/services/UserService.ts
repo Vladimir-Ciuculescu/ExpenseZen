@@ -54,6 +54,31 @@ const registerUser = async (user: User) => {
   }
 };
 
+const resetPassword = async (email: string, newPassword: string) => {
+  try {
+    const { data } = await supabase.from(USERS).select("*").filter("email", "eq", email).single();
+
+    if (!data) {
+      return {
+        message: "This user does not exist !",
+      };
+    } else {
+      await supabase
+        .from(USERS)
+        .update({ password: await hashPassword(newPassword) })
+        .filter("email", "eq", email);
+
+      return {
+        message: "Password resetted succesfully !",
+      };
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error);
+    }
+  }
+};
+
 const loginUser = async (email: string, password: string, provider: Provider) => {
   try {
     const { data } = await supabase
@@ -62,8 +87,6 @@ const loginUser = async (email: string, password: string, provider: Provider) =>
       .filter("email", "eq", email)
       .filter("provider", "eq", provider)
       .single();
-
-    console.log(data);
 
     if (data && (await compareHashed(password, data.password))) {
       return {
@@ -153,4 +176,5 @@ export const UserService = {
   getUserBudgets,
   saveUserBudgets,
   convertUserBudgetsCurrency,
+  resetPassword,
 };
