@@ -22,6 +22,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AppStackParamList } from "../interfaces/Navigation";
 import { UserService } from "../api/services/UserService";
+import { StatusBar } from "expo-status-bar";
 
 const SettingsScreen: React.FC<any> = () => {
   const dispatch = useDispatch();
@@ -187,6 +188,7 @@ const SettingsScreen: React.FC<any> = () => {
           color: "green.500",
           label: "About",
           rightElement: <FontAwesome name="angle-right" size={26} color="black" />,
+          onPress: () => navigation.navigate("About"),
         },
         {
           icon: <AntDesign name="logout" size={18} color={COLORS.MUTED[50]} />,
@@ -200,47 +202,50 @@ const SettingsScreen: React.FC<any> = () => {
   ];
 
   return (
-    <ScrollView contentContainerStyle={{ paddingVertical: 24 }}>
-      {SECTIONS.map(({ header, items }, key) => (
-        <View paddingX={"24px"} key={key}>
-          <Text
-            paddingY={"12px"}
-            fontSize={14}
-            color="muted.500"
-            textTransform="uppercase"
-            letterSpacing={1.1}
-            fontFamily="SourceBold">
-            {header}
-          </Text>
-          <VStack space={"12px"}>
-            {items.map(({ label, icon, color, rightElement, onPress }, index) => {
-              return (
-                <TouchableOpacity key={index} onPress={onPress}>
-                  <HStack
-                    alignItems="center"
-                    justifyContent="space-between"
-                    height={50}
-                    bg="muted.200"
-                    borderRadius={8}
-                    paddingX={"12px"}>
-                    {/* <View style={[styles.rowIcon, { backgroundColor: color }]}>{icon}</View> */}
-                    <HStack space="12px" alignItems="center">
-                      <Circle bg={color} size="32px">
-                        {icon}
-                      </Circle>
-                      <Text fontSize={17} color="muted.900">
-                        {label}
-                      </Text>
+    <View flex={1}>
+      <StatusBar style="light" />
+      <ScrollView contentContainerStyle={{ paddingVertical: 24 }}>
+        {SECTIONS.map(({ header, items }, key) => (
+          <View paddingX={"24px"} key={key}>
+            <Text
+              paddingY={"12px"}
+              fontSize={14}
+              color="muted.500"
+              textTransform="uppercase"
+              letterSpacing={1.1}
+              fontFamily="SourceBold">
+              {header}
+            </Text>
+            <VStack space={"12px"}>
+              {items.map(({ label, icon, color, rightElement, onPress }, index) => {
+                return (
+                  <TouchableOpacity key={index} onPress={onPress}>
+                    <HStack
+                      alignItems="center"
+                      justifyContent="space-between"
+                      height={50}
+                      bg="muted.200"
+                      borderRadius={8}
+                      paddingX={"12px"}>
+                      {/* <View style={[styles.rowIcon, { backgroundColor: color }]}>{icon}</View> */}
+                      <HStack space="12px" alignItems="center">
+                        <Circle bg={color} size="32px">
+                          {icon}
+                        </Circle>
+                        <Text fontSize={17} color="muted.900">
+                          {label}
+                        </Text>
+                      </HStack>
+                      {rightElement}
                     </HStack>
-                    {rightElement}
-                  </HStack>
-                </TouchableOpacity>
-              );
-            })}
-          </VStack>
-        </View>
-      ))}
-    </ScrollView>
+                  </TouchableOpacity>
+                );
+              })}
+            </VStack>
+          </View>
+        ))}
+      </ScrollView>
+    </View>
   );
 };
 export default SettingsScreen;

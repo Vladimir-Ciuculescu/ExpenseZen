@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { AppStackParamList, StackConfig } from "../interfaces/Navigation";
 import { RootState } from "../redux/store";
@@ -12,6 +12,7 @@ import OnboardingScreen from "../screens/OnboardingScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import TabNavigator from "./TabNavigator";
 import ResetPasswordScreen from "../screens/ResetPasswordScreen";
+import AboutScreen from "../screens/AboutScreen";
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
 
@@ -50,6 +51,7 @@ const StackNavigator: React.FC<any> = () => {
     { name: "ResetPassword", component: ResetPasswordScreen, options: { headerShown: false } },
     { name: "Tabs", component: TabNavigator, options: { headerShown: false } },
     { name: "Currency", component: AddCurrencyScreen, options: { headerShown: false } },
+    { name: "About", component: AboutScreen, options: { headerShown: false } },
     {
       name: "CategoryExpenses",
       component: CategoryExpensesScreen,

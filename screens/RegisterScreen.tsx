@@ -1,6 +1,6 @@
 import React from "react";
-import { SafeAreaView } from "react-native";
-import { HStack, Pressable, Text, VStack } from "native-base";
+import { SafeAreaView, TouchableOpacity } from "react-native";
+import { HStack, Text, VStack } from "native-base";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import RegisterForm from "../components/RegisterForm";
 import { StatusBar } from "expo-status-bar";
@@ -25,10 +25,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
             <Text fontFamily="SourceSansPro" fontSize={17}>
               Already have an account ?
             </Text>
-            <Pressable
-              onPress={navigation.goBack}
-              //onPress={goToRegister}
-            >
+            <TouchableOpacity onPress={navigation.goBack}>
               <Text
                 fontFamily="SourceBold"
                 fontSize={17}
@@ -36,7 +33,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                 style={{ backgroundColor: "transparent" }}>
                 Sign in
               </Text>
-            </Pressable>
+            </TouchableOpacity>
           </HStack>
         </VStack>
       </KeyboardAwareScrollView>

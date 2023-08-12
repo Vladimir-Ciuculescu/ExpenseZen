@@ -121,7 +121,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     dispatch(setExpensesAction(expenses));
 
     setLoading(false);
-    console.log("here");
   };
 
   const getCategoryMonthlyTotal = (category: string) => {

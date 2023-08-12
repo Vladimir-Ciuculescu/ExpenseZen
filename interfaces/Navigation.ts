@@ -11,6 +11,7 @@ export type AppStackParamList = {
   CategoryExpenses: { expenses: Expense[]; name: string };
   AddExpense: undefined;
   EditBudgets: undefined;
+  About: undefined;
 };
 
 export type StackConfig = {
