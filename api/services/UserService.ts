@@ -79,6 +79,29 @@ const resetPassword = async (email: string, newPassword: string) => {
   }
 };
 
+const changePassword = async (email: string, newPassword: string) => {
+  const hashedPassword = await hashPassword(newPassword);
+
+  try {
+    const { error } = await supabase
+      .from(USERS)
+      .update({ password: hashedPassword })
+      .filter("email", "eq", email);
+
+    if (error) {
+      throw error;
+    }
+
+    return {
+      message: "Password changed succesfully !",
+    };
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error);
+    }
+  }
+};
+
 const loginUser = async (email: string, password: string, provider: Provider) => {
   try {
     const { data } = await supabase
@@ -95,7 +118,7 @@ const loginUser = async (email: string, password: string, provider: Provider) =>
       };
     } else {
       return {
-        message: "This user does not exist !",
+        message: "Invalid email or password !",
       };
     }
   } catch (error) {
@@ -177,4 +200,5 @@ export const UserService = {
   saveUserBudgets,
   convertUserBudgetsCurrency,
   resetPassword,
+  changePassword,
 };

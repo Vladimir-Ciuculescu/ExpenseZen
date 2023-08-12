@@ -12,6 +12,7 @@ export type AppStackParamList = {
   AddExpense: undefined;
   EditBudgets: undefined;
   About: undefined;
+  ChangePassword: undefined;
 };
 
 export type StackConfig = {

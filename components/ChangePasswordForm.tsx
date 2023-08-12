@@ -1,40 +1,38 @@
-import { Text, VStack } from "native-base";
-import React, { useState } from "react";
-import { TouchableOpacity, Alert } from "react-native";
-import COLORS from "../colors";
-import EZInput from "./shared/EZInput";
-import { authInput } from "../commonStyles";
-import EZButton from "./shared/EZButton";
-import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { Text, VStack } from "native-base";
+import React, { useState } from "react";
+import { Alert, TouchableOpacity } from "react-native";
 import { AppStackParamList } from "../interfaces/Navigation";
+import { Ionicons } from "@expo/vector-icons";
+import COLORS from "../colors";
+import EZInput from "./shared/EZInput";
 import { useFormik } from "formik";
-import { resetPasswordSchema } from "../schemas/resetPasswordScheama";
+import { authInput } from "../commonStyles";
+import EZButton from "./shared/EZButton";
+import { changePasswordSchema } from "../schemas/changePasswordSchemta";
 import { UserService } from "../api/services/UserService";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
-const ResetPasswordForm: React.FC<any> = () => {
+const ChangePasswordForm: React.FC<any> = () => {
   const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
   const [loading, setLoading] = useState<boolean>(false);
+  const user: any = useSelector((state: RootState) => state.user);
 
   const formik = useFormik({
     initialValues: {
-      email: "",
       password: "",
       repeatPassword: "",
     },
-    validationSchema: resetPasswordSchema,
+    validationSchema: changePasswordSchema,
     onSubmit: async (values) => {
-      const { email, password } = values;
+      const { password } = values;
 
       try {
-        const response = await UserService.resetPassword(email, password);
+        const response = await UserService.changePassword(user.email, password);
 
-        if (response?.message === "This user does not exist !") {
-          Alert.alert("Error", response.message, [
-            { text: "OK", onPress: () => console.log("OK Pressed"), style: "destructive" },
-          ]);
-        } else if (response?.message === "Password resetted succesfully !") {
+        if (response?.message) {
           Alert.alert("Success", response.message, [
             {
               text: "OK",
@@ -51,11 +49,11 @@ const ResetPasswordForm: React.FC<any> = () => {
     },
   });
 
-  const { values, errors, submitForm, touched } = formik;
-
   const handleValue = (label: string, value: string) => {
     formik.setFieldValue(label, value);
   };
+
+  const { values, errors, touched, submitForm } = formik;
 
   const submit = async () => {
     setLoading(true);
@@ -70,7 +68,7 @@ const ResetPasswordForm: React.FC<any> = () => {
       </TouchableOpacity>
       <VStack>
         <Text fontFamily="SourceBold" fontSize={35}>
-          Reset your password
+          Change your password
         </Text>
         <Text fontFamily="SourceSansPro" fontSize={17} color={COLORS.MUTED[400]}>
           Fill the info to change your password
@@ -78,21 +76,9 @@ const ResetPasswordForm: React.FC<any> = () => {
       </VStack>
       <VStack space={6}>
         <EZInput
-          type="text"
-          style={authInput}
-          label="Email address"
-          value={values.email}
-          onChangeText={(e: string) => handleValue("email", e)}
-          error={touched.email && errors.email}
-          returnKeyType="next"
-          borderRadius={12}
-          borderColor="muted.200"
-        />
-        <EZInput
           type="password"
           style={authInput}
-          label="New Password"
-          textContentType="oneTimeCode"
+          label="New password"
           value={values.password}
           onChangeText={(e: string) => handleValue("password", e)}
           error={touched.password && errors.password}
@@ -109,7 +95,6 @@ const ResetPasswordForm: React.FC<any> = () => {
           onChangeText={(e: string) => handleValue("repeatPassword", e)}
           error={touched.repeatPassword && errors.repeatPassword}
           returnKeyType="next"
-          placeholder=""
           borderRadius={12}
           borderColor="muted.200"
         />
@@ -123,10 +108,10 @@ const ResetPasswordForm: React.FC<any> = () => {
         height="44px"
         _text={{ fontFamily: "SourceSansPro", fontSize: 17 }}
         _pressed={{ backgroundColor: COLORS.PURPLE[700], opacity: 0.7 }}>
-        Reset password
+        Change password
       </EZButton>
     </VStack>
   );
 };
 
-export default ResetPasswordForm;
+export default ChangePasswordForm;

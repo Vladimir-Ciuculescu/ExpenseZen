@@ -182,6 +182,7 @@ const SettingsScreen: React.FC<any> = () => {
           color: "orange.800",
           label: "Change password",
           rightElement: <FontAwesome name="angle-right" size={26} color="black" />,
+          onPress: () => navigation.navigate("ChangePassword"),
         },
         {
           icon: <Ionicons name="newspaper-sharp" size={18} color={COLORS.MUTED[50]} />,
