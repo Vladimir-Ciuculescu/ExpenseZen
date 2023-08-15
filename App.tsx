@@ -15,6 +15,7 @@ LogBox.ignoreLogs([
 ]);
 
 export default function App() {
+  console.log("App started !");
   const [fontsLoaded] = useFonts({
     SourceSansPro,
     SourceBold,
