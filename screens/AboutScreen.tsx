@@ -87,8 +87,8 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <Ionicons name="chevron-back-sharp" size={30} color="black" />
           </TouchableOpacity>
-          {paragraphs.map((item) => (
-            <VStack space={4}>
+          {paragraphs.map((item, key) => (
+            <VStack space={4} key={key}>
               <Text fontSize={30} fontFamily="SourceBold">
                 {item.title}
               </Text>

@@ -11,6 +11,7 @@ import { persistor, store } from "./redux/store";
 LogBox.ignoreLogs([
   "Using Math.random is not cryptographically secure! Use bcrypt.setRandomFallback to set a PRNG.",
   "VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead.",
+  "In React 18, SSRProvider is not necessary and is a noop. You can remove it from your app.",
 ]);
 
 export default function App() {

@@ -32,9 +32,6 @@ const expensesReducer = createSlice({
     setExpenses: (state, action) => {
       state.expenses = action.payload;
     },
-    removeExpenses: (state) => {
-      state.expenses = [];
-    },
 
     addExpense: (state, action) => {
       state.expenses = [...state.expenses, action.payload];
@@ -83,7 +80,6 @@ const expensesReducer = createSlice({
 
 //actions
 export const setExpensesAction = expensesReducer.actions.setExpenses;
-export const removeExpensesAction = expensesReducer.actions.removeExpenses;
 export const addExpenseAction = expensesReducer.actions.addExpense;
 export const setCategoriesAction = expensesReducer.actions.setCategories;
 export const setBudgetsAction = expensesReducer.actions.setBudgets;

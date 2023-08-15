@@ -1,4 +1,5 @@
 import { CONVERT_EXPENSES_CURRENCY, GET_MONTH_EXPENSES } from "../../constants/PostgresFunctions";
+import { EXPENSES } from "../../constants/Tables";
 import { Expense } from "../../interfaces/Expense";
 import { getCurrentDate } from "../../utils/getCurrentDate";
 import { supabase } from "../supabase";
@@ -61,8 +62,23 @@ const convertExpensesCurrency = async (userId: number, conversionRate: number) =
   }
 };
 
+const removeUserExpenses = async (userId: number) => {
+  try {
+    const { error } = await supabase.from(EXPENSES).delete().filter("user_id", "eq", userId);
+
+    if (error) {
+      throw error;
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error);
+    }
+  }
+};
+
 export const ExpenseService = {
   AddExpense,
   getMonthExpenses,
   convertExpensesCurrency,
+  removeUserExpenses,
 };

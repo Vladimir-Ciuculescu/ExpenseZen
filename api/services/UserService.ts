@@ -193,6 +193,20 @@ const convertUserBudgetsCurrency = async (userId: number, conversionRate: number
   }
 };
 
+const removeUserBudgets = async (userId: number) => {
+  try {
+    const { error } = await supabase.from(MONTHLY_BUDGETS).delete().filter("user_id", "eq", userId);
+
+    if (error) {
+      throw error;
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error);
+    }
+  }
+};
+
 export const UserService = {
   registerUser,
   loginUser,
@@ -201,4 +215,5 @@ export const UserService = {
   convertUserBudgetsCurrency,
   resetPassword,
   changePassword,
+  removeUserBudgets,
 };

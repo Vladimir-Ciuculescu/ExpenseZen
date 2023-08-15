@@ -21,6 +21,8 @@ interface LoginFormProps {
 const LoginForm: React.FC<LoginFormProps> = ({ navigation }) => {
   const passwordRef = useRef(null);
 
+  const [passwordVisilble, setPasswordVisible] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -51,11 +53,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ navigation }) => {
   useEffect(() => {
     navigation.addListener("focus", () => {
       formik.resetForm();
+      setPasswordVisible(false);
     });
   }, [navigation]);
-
-  const [passwordVisilble, setPasswordVisible] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
 
   const dispatch = useDispatch();
 

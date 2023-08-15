@@ -36,18 +36,29 @@ const SettingsScreen: React.FC<any> = () => {
 
   let pickerRef = useRef<any>(null);
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: () => <EZHeaderTitle>Settings</EZHeaderTitle>,
+    });
+  }, [navigation]);
+
+  const displayLogoutAlert = () => {
+    Alert.alert("Log out", "Are you sure you want to log out ?", [
+      {
+        text: "No",
+
+        style: "cancel",
+      },
+      { text: "Yes", onPress: () => logout(), style: "destructive" },
+    ]);
+  };
+
   const logout: any = () => {
     dispatch(removeUser());
     dispatch(removeCurrency());
     dispatch(removeExpensesAction());
     navigation.navigate("Login");
   };
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: () => <EZHeaderTitle>Settings</EZHeaderTitle>,
-    });
-  }, [navigation]);
 
   const getCurrencies = async () => {
     if (!currencies.length) {
@@ -89,6 +100,38 @@ const SettingsScreen: React.FC<any> = () => {
     Alert.alert("Currency updated", "All your expenses were updated with the new currency", [
       { text: "OK" },
     ]);
+  };
+
+  const displayEraseDataAlert = () => {
+    Alert.alert(
+      "Erase data",
+      "This will delete all your expenses and budgets, are you sure you want to continue ?",
+      [
+        {
+          text: "No",
+
+          style: "cancel",
+        },
+        { text: "Yes", onPress: async () => await eraseData(), style: "destructive" },
+      ]
+    );
+  };
+
+  const removeExpenses = async () => {
+    await ExpenseService.removeUserExpenses(user.id);
+  };
+
+  const removeBudgets = async () => {
+    await UserService.removeUserBudgets(user.id);
+  };
+
+  const eraseData = async () => {
+    await Promise.all([removeExpenses(), removeBudgets()]);
+
+    dispatch(setExpensesAction([]));
+    dispatch(setBudgetsAction([]));
+
+    Alert.alert("Completed", "Your data has been erased !", [{ text: "Ok" }]);
   };
 
   const SECTIONS = [
@@ -168,7 +211,7 @@ const SettingsScreen: React.FC<any> = () => {
           icon: <MaterialCommunityIcons name="eraser" size={18} color={COLORS.MUTED[50]} />,
           color: "rose.600",
           label: "Erase data",
-          onPress: () => toggleDarkTheme(!darkTheme),
+          onPress: () => displayEraseDataAlert(),
         },
       ],
     },
@@ -195,7 +238,7 @@ const SettingsScreen: React.FC<any> = () => {
           icon: <AntDesign name="logout" size={18} color={COLORS.MUTED[50]} />,
           color: "yellow.500",
           label: "Logout",
-          onPress: () => logout(),
+          onPress: () => displayLogoutAlert(),
           rightElement: <FontAwesome name="angle-right" size={26} color="black" />,
         },
       ],
@@ -228,7 +271,6 @@ const SettingsScreen: React.FC<any> = () => {
                       bg="muted.200"
                       borderRadius={8}
                       paddingX={"12px"}>
-                      {/* <View style={[styles.rowIcon, { backgroundColor: color }]}>{icon}</View> */}
                       <HStack space="12px" alignItems="center">
                         <Circle bg={color} size="32px">
                           {icon}
