@@ -11,11 +11,7 @@ import { CurrencyService } from "../api/services/CurrencyService";
 import { RootState } from "../redux/store";
 import COLORS from "../colors";
 import { ExpenseService } from "../api/services/ExpenseService";
-import {
-  removeExpensesAction,
-  setBudgetsAction,
-  setExpensesAction,
-} from "../redux/expensesReducers";
+import { setBudgetsAction, setExpensesAction } from "../redux/expensesReducers";
 import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -56,7 +52,6 @@ const SettingsScreen: React.FC<any> = () => {
   const logout: any = () => {
     dispatch(removeUser());
     dispatch(removeCurrency());
-    dispatch(removeExpensesAction());
     navigation.navigate("Login");
   };
 
