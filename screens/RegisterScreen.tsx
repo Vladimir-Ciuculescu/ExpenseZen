@@ -5,18 +5,22 @@ import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import RegisterForm from "../components/RegisterForm";
 import { StatusBar } from "expo-status-bar";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 interface RegisterScreenProps {
   navigation: NavigationProp<ParamListBase>;
 }
 
 const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
+  const user = useSelector((state: RootState) => state.user);
+
   return (
     <SafeAreaView
       style={{
         flex: 1,
       }}>
-      <StatusBar style="dark" />
+      <StatusBar style={user.theme === "dark" ? "light" : "dark"} />
 
       <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
         <VStack space={10} px={5} paddingTop={10}>

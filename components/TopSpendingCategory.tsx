@@ -1,10 +1,9 @@
-import { Box, Text, VStack } from "native-base";
+import { Box, Text, useTheme, VStack } from "native-base";
 import React from "react";
 import { Category } from "../interfaces/Category";
 import { getCategoryIcon } from "../utils/getCategoryIcon";
 import { useNavigation } from "@react-navigation/native";
 import { Expense } from "../interfaces/Expense";
-import COLORS from "../colors";
 import { TouchableOpacity } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AppStackParamList } from "../interfaces/Navigation";
@@ -15,7 +14,10 @@ interface TopSpendingCategoryProps {
 }
 
 const TopSpendingCategory: React.FC<TopSpendingCategoryProps> = ({ item, expenses }) => {
-  const { name, color, id } = item;
+  const { name, color } = item;
+  const {
+    colors: { muted },
+  } = useTheme();
 
   const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
 
@@ -37,7 +39,7 @@ const TopSpendingCategory: React.FC<TopSpendingCategoryProps> = ({ item, expense
           justifyContent="center"
           alignItems="center"
           borderRadius={22}>
-          {getCategoryIcon(name, 32, COLORS.MUTED[50])}
+          {getCategoryIcon(name, 32, muted[50])}
         </Box>
         <Text fontFamily="SourceBold">{name}</Text>
       </VStack>

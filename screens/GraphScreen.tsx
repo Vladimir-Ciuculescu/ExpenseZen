@@ -9,6 +9,7 @@ import {
   Skeleton,
   ScrollView,
   FlatList,
+  useTheme,
 } from "native-base";
 import React, { useLayoutEffect, useState, Fragment } from "react";
 import PieChart from "react-native-pie-chart";
@@ -34,6 +35,9 @@ const GraphScreen: React.FC<GraphScreenProps> = ({ navigation }) => {
   const [colors, setColors] = useState<string[]>(["red"]);
   const { expenses } = useSelector((state: RootState) => state.expenses);
   const monthTotal = useSelector(monthTotalSelector);
+  const {
+    colors: { muted },
+  } = useTheme();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -94,7 +98,7 @@ const GraphScreen: React.FC<GraphScreenProps> = ({ navigation }) => {
         borderRadius={20}>
         {expenses && expenses.length > 0 ? (
           <Fragment>
-            <Box style={{ alignItems: "center", justifyContent: "center" }}>
+            <Box bg="muted.50" style={{ alignItems: "center", justifyContent: "center" }}>
               {loading ? (
                 <Skeleton style={{ width: 170, height: 170 }} rounded="full" />
               ) : (
@@ -103,7 +107,7 @@ const GraphScreen: React.FC<GraphScreenProps> = ({ navigation }) => {
                   series={series}
                   sliceColor={colors}
                   coverRadius={0.75}
-                  coverFill={"#FFF"}
+                  coverFill={muted[50]}
                 />
               )}
               <View position="absolute" alignItems="center" justifyContent="center">

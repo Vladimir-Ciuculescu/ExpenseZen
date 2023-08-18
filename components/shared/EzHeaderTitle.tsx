@@ -6,7 +6,11 @@ interface Props {
 
 const EZHeaderTitle: React.FC<Props> = ({ children }) => {
   return (
-    <Text color="muted.50" fontFamily="SourceBold" fontSize={20}>
+    <Text
+      fontFamily="SourceBold"
+      _light={{ color: "muted.50" }}
+      _dark={{ color: "muted.900" }}
+      fontSize={20}>
       {children}
     </Text>
   );

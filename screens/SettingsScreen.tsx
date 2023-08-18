@@ -1,8 +1,17 @@
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
-import { removeCurrency, removeUser, setCurrency } from "../redux/userReducer";
+import { removeCurrency, removeUser, setCurrency, setThemeAction } from "../redux/userReducer";
 import React, { useLayoutEffect, useRef, useState } from "react";
-import { View, Text, ScrollView, HStack, VStack, Circle } from "native-base";
+import {
+  View,
+  Text,
+  ScrollView,
+  HStack,
+  VStack,
+  Circle,
+  useColorMode,
+  useTheme,
+} from "native-base";
 import { TouchableOpacity, Alert, Switch } from "react-native";
 import EZHeaderTitle from "../components/shared/EzHeaderTitle";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -12,9 +21,7 @@ import { RootState } from "../redux/store";
 import COLORS from "../colors";
 import { ExpenseService } from "../api/services/ExpenseService";
 import { setBudgetsAction, setExpensesAction } from "../redux/expensesReducers";
-import { Ionicons } from "@expo/vector-icons";
-import { FontAwesome } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
+import { Ionicons, FontAwesome, AntDesign } from "@expo/vector-icons";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { AppStackParamList } from "../interfaces/Navigation";
 import { UserService } from "../api/services/UserService";
@@ -22,13 +29,18 @@ import { StatusBar } from "expo-status-bar";
 
 const SettingsScreen: React.FC<any> = () => {
   const dispatch = useDispatch();
+  const user: any = useSelector((state: RootState) => state.user);
+  const {
+    colors: { muted },
+  } = useTheme();
+
   const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
   const [currencies, setCurrencies] = useState<any[]>([]);
   const [notificationsAllowed, toggleNotificationsAllowed] = useState<boolean>(false);
-  const [darkTheme, toggleDarkTheme] = useState<boolean>(false);
-  const user: any = useSelector((state: RootState) => state.user);
+  const [theme, toggleTheme] = useState<boolean>(user.theme === "light" ? false : true);
 
   const [selectedCurrency, setSelectedCurrency] = useState<string | null>(null);
+  const { toggleColorMode } = useColorMode();
 
   let pickerRef = useRef<any>(null);
 
@@ -70,6 +82,12 @@ const SettingsScreen: React.FC<any> = () => {
 
       setCurrencies(currenciesArray);
     }
+  };
+
+  const switchTheme = () => {
+    toggleColorMode();
+    dispatch(setThemeAction(user.theme === "light" ? "dark" : "light"));
+    toggleTheme(!theme);
   };
 
   const changeCurrency = async () => {
@@ -174,6 +192,7 @@ const SettingsScreen: React.FC<any> = () => {
               onClose={changeCurrency}
             />
           ),
+          disabled: true,
         },
         {
           icon: (
@@ -192,21 +211,22 @@ const SettingsScreen: React.FC<any> = () => {
               onValueChange={() => toggleNotificationsAllowed(!notificationsAllowed)}
             />
           ),
+          disabled: true,
         },
         {
-          icon: <Ionicons name={darkTheme ? "moon" : "sunny"} size={18} color={COLORS.MUTED[50]} />,
+          icon: <Ionicons name={theme ? "moon" : "sunny"} size={18} color={COLORS.MUTED[50]} />,
           color: "violet.800",
-          label: "Light theme",
-          onPress: () => toggleDarkTheme(!darkTheme),
-          rightElement: (
-            <Switch value={darkTheme} onValueChange={() => toggleDarkTheme(!darkTheme)} />
-          ),
+          label: user.theme === "light" ? "Light theme" : "Dark theme",
+
+          rightElement: <Switch value={theme} onValueChange={() => switchTheme()} />,
+          disabled: true,
         },
         {
           icon: <MaterialCommunityIcons name="eraser" size={18} color={COLORS.MUTED[50]} />,
           color: "rose.600",
           label: "Erase data",
           onPress: () => displayEraseDataAlert(),
+          disabled: false,
         },
       ],
     },
@@ -219,22 +239,25 @@ const SettingsScreen: React.FC<any> = () => {
           icon: <FontAwesome name="lock" size={18} color={COLORS.MUTED[50]} />,
           color: "orange.800",
           label: "Change password",
-          rightElement: <FontAwesome name="angle-right" size={26} color="black" />,
+          rightElement: <FontAwesome name="angle-right" size={26} color={muted[900]} />,
           onPress: () => navigation.navigate("ChangePassword"),
+          disabled: false,
         },
         {
           icon: <Ionicons name="newspaper-sharp" size={18} color={COLORS.MUTED[50]} />,
           color: "green.500",
           label: "About",
-          rightElement: <FontAwesome name="angle-right" size={26} color="black" />,
+          rightElement: <FontAwesome name="angle-right" size={26} color={muted[900]} />,
           onPress: () => navigation.navigate("About"),
+          disabled: false,
         },
         {
           icon: <AntDesign name="logout" size={18} color={COLORS.MUTED[50]} />,
           color: "yellow.500",
           label: "Logout",
           onPress: () => displayLogoutAlert(),
-          rightElement: <FontAwesome name="angle-right" size={26} color="black" />,
+          rightElement: <FontAwesome name="angle-right" size={26} color={muted[900]} />,
+          disabled: false,
         },
       ],
     },
@@ -256,14 +279,14 @@ const SettingsScreen: React.FC<any> = () => {
               {header}
             </Text>
             <VStack space={"12px"}>
-              {items.map(({ label, icon, color, rightElement, onPress }, index) => {
+              {items.map(({ label, icon, color, rightElement, onPress, disabled }, index) => {
                 return (
-                  <TouchableOpacity key={index} onPress={onPress}>
+                  <TouchableOpacity key={index} onPress={onPress} disabled={disabled}>
                     <HStack
                       alignItems="center"
                       justifyContent="space-between"
                       height={50}
-                      bg="muted.200"
+                      bg={user.theme === "dark" ? "muted.50" : "muted.200"}
                       borderRadius={8}
                       paddingX={"12px"}>
                       <HStack space="12px" alignItems="center">

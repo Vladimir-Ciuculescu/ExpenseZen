@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { HStack, Text, VStack, View } from "native-base";
+import { HStack, Text, VStack, View, useTheme } from "native-base";
 import { SafeAreaView, FlatList, useWindowDimensions, TouchableOpacity } from "react-native";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
@@ -27,6 +27,9 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
   const { width } = useWindowDimensions();
   const dispatch = useDispatch();
   const scrollRef = useRef<any>(null);
+  const {
+    colors: { muted },
+  } = useTheme();
 
   const user = useSelector((state: RootState) => state.user);
   const categories = useSelector(categoriesSelector);
@@ -95,7 +98,7 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar style="dark" />
+      <StatusBar style={user.theme === "dark" ? "light" : "dark"} />
       <KeyboardAwareScrollView
         showsVerticalScrollIndicator={false}
         ref={scrollRef}
@@ -103,7 +106,7 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
         <TouchableOpacity
           style={{ position: "absolute", right: 40, top: 25, zIndex: 9999 }}
           onPress={() => navigation.goBack()}>
-          <AntDesign name="close" size={24} color="black" />
+          <AntDesign name="close" size={24} color={muted[900]} />
         </TouchableOpacity>
         <View flex={1} pt={16} alignItems="center" justifyContent="space-between">
           <VStack alignItems="center" width="100%" px={12} space={10}>
@@ -120,7 +123,7 @@ const AddExpenseScreen: React.FC<AddExpenseScreenProps> = ({ navigation }) => {
                 onChangeText={(e: string) => handleValue("amount", e)}
                 label={`Enter amount ${user.symbol}`}
                 borderRadius={12}
-                borderColor="muted.200"
+                borderColor="muted.100"
                 placeholderTextColor="muted.300"
                 _focus={{
                   backgroundColor: "transparent",

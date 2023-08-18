@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Text, VStack } from "native-base";
+import { Text, useTheme, VStack } from "native-base";
 import React, { useState } from "react";
 import { Alert, TouchableOpacity } from "react-native";
 import { AppStackParamList } from "../interfaces/Navigation";
@@ -19,6 +19,9 @@ const ChangePasswordForm: React.FC<any> = () => {
   const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
   const [loading, setLoading] = useState<boolean>(false);
   const user: any = useSelector((state: RootState) => state.user);
+  const {
+    colors: { muted },
+  } = useTheme();
 
   const formik = useFormik({
     initialValues: {
@@ -64,7 +67,7 @@ const ChangePasswordForm: React.FC<any> = () => {
   return (
     <VStack space={10}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Ionicons name="chevron-back-sharp" size={30} color="black" />
+        <Ionicons name="chevron-back-sharp" size={30} color={muted[900]} />
       </TouchableOpacity>
       <VStack>
         <Text fontFamily="SourceBold" fontSize={35}>

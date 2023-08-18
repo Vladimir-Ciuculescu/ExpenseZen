@@ -22,7 +22,7 @@ const StackNavigator: React.FC<any> = () => {
     undefined
   );
   const { onboarded } = useSelector((state: RootState) => state.onboard);
-  const user = useSelector((state: RootState) => state.user);
+  const user: any = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     const checkOnboarding = async () => {

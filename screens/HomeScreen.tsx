@@ -39,7 +39,6 @@ import {
   todayTotalSelector,
   topSpedingCategoriesSelector,
 } from "../redux/expensesReducers";
-import { getCategoryIcon } from "../utils/getCategoryIcon";
 
 interface HomeScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -91,7 +90,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         id: category.id,
         name: category.name,
         color: category.color,
-        icon: getCategoryIcon(category.name, 24),
+        //icon: getCategoryIcon(category.name, 24),
       };
     });
   };
@@ -167,7 +166,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                 {loading ? (
                   <Skeleton mt={5} mb={3} h="5" width={20} rounded="full" startColor="indigo.300" />
                 ) : (
-                  <Text fontFamily="SourceBold" color="muted.900" fontSize={35}>
+                  <Text fontFamily="SourceBold" fontSize={35}>
                     {user.symbol} {monthTotal.toFixed(2)}
                   </Text>
                 )}

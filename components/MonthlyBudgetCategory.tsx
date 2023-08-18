@@ -1,4 +1,4 @@
-import { Box, HStack, Text, VStack } from "native-base";
+import { Box, HStack, Text, useTheme, VStack } from "native-base";
 import React from "react";
 import { getCategoryIcon } from "../utils/getCategoryIcon";
 import EZProgress from "./shared/EZProgress";
@@ -16,6 +16,9 @@ interface MonthlyBudgetCategoryProps {
 const MonthlyBudgetCategory: React.FC<MonthlyBudgetCategoryProps> = ({ budget, monthlyTotal }) => {
   const { budget: amount, category, color } = budget;
   const user: any = useSelector((state: RootState) => state.user);
+  const {
+    colors: { muted },
+  } = useTheme();
 
   const budgetStatus = () => {
     const threshold = (amount * 75) / 100;
@@ -61,7 +64,7 @@ const MonthlyBudgetCategory: React.FC<MonthlyBudgetCategoryProps> = ({ budget, m
             style={{ backgroundColor: color }}
             justifyContent="center"
             alignItems="center">
-            {getCategoryIcon(category, 24, COLORS.MUTED[50])}
+            {getCategoryIcon(category, 24, muted[50])}
           </Box>
           <Text fontFamily="SourceBold" fontSize={18}>
             {category}

@@ -1,9 +1,11 @@
 import { StatusBar } from "expo-status-bar";
-import { Text, VStack } from "native-base";
+import { Text, useTheme, VStack } from "native-base";
 import React, { Fragment } from "react";
 import { ScrollView, SafeAreaView, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 interface AboutScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -79,13 +81,18 @@ const paragraphs: textInfo[] = [
 ];
 
 const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
+  const {
+    colors: { muted },
+  } = useTheme();
+  const { theme } = useSelector((state: RootState) => state.user);
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar style="dark" />
+      <StatusBar style={theme === "dark" ? "light" : "dark"} />
       <ScrollView showsVerticalScrollIndicator={false}>
         <VStack space={10} px={5} paddingTop={10}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Ionicons name="chevron-back-sharp" size={30} color="black" />
+            <Ionicons name="chevron-back-sharp" size={30} color={muted[900]} />
           </TouchableOpacity>
           {paragraphs.map((item, key) => (
             <VStack space={4} key={key}>

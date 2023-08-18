@@ -5,6 +5,8 @@ import { Category } from "../interfaces/Category";
 import { getCategoryIcon } from "../utils/getCategoryIcon";
 import { AntDesign } from "@expo/vector-icons";
 import COLORS from "../colors";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 interface CategoryItemProps {
   category: Category;
@@ -19,6 +21,8 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
   selectedCategory,
   disabled,
 }) => {
+  const user: any = useSelector((state: RootState) => state.user);
+
   const { name, color } = category;
 
   const isSelected = selectedCategory === name;
@@ -33,9 +37,9 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
       width="175px"
       onStartShouldSetResponder={() => true}
       borderColor={isSelected ? COLORS.EMERALD[400] : "muted.100"}
-      borderWidth={1.5}
+      borderWidth={user.theme === "dark" ? 0 : 1.5}
       height={65}
-      bg="muted.100"
+      bg="muted.50"
       style={{
         shadowColor: "#171717",
         shadowOffset: { width: 0, height: 0 },
@@ -43,8 +47,7 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
         shadowRadius: 4,
       }}
       borderRadius={20}
-      px={2}
-    >
+      px={2}>
       <HStack flex={1} space={3} alignItems="center" justifyContent="flex-start">
         <Box
           width="45px"
@@ -52,8 +55,7 @@ const CategoryItem: React.FC<CategoryItemProps> = ({
           backgroundColor={color}
           borderRadius={18}
           justifyContent="center"
-          alignItems="center"
-        >
+          alignItems="center">
           {getCategoryIcon(name, 24, COLORS.MUTED[50])}
         </Box>
         <Text fontFamily="SourceBold" style={{ flex: 1 }} fontSize={17}>

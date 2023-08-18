@@ -1,5 +1,5 @@
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
-import { Text, VStack } from "native-base";
+import { Text, useTheme, VStack } from "native-base";
 import React, { useState } from "react";
 import { SafeAreaView, TouchableOpacity } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -31,6 +31,9 @@ const EditBudgetScreen: React.FC<EditBudgetScreenProps> = ({ navigation }) => {
   const dispatch = useDispatch();
   const monthlyBudgets = useSelector(monthlyBudgetsSelector);
   const categories = useSelector(categoriesSelector);
+  const {
+    colors: { muted },
+  } = useTheme();
 
   const closeModal = () => {
     navigation.goBack();
@@ -85,14 +88,14 @@ const EditBudgetScreen: React.FC<EditBudgetScreenProps> = ({ navigation }) => {
       id: category.id,
       name: category.name,
       color: category.color,
-      icon: getCategoryIcon(category.name, 24, COLORS.MUTED[50]),
+      icon: getCategoryIcon(category.name, 24, muted[50]),
       budget: budget ? budget.budget : 0,
     };
   });
 
   return (
     <SafeAreaView>
-      <StatusBar style="dark" />
+      <StatusBar style={user.theme === "dark" ? "light" : "dark"} />
       <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
         <VStack mt={10} space={10} px={7}>
           <TouchableOpacity
@@ -103,7 +106,7 @@ const EditBudgetScreen: React.FC<EditBudgetScreenProps> = ({ navigation }) => {
               zIndex: 9999,
             }}
             onPress={closeModal}>
-            <AntDesign name="close" color="black" size={24} />
+            <AntDesign name="close" color={muted[900]} size={24} />
           </TouchableOpacity>
           <Text textAlign="center" fontFamily="SourceBold" fontSize={26}>
             Edit your monthly budgets

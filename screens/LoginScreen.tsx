@@ -5,6 +5,8 @@ import LoginForm from "../components/LoginForm";
 import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 interface LoginScreenProps {
   navigation: NavigationProp<ParamListBase>;
@@ -14,10 +16,11 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
   const goToRegister = () => {
     navigation.navigate("Register");
   };
+  const user = useSelector((state: RootState) => state.user);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <StatusBar style="dark" />
+      <StatusBar style={user.theme === "dark" ? "light" : "dark"} />
       <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
         <VStack space={10} px={5} paddingTop={24}>
           <LoginForm navigation={navigation} />

@@ -7,6 +7,7 @@ interface initalStateProps {
   email: string | null;
   currency: string | null;
   symbol: string | null;
+  theme: "light" | "dark";
 }
 
 const initialState: initalStateProps = {
@@ -16,6 +17,7 @@ const initialState: initalStateProps = {
   email: null,
   currency: null,
   symbol: null,
+  theme: "light",
 };
 
 const userReducer = createSlice({
@@ -45,6 +47,9 @@ const userReducer = createSlice({
       state.currency = null;
       state.symbol = null;
     },
+    setTheme: (state, action) => {
+      state.theme = action.payload;
+    },
   },
 });
 
@@ -52,5 +57,6 @@ export const setUser = userReducer.actions.setUser;
 export const removeUser = userReducer.actions.removeUser;
 export const setCurrency = userReducer.actions.setCurrency;
 export const removeCurrency = userReducer.actions.removeCurrency;
+export const setThemeAction = userReducer.actions.setTheme;
 
 export default userReducer.reducer;

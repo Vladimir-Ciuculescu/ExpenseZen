@@ -1,8 +1,10 @@
 import React, { ForwardedRef, forwardRef } from "react";
 import { KeyboardTypeOptions, ReturnKeyTypeOptions } from "react-native";
-import { FormControl, Input, Text } from "native-base";
+import { FormControl, Input, Text, useTheme } from "native-base";
 import { FontAwesome } from "@expo/vector-icons";
 import COLORS from "../../colors";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 type inputType = "text" | "password" | undefined;
 
@@ -35,6 +37,11 @@ type Props = EZInputProps & EZInputStylesProp;
 
 const EZInput = forwardRef<any, Props>((props: Props, ref: ForwardedRef<any>) => {
   const {
+    colors: { muted },
+  } = useTheme();
+  const user = useSelector((state: RootState) => state.user);
+
+  const {
     placeholder,
     error,
     value,
@@ -60,16 +67,18 @@ const EZInput = forwardRef<any, Props>((props: Props, ref: ForwardedRef<any>) =>
       isInvalid={error !== undefined}
       justifyContent="center"
       alignItems={alignItems || "flex-start"}
-      style={{ gap: 5 }}
-    >
+      style={{ gap: 5 }}>
       {label && (
-        <Text fontSize={17} color={COLORS.MUTED[900]} fontFamily="SourceBold">
+        <Text fontSize={17} color={muted[900]} fontFamily="SourceBold">
           {label}
         </Text>
       )}
 
       <Input
-        bg="muted.200"
+        bg={user.theme === "dark" ? "muted.50" : "muted.200"}
+        //backgroundColor="muted.100"
+        color={user.theme === "dark" ? "muted.900" : "purple.700"}
+        borderWidth={"0.5"}
         returnKeyType={returnKeyType}
         onSubmitEditing={onSubmitEditing}
         ref={ref}
@@ -90,8 +99,7 @@ const EZInput = forwardRef<any, Props>((props: Props, ref: ForwardedRef<any>) =>
       />
       <FormControl.ErrorMessage
         _text={{ fontSize: 14, fontFamily: "SourceBold" }}
-        leftIcon={<FontAwesome name="close" size={20} color={COLORS.DANGER[400]} />}
-      >
+        leftIcon={<FontAwesome name="close" size={20} color={COLORS.DANGER[400]} />}>
         {error}
       </FormControl.ErrorMessage>
     </FormControl>

@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Animated } from "react-native";
 import { View } from "native-base";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 interface EZProgresssProps {
   height: string | number;
@@ -9,15 +11,11 @@ interface EZProgresssProps {
   color: string | undefined;
 }
 
-const EZProgress: React.FC<EZProgresssProps> = ({
-  height,
-  value,
-  maxValue,
-  color,
-}) => {
+const EZProgress: React.FC<EZProgresssProps> = ({ height, value, maxValue, color }) => {
   const animatedValue = useRef(new Animated.Value(-1000)).current;
   const reactive = useRef(new Animated.Value(-1000)).current;
   const [width, setWidth] = useState<number>(0);
+  const user = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     Animated.timing(animatedValue, {
@@ -45,11 +43,10 @@ const EZProgress: React.FC<EZProgresssProps> = ({
         const width = e.nativeEvent.layout.width;
         setWidth(width);
       }}
-      bg="muted.200"
+      bg={user.theme === "dark" ? "muted.500" : "muted.200"}
       borderRadius={height}
       overflow="hidden"
-      height={height}
-    >
+      height={height}>
       <AnimatedView
         style={{
           transform: [{ translateX: animatedValue }],

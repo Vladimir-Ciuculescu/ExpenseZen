@@ -1,4 +1,4 @@
-import { Text, VStack } from "native-base";
+import { Text, useTheme, VStack } from "native-base";
 import React, { useState } from "react";
 import { TouchableOpacity, Alert } from "react-native";
 import COLORS from "../colors";
@@ -16,6 +16,9 @@ import { UserService } from "../api/services/UserService";
 const ResetPasswordForm: React.FC<any> = () => {
   const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
   const [loading, setLoading] = useState<boolean>(false);
+  const {
+    colors: { muted },
+  } = useTheme();
 
   const formik = useFormik({
     initialValues: {
@@ -66,7 +69,7 @@ const ResetPasswordForm: React.FC<any> = () => {
   return (
     <VStack space={10}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Ionicons name="chevron-back-sharp" size={30} color="black" />
+        <Ionicons name="chevron-back-sharp" size={30} color={muted[900]} />
       </TouchableOpacity>
       <VStack>
         <Text fontFamily="SourceBold" fontSize={35}>

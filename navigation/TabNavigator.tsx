@@ -47,7 +47,7 @@ const TabNavigator: React.FC<any> = () => {
         screenOptions={{
           unmountOnBlur: true,
           tabBarActiveTintColor: COLORS.PURPLE[700],
-          tabBarInactiveTintColor: COLORS.MUTED[500],
+          // tabBarInactiveTintColor: COLORS.MUTED[500],
 
           tabBarLabelStyle: {
             fontFamily: "SourceBold",

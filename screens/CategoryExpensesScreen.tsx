@@ -1,6 +1,6 @@
 import React, { useLayoutEffect } from "react";
 import { SafeAreaView, TouchableOpacity } from "react-native";
-import { Text, ScrollView, HStack, View } from "native-base";
+import { Text, ScrollView, HStack, View, useTheme } from "native-base";
 import { NavigationProp, ParamListBase, RouteProp } from "@react-navigation/native";
 import { FontAwesome5 } from "@expo/vector-icons";
 
@@ -19,6 +19,9 @@ type Props = {
 const CategoryExpensesScreen: React.FC<Props> = ({ navigation, route }) => {
   const { params } = route;
   const { expenses, name } = params;
+  const {
+    colors: { muted },
+  } = useTheme();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -33,7 +36,7 @@ const CategoryExpensesScreen: React.FC<Props> = ({ navigation, route }) => {
       ),
       headerLeft: () => (
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <FontAwesome5 name="arrow-left" size={24} color="black" />
+          <FontAwesome5 name="arrow-left" size={24} color={muted[900]} />
         </TouchableOpacity>
       ),
     });
@@ -51,7 +54,7 @@ const CategoryExpensesScreen: React.FC<Props> = ({ navigation, route }) => {
             <View key={index}>
               <HStack alignItems="center">
                 <View width={"48px"} height={"48px"} alignItems="center" justifyContent="center">
-                  {getCategoryIcon(expense.name, 24, COLORS.MUTED[900])}
+                  {getCategoryIcon(expense.name, 24, muted[900])}
                 </View>
 
                 <View
