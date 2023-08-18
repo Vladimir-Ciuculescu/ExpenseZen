@@ -1,4 +1,4 @@
-import { useWindowDimensions, Animated, StyleSheet } from "react-native";
+import { useWindowDimensions, Animated } from "react-native";
 import React from "react";
 import { HStack, View } from "native-base";
 

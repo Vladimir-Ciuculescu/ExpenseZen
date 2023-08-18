@@ -1,7 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { VStack } from "native-base";
 import React from "react";
-import {} from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux";

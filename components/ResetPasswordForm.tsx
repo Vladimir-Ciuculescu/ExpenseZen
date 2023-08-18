@@ -34,9 +34,7 @@ const ResetPasswordForm: React.FC<any> = () => {
         const response = await UserService.resetPassword(email, password);
 
         if (response?.message === "This user does not exist !") {
-          Alert.alert("Error", response.message, [
-            { text: "OK", onPress: () => console.log("OK Pressed"), style: "destructive" },
-          ]);
+          Alert.alert("Error", response.message, [{ text: "OK", style: "destructive" }]);
         } else if (response?.message === "Password resetted succesfully !") {
           Alert.alert("Success", response.message, [
             {

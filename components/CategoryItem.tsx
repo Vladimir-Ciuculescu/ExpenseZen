@@ -1,6 +1,5 @@
-import React, { Fragment, useState } from "react";
+import React from "react";
 import { Box, HStack, Pressable, Text } from "native-base";
-import { FontAwesome } from "@expo/vector-icons";
 import { Category } from "../interfaces/Category";
 import { getCategoryIcon } from "../utils/getCategoryIcon";
 import { AntDesign } from "@expo/vector-icons";

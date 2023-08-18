@@ -7,30 +7,12 @@ import { RootState } from "../redux/store";
 const AppContainer: React.FC<any> = () => {
   const user = useSelector((state: RootState) => state.user);
 
-  console.log(user.theme);
-
   const isDarkTheme = user.theme === "dark";
 
   const theme = extendTheme({
-    // components: {
-    //   Text: {
-    //     baseStyle: (prop: any) => {
-    //       return {
-    //         _light: { color: "red.300" },
-    //         _dark: { color: "muted.300" },
-    //       };
-    //     },
-    //   },
-    // },
     colors: {
-      purple: {
-        400: "red",
-      },
       muted: {
         50: isDarkTheme ? "#374151" : "#fafafa",
-        //50: "red",
-        //100: "red",
-        //  200: "red",
         900: isDarkTheme ? "#fafafa" : "#171717",
       },
     },
