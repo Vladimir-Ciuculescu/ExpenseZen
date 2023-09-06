@@ -6,8 +6,6 @@ import { Expense } from "../interfaces/Expense";
 import { RootState } from "./store";
 
 const todayDate = moment().format("YYYY-MM-DD");
-const startOfMonth = moment().startOf("month").format("YYYY-MM-DD");
-const endOfMonth = moment().endOf("month").format("YYYY-MM-DD");
 
 interface initialStateProps {
   expenses: Expense[];
@@ -87,6 +85,7 @@ export const editBudgetsAction = expensesReducer.actions.editBudgets;
 
 //selectors
 const generalState = (state: RootState) => state.expenses;
+const globalState = (state: RootState) => state;
 
 export const todayTotalSelector = createSelector([generalState], (expenses: any) => {
   return expenses.expenses
@@ -94,10 +93,19 @@ export const todayTotalSelector = createSelector([generalState], (expenses: any)
     .reduce((accumulator: any, currentValue: Expense) => accumulator + currentValue.amount, 0);
 });
 
-export const monthTotalSelector = createSelector([generalState], (expenses: any) => {
-  return expenses.expenses
-    .filter((expense: Expense) => expense.payDate >= startOfMonth && expense.payDate <= endOfMonth)
-    .reduce((accumulator: any, currentValue: Expense) => accumulator + currentValue.amount, 0);
+export const monthTotalSelector = createSelector([globalState], (globalState: any) => {
+  const currentMonth = globalState.user.month;
+  const parsedMonth = moment(currentMonth, "MMMM");
+  if (parsedMonth.isValid()) {
+    const monthNumber = parsedMonth.month();
+    const startOfMonth = moment().month(monthNumber).startOf("month").format("YYYY-MM-DD");
+    const endOfMonth = moment().month(monthNumber).endOf("month").format("YYYY-MM-DD");
+    return globalState.expenses.expenses
+      .filter(
+        (expense: Expense) => expense.payDate >= startOfMonth && expense.payDate <= endOfMonth
+      )
+      .reduce((accumulator: any, currentValue: Expense) => accumulator + currentValue.amount, 0);
+  }
 });
 
 export const categoriesSelector = createSelector([generalState], (expenses: any) => {

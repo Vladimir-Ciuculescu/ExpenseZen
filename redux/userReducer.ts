@@ -1,4 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
+import moment from "moment";
+
+const currentMonth = moment().format("MMMM");
 
 interface initalStateProps {
   id: number;
@@ -8,6 +11,7 @@ interface initalStateProps {
   currency: string | null;
   symbol: string | null;
   theme: "light" | "dark";
+  month: string;
 }
 
 const initialState: initalStateProps = {
@@ -18,6 +22,7 @@ const initialState: initalStateProps = {
   currency: null,
   symbol: null,
   theme: "light",
+  month: currentMonth,
 };
 
 const userReducer = createSlice({
@@ -50,6 +55,9 @@ const userReducer = createSlice({
     setTheme: (state, action) => {
       state.theme = action.payload;
     },
+    setMonth: (state, action) => {
+      state.month = action.payload;
+    },
   },
 });
 
@@ -58,5 +66,6 @@ export const removeUser = userReducer.actions.removeUser;
 export const setCurrency = userReducer.actions.setCurrency;
 export const removeCurrency = userReducer.actions.removeCurrency;
 export const setThemeAction = userReducer.actions.setTheme;
+export const setMonthAction = userReducer.actions.setMonth;
 
 export default userReducer.reducer;

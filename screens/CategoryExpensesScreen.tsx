@@ -10,6 +10,8 @@ import { StatusBar } from "expo-status-bar";
 import { getCategoryIcon } from "../utils/getCategoryIcon";
 import COLORS from "../colors";
 import { AppStackParamList } from "../interfaces/Navigation";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
 
 type Props = {
   navigation: NavigationProp<ParamListBase>;
@@ -19,6 +21,7 @@ type Props = {
 const CategoryExpensesScreen: React.FC<Props> = ({ navigation, route }) => {
   const { params } = route;
   const { expenses, name } = params;
+  const { theme } = useSelector((state: RootState) => state.user);
   const {
     colors: { muted },
   } = useTheme();
@@ -44,7 +47,7 @@ const CategoryExpensesScreen: React.FC<Props> = ({ navigation, route }) => {
 
   return (
     <SafeAreaView>
-      <StatusBar style="dark" />
+      <StatusBar style={theme === "dark" ? "light" : "dark"} />
       <ScrollView contentContainerStyle={{ padding: 24 }}>
         {expenses.map((expense: Expense, index: number) => {
           const parsedDate = moment(expense.payDate, "YYYY-MM-DD");
